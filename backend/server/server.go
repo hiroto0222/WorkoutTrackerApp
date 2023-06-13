@@ -45,7 +45,7 @@ func (server *Server) setupRouter() {
 
 	authRoutes := apiRoutes.Group("/auth")
 	authRoutes.POST("/register", AuthController.SignUpUser)
-	authRoutes.POST("/register", AuthController.SignInUser)
+	authRoutes.POST("/login", AuthController.SignInUser)
 	authRoutes.GET("/logout", middleware.AuthMiddleware(server.Config, server.DB), AuthController.SignOutUser)
 
 	apiRoutes.GET("/sessions/oauth/google", AuthController.GoogleOAuth)
