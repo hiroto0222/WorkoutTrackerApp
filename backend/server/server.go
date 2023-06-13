@@ -6,8 +6,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/hiroto0222/workout-tracker-app/config"
+	"github.com/hiroto0222/workout-tracker-app/controllers"
+	"github.com/hiroto0222/workout-tracker-app/middleware"
 	"gorm.io/gorm"
 )
+
+var AuthController controllers.AuthController
 
 type Server struct {
 	Config config.Config
@@ -20,6 +24,9 @@ func NewServer(config config.Config, db *gorm.DB) *Server {
 		Config: config,
 		DB:     db,
 	}
+
+	AuthController = *controllers.NewAuthController(config, db)
+
 	server.setupRouter()
 	return server
 }
@@ -34,6 +41,18 @@ func (server *Server) setupRouter() {
 			"status":  "success",
 			"message": "service is healthy",
 		})
+	})
+
+	authRoutes := apiRoutes.Group("/auth")
+	authRoutes.POST("/register", AuthController.SignUpUser)
+	authRoutes.POST("/register", AuthController.SignInUser)
+	authRoutes.GET("/logout", middleware.AuthMiddleware(server.Config, server.DB), AuthController.SignOutUser)
+
+	apiRoutes.GET("/sessions/oauth/google", AuthController.GoogleOAuth)
+	apiRoutes.GET("/users/me", middleware.AuthMiddleware(server.Config, server.DB), controllers.GetMe)
+
+	router.NoRoute(func(ctx *gin.Context) {
+		ctx.JSON(http.StatusNotFound, gin.H{"status": "error", "message": "Route Not Found"})
 	})
 
 	server.Router = router
