@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/hiroto0222/workout-tracker-app/config"
 	"github.com/hiroto0222/workout-tracker-app/controllers"
@@ -34,6 +35,13 @@ func NewServer(config config.Config, db *gorm.DB) *Server {
 // setupRouter sets up the HTTP router for all api endpoints
 func (server *Server) setupRouter() {
 	router := gin.Default()
+
+	// add cors
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowOrigins = []string{server.Config.Origin}
+	corsConfig.AllowCredentials = true
+
+	router.Use(cors.New(corsConfig))
 
 	apiRoutes := router.Group("/api/v1")
 	apiRoutes.GET("/health", func(ctx *gin.Context) {
