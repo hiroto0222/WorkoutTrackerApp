@@ -88,7 +88,66 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": "success"})
 }
 
-func (ac *AuthController) LogoutUser(ctx *gin.Context) {
+// SignOutUser signs out user and the JWT token will be removed from the response cookie.
+func (ac *AuthController) SignOutUser(ctx *gin.Context) {
 	ctx.SetCookie("token", "", -1, "/", "localhost", false, true)
 	ctx.JSON(http.StatusOK, gin.H{"status": "success"})
+}
+
+func (ac *AuthController) GoogleOAuth(ctx *gin.Context) {
+	code := ctx.Query("code")
+	var pathURL string = "/"
+
+	if ctx.Query("state") != "" {
+		pathURL = ctx.Query("state")
+	}
+
+	if code == "" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"status": "fail", "message": "Authorization code not provided!"})
+		return
+	}
+
+	tokenRes, err := utils.GetGoogleOAuthToken(code, ac.config)
+	if err != nil {
+		ctx.JSON(http.StatusBadGateway, gin.H{"status": "fail", "message": err.Error()})
+		return
+	}
+
+	googleUser, err := utils.GetGoogleUser(tokenRes.AccessToken, tokenRes.IDToken)
+	if err != nil {
+		ctx.JSON(http.StatusBadGateway, gin.H{"status": "fail", "message": err.Error()})
+		return
+	}
+
+	now := time.Now()
+	email := strings.ToLower(googleUser.Email)
+
+	userData := models.User{
+		Name:      googleUser.Name,
+		Email:     email,
+		Password:  "",
+		Photo:     googleUser.Picture,
+		Provider:  "Google",
+		Role:      "user",
+		Verified:  true,
+		CreatedAt: now,
+		UpdatedAt: now,
+	}
+
+	if ac.db.Model(&userData).Where("email = ?", email).Updates(&userData).RowsAffected == 0 {
+		ac.db.Create(&userData)
+	}
+
+	var user models.User
+	ac.db.First(&user, "email = ?", email)
+
+	token, err := utils.GenerateToken(ac.config.TokenExpiresIn, user.ID.String(), ac.config.JWTSecret)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
+		return
+	}
+
+	ctx.SetCookie("token", token, ac.config.TokenMaxAge*60, "/", "localhost", false, true)
+
+	ctx.Redirect(http.StatusTemporaryRedirect, fmt.Sprint(ac.config.Origin, pathURL))
 }
