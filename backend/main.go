@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/hiroto0222/workout-tracker-app/config"
+	"github.com/hiroto0222/workout-tracker-app/db"
 )
 
 func main() {
@@ -14,6 +15,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("could not load config, %v", err)
 	}
+
+	// connect to db
+	db.Init(config)
 
 	server := gin.Default()
 	server.GET("/api/v1/health", func(ctx *gin.Context) {
