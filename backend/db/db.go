@@ -15,7 +15,7 @@ var (
 	err error
 )
 
-func Init(config config.Config) {
+func Init(config config.Config) *gorm.DB {
 	db, err = gorm.Open(postgres.Open(config.DBSource), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to DB")
@@ -23,4 +23,6 @@ func Init(config config.Config) {
 
 	db.AutoMigrate(&models.User{})
 	fmt.Println("🚀 Connected successfully to DB")
+
+	return db
 }

@@ -2,11 +2,10 @@ package main
 
 import (
 	"log"
-	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"github.com/hiroto0222/workout-tracker-app/config"
 	"github.com/hiroto0222/workout-tracker-app/db"
+	"github.com/hiroto0222/workout-tracker-app/server"
 )
 
 func main() {
@@ -17,15 +16,10 @@ func main() {
 	}
 
 	// connect to db
-	db.Init(config)
+	db := db.Init(config)
 
-	server := gin.Default()
-	server.GET("/api/v1/health", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{
-			"status":  "success",
-			"message": "service is healthy",
-		})
-	})
+	// create server
+	server := server.NewServer(config, db)
 
-	log.Fatal(server.Run(":" + config.Port))
+	log.Fatal(server.Start())
 }
