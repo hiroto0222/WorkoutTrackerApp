@@ -8,6 +8,7 @@ import (
 
 type Config struct {
 	Origin string `mapstructure:"ORIGIN"`
+	Port   string `mapstructure:"PORT"`
 
 	// jwt config
 	JWTSecret      string        `mapstructure:"JWT_SECRET"`
