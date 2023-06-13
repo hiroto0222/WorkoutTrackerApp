@@ -1,4 +1,4 @@
-package schema
+package schemas
 
 type RegisterUserInput struct {
 	Name     string `json:"name" binding:"required"`
