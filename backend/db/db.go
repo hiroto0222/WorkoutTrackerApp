@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/hiroto0222/workout-tracker-app/config"
+	"github.com/hiroto0222/workout-tracker-app/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -20,6 +21,6 @@ func Init(config config.Config) {
 		log.Fatal("Failed to connect to DB")
 	}
 
-	db.AutoMigrate()
+	db.AutoMigrate(&models.User{})
 	fmt.Println("🚀 Connected successfully to DB")
 }
