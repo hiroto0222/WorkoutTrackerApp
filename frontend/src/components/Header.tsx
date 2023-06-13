@@ -12,9 +12,12 @@ const Header = () => {
     try {
       store.setRequestLoading(true);
       const VITE_SERVER_ENDPOINT = import.meta.env.VITE_SERVER_ENDPOINT;
-      const response = await fetch(`${VITE_SERVER_ENDPOINT}/api/auth/logout`, {
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${VITE_SERVER_ENDPOINT}/api/v1/auth/logout`,
+        {
+          credentials: "include",
+        }
+      );
       if (!response.ok) {
         throw await response.json();
       }

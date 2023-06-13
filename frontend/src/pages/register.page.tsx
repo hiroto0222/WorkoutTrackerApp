@@ -1,10 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import useStore from "../store";
 import { object, string, TypeOf } from "zod";
-import { useEffect } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import useStore from "../store";
 
 const registerSchema = object({
   name: string().min(1, "Full name is required").max(100),
@@ -32,7 +32,7 @@ const RegisterPage = () => {
       store.setRequestLoading(true);
       const VITE_SERVER_ENDPOINT = import.meta.env.VITE_SERVER_ENDPOINT;
       const response = await fetch(
-        `${VITE_SERVER_ENDPOINT}/api/auth/register`,
+        `${VITE_SERVER_ENDPOINT}/api/v1/auth/register`,
         {
           method: "POST",
           credentials: "include",

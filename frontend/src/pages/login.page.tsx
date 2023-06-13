@@ -1,14 +1,14 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { TypeOf, object, string } from "zod";
 import GitHubLogo from "../assets/github.svg";
 import GoogleLogo from "../assets/google.svg";
+import useStore from "../store";
 import { getGitHubUrl } from "../utils/getGithubUrl";
 import { getGoogleUrl } from "../utils/getGoogleUrl";
-import { object, string, TypeOf } from "zod";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import useStore from "../store";
-import { toast } from "react-toastify";
-import { useEffect } from "react";
 
 const loginSchema = object({
   email: string()
@@ -32,7 +32,7 @@ const LoginPage = () => {
     try {
       store.setRequestLoading(true);
       const VITE_SERVER_ENDPOINT = import.meta.env.VITE_SERVER_ENDPOINT;
-      const response = await fetch(`${VITE_SERVER_ENDPOINT}/api/auth/login`, {
+      const response = await fetch(`${VITE_SERVER_ENDPOINT}/api/v1/auth/login`, {
         method: "POST",
         credentials: "include",
         body: JSON.stringify(data),
