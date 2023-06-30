@@ -2,16 +2,12 @@ package models
 
 import (
 	"time"
-
-	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 type User struct {
-	ID       uuid.UUID `gorm:"type:uuid;primary_key;"`
-	Name     string    `gorm:"type:varchar(100);not null"`
-	Email    string    `gorm:"type:varchar(100);uniqueIndex;not null"`
-	Password string    `gorm:"type:varchar(100);not null"`
+	ID    string `gorm:"type:varchar;primary_key;"`
+	Name  string `gorm:"type:varchar(100);not null"`
+	Email string `gorm:"type:varchar(100);uniqueIndex;not null"`
 
 	Role  string `gorm:"type:varchar(20);default:'user';"`
 	Photo string `gorm:"default:'default.png';"`
@@ -20,11 +16,6 @@ type User struct {
 	Provider  string    `gorm:"default:'local';"`
 	CreatedAt time.Time `gorm:"not null"`
 	UpdatedAt time.Time `gorm:"not null"`
-}
-
-func (user *User) BeforeCreate(*gorm.DB) error {
-	user.ID = uuid.New()
-	return nil
 }
 
 type UserResponse struct {
@@ -41,7 +32,7 @@ type UserResponse struct {
 
 func FilteredResponse(user *User) UserResponse {
 	return UserResponse{
-		ID:        user.ID.String(),
+		ID:        user.ID,
 		Email:     user.Email,
 		Name:      user.Name,
 		Role:      user.Role,

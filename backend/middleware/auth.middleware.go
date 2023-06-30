@@ -1,23 +1,27 @@
 package middleware
 
 import (
-	"fmt"
+	"errors"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/hiroto0222/workout-tracker-app/config"
 	"github.com/hiroto0222/workout-tracker-app/models"
-	"github.com/hiroto0222/workout-tracker-app/utils"
+	services "github.com/hiroto0222/workout-tracker-app/services/auth"
 	"gorm.io/gorm"
 )
 
-func AuthMiddleware(config config.Config, db *gorm.DB) gin.HandlerFunc {
+const (
+	authorizationHeader = "Authorization"
+)
+
+func AuthMiddleware(authService *services.AuthService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		client := authService.FireAuth
 		var token string
 		cookie, err := ctx.Cookie("token")
 
-		authorizationHeader := ctx.Request.Header.Get("Authorization")
+		authorizationHeader := ctx.Request.Header.Get(authorizationHeader)
 		fields := strings.Fields(authorizationHeader)
 
 		if len(fields) != 0 && fields[0] == "Bearer" {
@@ -27,24 +31,40 @@ func AuthMiddleware(config config.Config, db *gorm.DB) gin.HandlerFunc {
 		}
 
 		if token == "" {
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": "fail", "message": "You are not logged in"})
-			return
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"message": "You are not logged in",
+			})
 		}
 
-		sub, err := utils.ValidateToken(token, config.JWTSecret)
+		res, err := client.VerifyIDToken(ctx, token)
 		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": "fail", "message": err.Error()})
-			return
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"message": err.Error(),
+			})
 		}
 
 		var user models.User
-		result := db.First(&user, "id = ?", fmt.Sprint(sub))
-		if result.Error != nil {
-			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": "the user belonging to this token no logger exists"})
-			return
+		if err := authService.DB.Where("id = ?", res.UID).First(&user).Error; err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				// register new user who signed up through firebase in client
+				registerUserPayload := services.RegisterUserPayload{}
+				registerUserPayload.UID = res.UID
+				registerUserPayload.SignInProvider = res.Firebase.SignInProvider
+				if name, ok := res.Claims["name"]; ok {
+					registerUserPayload.Name = name.(string)
+				}
+				if email, ok := res.Claims["email"]; ok {
+					registerUserPayload.Email = email.(string)
+				}
+				authService.Register(registerUserPayload)
+			} else {
+				ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+					"message": err.Error(),
+				})
+			}
 		}
 
-		ctx.Set("currentUser", user)
+		ctx.Set("USER_ID", res.UID)
 		ctx.Next()
 	}
 }

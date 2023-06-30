@@ -2,31 +2,39 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"time"
 
+	"firebase.google.com/go/auth"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/hiroto0222/workout-tracker-app/config"
 	"github.com/hiroto0222/workout-tracker-app/controllers"
 	"github.com/hiroto0222/workout-tracker-app/middleware"
+	services "github.com/hiroto0222/workout-tracker-app/services/auth"
 	"gorm.io/gorm"
 )
 
-var AuthController controllers.AuthController
-
 type Server struct {
-	Config config.Config
-	DB     *gorm.DB
-	Router *gin.Engine
+	Config   config.Config
+	DB       *gorm.DB
+	Router   *gin.Engine
+	FireAuth *auth.Client
 }
 
-func NewServer(config config.Config, db *gorm.DB) *Server {
+func NewServer(conf config.Config, db *gorm.DB) *Server {
 	server := &Server{
-		Config: config,
+		Config: conf,
 		DB:     db,
 	}
 
-	AuthController = *controllers.NewAuthController(config, db)
+	authClient, err := config.InitAuth()
+	if err != nil {
+		log.Fatal("failed to create firebase auth instance")
+	}
+
+	server.FireAuth = authClient
 
 	server.setupRouter()
 	return server
@@ -36,12 +44,23 @@ func NewServer(config config.Config, db *gorm.DB) *Server {
 func (server *Server) setupRouter() {
 	router := gin.Default()
 
-	// add cors
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{server.Config.Origin}
-	corsConfig.AllowCredentials = true
+	// setup cors
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{server.Config.Origin},
+		AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization", "accept", "origin", "Cache-Control", "X-Requested-With"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return true
+		},
+		MaxAge: 15 * time.Second,
+	}))
 
-	router.Use(cors.New(corsConfig))
+	authService := &services.AuthService{
+		DB:       server.DB,
+		FireAuth: server.FireAuth,
+	}
 
 	apiRoutes := router.Group("/api/v1")
 	apiRoutes.GET("/health", func(ctx *gin.Context) {
@@ -51,17 +70,7 @@ func (server *Server) setupRouter() {
 		})
 	})
 
-	authRoutes := apiRoutes.Group("/auth")
-	authRoutes.POST("/register", AuthController.SignUpUser)
-	authRoutes.POST("/login", AuthController.SignInUser)
-	authRoutes.GET("/logout", middleware.AuthMiddleware(server.Config, server.DB), AuthController.SignOutUser)
-
-	apiRoutes.GET("/sessions/oauth/google", AuthController.GoogleOAuth)
-	apiRoutes.GET("/users/me", middleware.AuthMiddleware(server.Config, server.DB), controllers.GetMe)
-
-	router.NoRoute(func(ctx *gin.Context) {
-		ctx.JSON(http.StatusNotFound, gin.H{"status": "error", "message": "Route Not Found"})
-	})
+	apiRoutes.GET("/todo", middleware.AuthMiddleware(authService), controllers.GetTodo)
 
 	server.Router = router
 }
