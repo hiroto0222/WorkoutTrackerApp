@@ -1,5 +1,12 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import React, { useState } from "react";
+import { ANDROID_CLIENT_ID, IOS_CLIENT_ID } from "@env";
+import * as Google from "expo-auth-session/providers/google";
+import * as WebBrowser from "expo-web-browser";
+import {
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+  signInWithCredential,
+} from "firebase/auth";
+import React, { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -10,9 +17,25 @@ import {
 } from "react-native";
 import { auth } from "../config/firebase";
 
+WebBrowser.maybeCompleteAuthSession();
+
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    iosClientId: IOS_CLIENT_ID,
+    androidClientId: ANDROID_CLIENT_ID,
+  });
+
+  useEffect(() => {
+    if (response?.type == "success") {
+      const { id_token } = response.params;
+      const credential = GoogleAuthProvider.credential(id_token);
+      signInWithCredential(auth, credential).then((userCreds) => {
+        console.log(userCreds.user);
+      });
+    }
+  }, [response]);
 
   const handleSignUp = () => {
     createUserWithEmailAndPassword(auth, email, password)
@@ -53,6 +76,12 @@ const LoginScreen = () => {
           style={[styles.button, styles.buttonOutline]}
         >
           <Text style={styles.buttonOutlineText}>Register</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => promptAsync()}
+          style={[styles.button, styles.buttonOutline]}
+        >
+          <Text style={styles.buttonOutlineText}>Login with Google</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
