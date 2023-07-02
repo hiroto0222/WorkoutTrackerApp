@@ -16,9 +16,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useDispatch } from "react-redux";
-import { auth } from "../config/firebase";
-import { setAuth } from "../store/slices/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "store";
+import { auth } from "../../config/firebase";
+import { setAuth } from "../../store/slices/auth";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -29,6 +30,8 @@ const LoginScreen = () => {
     iosClientId: IOS_CLIENT_ID,
     androidClientId: ANDROID_CLIENT_ID,
   });
+
+  const userState = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -45,6 +48,7 @@ const LoginScreen = () => {
               accessToken,
             })
           );
+          console.log(userState);
         });
       });
     }
