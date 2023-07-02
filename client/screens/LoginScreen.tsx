@@ -5,6 +5,7 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithCredential,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import {
@@ -15,7 +16,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useDispatch } from "react-redux";
 import { auth } from "../config/firebase";
+import { setAuth } from "../store/slices/auth";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -26,19 +29,41 @@ const LoginScreen = () => {
     iosClientId: IOS_CLIENT_ID,
     androidClientId: ANDROID_CLIENT_ID,
   });
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (response?.type == "success") {
       const { id_token } = response.params;
       const credential = GoogleAuthProvider.credential(id_token);
       signInWithCredential(auth, credential).then((userCreds) => {
-        console.log(userCreds.user);
+        const user = userCreds.user;
+        user.getIdToken().then((accessToken) => {
+          dispatch(
+            setAuth({
+              userId: user.uid,
+              displayName: user.displayName || "",
+              accessToken,
+            })
+          );
+        });
       });
     }
   }, [response]);
 
   const handleSignUp = () => {
     createUserWithEmailAndPassword(auth, email, password)
+      .then((userCreds) => {
+        const user = userCreds.user;
+        console.log(user);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert((err as Error).message);
+      });
+  };
+
+  const handleLogin = () => {
+    signInWithEmailAndPassword(auth, email, password)
       .then((userCreds) => {
         const user = userCreds.user;
         console.log(user);
@@ -68,7 +93,7 @@ const LoginScreen = () => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => {}} style={styles.button}>
+        <TouchableOpacity onPress={handleLogin} style={styles.button}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
         <TouchableOpacity
