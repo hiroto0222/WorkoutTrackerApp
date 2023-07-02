@@ -25,6 +25,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
+          <string>workout-tracker</string>
           <string>com.hiroto0222.workouttracker</string>
         </array>
       </dict>

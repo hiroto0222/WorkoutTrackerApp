@@ -10,6 +10,13 @@ module.exports = function (api) {
           path: ".env",
         },
       ],
+      [
+        "module-resolver",
+        {
+          root: ["./src/"],
+          extensions: [".ts", ".tsx", ".mjs", ".js", ".jsx"],
+        },
+      ],
     ],
   };
 };
