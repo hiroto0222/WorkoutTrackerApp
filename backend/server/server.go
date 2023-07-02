@@ -16,6 +16,8 @@ import (
 	"gorm.io/gorm"
 )
 
+var UserController controllers.UserController
+
 type Server struct {
 	Config   config.Config
 	DB       *gorm.DB
@@ -33,8 +35,9 @@ func NewServer(conf config.Config, db *gorm.DB) *Server {
 	if err != nil {
 		log.Fatal("failed to create firebase auth instance")
 	}
-
 	server.FireAuth = authClient
+
+	UserController = *controllers.NewUserController(db)
 
 	server.setupRouter()
 	return server
@@ -70,7 +73,7 @@ func (server *Server) setupRouter() {
 		})
 	})
 
-	apiRoutes.GET("/todo", middleware.AuthMiddleware(authService), controllers.GetTodo)
+	apiRoutes.GET("/user/me", middleware.AuthMiddleware(authService), UserController.GetUser)
 
 	server.Router = router
 }

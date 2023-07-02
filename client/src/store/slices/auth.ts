@@ -4,12 +4,14 @@ export interface AuthState {
   accessToken?: string;
   userId?: string;
   displayName?: string;
+  photoURL?: string;
 }
 
 const initialState: AuthState = {
   accessToken: undefined,
   userId: undefined,
   displayName: undefined,
+  photoURL: undefined,
 };
 
 export const authSlice = createSlice({

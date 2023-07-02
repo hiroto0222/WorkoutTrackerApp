@@ -48,7 +48,6 @@ const LoginScreen = () => {
               accessToken,
             })
           );
-          console.log(userState);
         });
       });
     }
@@ -58,10 +57,8 @@ const LoginScreen = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCreds) => {
         const user = userCreds.user;
-        console.log(user);
       })
       .catch((err) => {
-        console.log(err);
         alert((err as Error).message);
       });
   };
@@ -70,10 +67,8 @@ const LoginScreen = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCreds) => {
         const user = userCreds.user;
-        console.log(user);
       })
       .catch((err) => {
-        console.log(err);
         alert((err as Error).message);
       });
   };

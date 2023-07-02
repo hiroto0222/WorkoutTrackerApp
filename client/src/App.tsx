@@ -1,28 +1,17 @@
-import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { registerRootComponent } from "expo";
+import RootNavigation from "navigation";
 import { StyleSheet } from "react-native";
 import { Provider } from "react-redux";
-import HomeScreen from "./components/screens/HomeScreen";
-import LoginScreen from "./components/screens/LoginScreen";
 import { store } from "./store";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Provider store={store}>
-        <Stack.Navigator>
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="Login"
-            component={LoginScreen}
-          />
-          <Stack.Screen name="Home" component={HomeScreen} />
-        </Stack.Navigator>
-      </Provider>
-    </NavigationContainer>
+    <Provider store={store}>
+      <RootNavigation />
+    </Provider>
   );
 }
 
