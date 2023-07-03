@@ -1,12 +1,24 @@
 import { auth } from "config/firebase";
 import { signOut } from "firebase/auth";
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
+import axios from "../../config/axios";
 
 const HomeScreen = () => {
   const user = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    axios
+      .get("user/me", {
+        headers: {
+          Authorization: "Bearer " + user.accessToken,
+        },
+      })
+      .then((val) => console.log(val.data))
+      .catch((err) => console.log(err));
+  }, []);
 
   const handleLogout = () => {
     signOut(auth);
