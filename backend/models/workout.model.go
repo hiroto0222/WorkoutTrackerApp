@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Workout struct {
-	ID        uint      `gorm:"type:serial;primary_key;auto_increment"`
+	ID        int       `gorm:"type:int AUTO_INCREMENT;primary_key;"`
 	UserID    string    `gorm:"type:varchar;not null"`
 	StartedAt time.Time `gorm:"not null"`
 	EndedAt   time.Time `gorm:"not null"`

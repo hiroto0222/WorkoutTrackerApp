@@ -1,9 +1,9 @@
 package models
 
 type WorkoutExercise struct {
-	ID         uint `gorm:"type:serial;primary_key;auto_increment"`
-	WorkoutID  uint `gorm:"type:serial;not null"`
-	ExerciseID uint `gorm:"type:serial;not null"`
+	ID         int `gorm:"type:int AUTO_INCREMENT;primary_key"`
+	WorkoutID  int `gorm:"type:int;not null"`
+	ExerciseID int `gorm:"type:int;not null"`
 
 	Workout  Workout  `gorm:"foreignKey:WorkoutID"`
 	Exercise Exercise `gorm:"foreignKey:ExerciseID"`

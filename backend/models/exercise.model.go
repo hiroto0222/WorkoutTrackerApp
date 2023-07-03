@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Exercise struct {
-	ID          uint      `gorm:"type:serial;primary_key;auto_increment"`
+	ID          int       `gorm:"type:int AUTO_INCREMENT;primary_key"`
 	Name        string    `gorm:"type:varchar(255);uniqueIndex;not null"`
 	Description string    `gorm:"type:text"`
 	CreatedAt   time.Time `gorm:"not null"`
@@ -11,7 +11,7 @@ type Exercise struct {
 }
 
 type ExerciseResponse struct {
-	ID          uint   `json:"id,omitempty"`
+	ID          int    `json:"id,omitempty"`
 	Name        string `json:"name,omitempty"`
 	Description string `json:"description,omitempty"`
 	CreatedAt   time.Time
