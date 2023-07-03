@@ -37,9 +37,9 @@ func FilteredResponse(user *User) UserResponse {
 		Name:      user.Name,
 		Photo:     user.Photo,
 		Provider:  user.Provider,
-		CreatedAt: user.CreatedAt,
 		Weight:    user.Weight,
 		Height:    user.Height,
+		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
 	}
 }
