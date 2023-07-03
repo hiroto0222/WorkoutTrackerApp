@@ -22,6 +22,11 @@ func Init(config config.Config) *gorm.DB {
 	}
 
 	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.Exercise{})
+	db.AutoMigrate(&models.Workout{})
+	db.AutoMigrate(&models.WorkoutExercise{})
+	db.AutoMigrate(&models.Log{})
+
 	fmt.Println("🚀 Connected successfully to DB")
 
 	return db
