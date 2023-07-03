@@ -1,5 +1,6 @@
 import { ANDROID_CLIENT_ID, IOS_CLIENT_ID } from "@env";
 import * as Google from "expo-auth-session/providers/google";
+import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
 import {
   GoogleAuthProvider,
@@ -8,14 +9,8 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import {
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { SafeAreaView, StatusBar } from "react-native";
+import { Button, Div, Image, Input, Text } from "react-native-magnus";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { auth } from "../../config/firebase";
@@ -97,90 +92,109 @@ const LoginScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
-      <View style={styles.inputContainer}>
-        <TextInput
-          autoCapitalize="none"
-          placeholder="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          style={styles.input}
-          secureTextEntry
-        />
-      </View>
+    <>
+      <StatusBar barStyle="dark-content" />
+      <SafeAreaView style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
+        <Div flex={1} mt="2xl">
+          <Text mt="3xl" mx="xl" w="70%" fontWeight="bold" fontSize="5xl">
+            Get Started
+          </Text>
+          <Input
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            autoCapitalize="none"
+            mx="xl"
+            mt="2xl"
+            px="md"
+            py="md"
+            borderColor="gray200"
+            borderWidth={1}
+            placeholder="Email"
+          />
+          <Input
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            mx="xl"
+            mt="md"
+            px="md"
+            py="md"
+            borderColor="gray200"
+            borderWidth={1}
+            placeholder="Password"
+            secureTextEntry
+          />
+          <Button
+            onPress={handleLogin}
+            mx="xl"
+            mt="xl"
+            mb="xl"
+            py="lg"
+            bg="orange500"
+            rounded="circle"
+            block
+          >
+            Sign In
+          </Button>
+          <Button
+            onPress={handleSignUp}
+            mx="xl"
+            mb="xl"
+            py="lg"
+            bg="gray300"
+            rounded="circle"
+            block
+            color="black"
+          >
+            Sign Up
+          </Button>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handleLogin} style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleSignUp}
-          style={[styles.button, styles.buttonOutline]}
-        >
-          <Text style={styles.buttonOutlineText}>Register</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => promptAsync()}
-          style={[styles.button, styles.buttonOutline]}
-        >
-          <Text style={styles.buttonOutlineText}>Login with Google</Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+          <Div
+            mx="xl"
+            alignItems="center"
+            justifyContent="center"
+            flexDir="row"
+            mt="xl"
+          >
+            <Div h={1} flex={1} bg="gray400" />
+            <Text px="lg" fontSize="sm" color="gray500">
+              Or continue with
+            </Text>
+            <Div h={1} flex={1} bg="gray400" />
+          </Div>
+
+          <Div
+            mx="xl"
+            alignItems="center"
+            justifyContent="center"
+            flexDir="row"
+            mt="xl"
+          >
+            <Button
+              onPress={() => promptAsync()}
+              mr="md"
+              flex={1}
+              py="lg"
+              rounded="circle"
+              borderWidth={1}
+              borderColor="gray200"
+              bg="white"
+              color="gray900"
+              prefix={
+                <Image
+                  h={20}
+                  w={20}
+                  mr="md"
+                  source={require("../../assets/google.png")}
+                />
+              }
+            >
+              Google
+            </Button>
+          </Div>
+        </Div>
+      </SafeAreaView>
+    </>
   );
 };
 
 export default LoginScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  inputContainer: {
-    width: "80%",
-  },
-  input: {
-    backgroundColor: "white",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginTop: 5,
-  },
-  buttonContainer: {
-    width: "60%",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 40,
-  },
-  button: {
-    backgroundColor: "#0782F9",
-    width: "100%",
-    padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "700",
-    fontSize: 16,
-  },
-  buttonOutline: {
-    backgroundColor: "white",
-    marginTop: 5,
-    borderColor: "#0782F9",
-    borderWidth: 2,
-  },
-  buttonOutlineText: {
-    color: "#0782F9",
-    fontWeight: "700",
-    fontSize: 16,
-  },
-});
