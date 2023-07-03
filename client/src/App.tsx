@@ -1,27 +1,17 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { registerRootComponent } from "expo";
 import RootNavigation from "navigation";
-import { StyleSheet } from "react-native";
+import { ThemeProvider } from "react-native-magnus";
 import { Provider } from "react-redux";
 import { store } from "./store";
-
-const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <Provider store={store}>
-      <RootNavigation />
+      <ThemeProvider>
+        <RootNavigation />
+      </ThemeProvider>
     </Provider>
   );
 }
 
 registerRootComponent(App);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
