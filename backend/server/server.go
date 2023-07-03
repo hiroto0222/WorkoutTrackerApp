@@ -60,7 +60,7 @@ func (server *Server) setupRouter() {
 		MaxAge: 15 * time.Second,
 	}))
 
-	authService := &services.AuthService{
+	authService := services.AuthService{
 		DB:       server.DB,
 		FireAuth: server.FireAuth,
 	}
@@ -73,7 +73,7 @@ func (server *Server) setupRouter() {
 		})
 	})
 
-	apiRoutes.GET("/user/me", middleware.AuthMiddleware(authService), UserController.GetUser)
+	apiRoutes.GET("/user/me", middleware.AuthMiddleware(&authService), UserController.GetUser)
 
 	server.Router = router
 }

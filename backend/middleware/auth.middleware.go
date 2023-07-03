@@ -24,7 +24,7 @@ func AuthMiddleware(authService *services.AuthService) gin.HandlerFunc {
 		authorizationHeader := ctx.Request.Header.Get(authorizationHeader)
 		fields := strings.Fields(authorizationHeader)
 
-		if len(fields) != 0 && fields[0] == "Bearer" {
+		if len(fields) >= 2 && fields[0] == "Bearer" {
 			token = fields[1]
 		} else if err == nil {
 			token = cookie
@@ -34,6 +34,7 @@ func AuthMiddleware(authService *services.AuthService) gin.HandlerFunc {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"message": "You are not logged in",
 			})
+			return
 		}
 
 		res, err := client.VerifyIDToken(ctx, token)
@@ -41,26 +42,32 @@ func AuthMiddleware(authService *services.AuthService) gin.HandlerFunc {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"message": err.Error(),
 			})
+			return
 		}
 
+		// register new user who signed up through firebase (if first time)
 		var user models.User
 		if err := authService.DB.Where("id = ?", res.UID).First(&user).Error; err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
-				// register new user who signed up through firebase in client
-				registerUserPayload := services.RegisterUserPayload{}
-				registerUserPayload.UID = res.UID
-				registerUserPayload.SignInProvider = res.Firebase.SignInProvider
+				registerUserPayload := services.RegisterUserPayload{
+					ID:             res.UID,
+					SignInProvider: res.Firebase.SignInProvider,
+				}
 				if name, ok := res.Claims["name"]; ok {
 					registerUserPayload.Name = name.(string)
 				}
 				if email, ok := res.Claims["email"]; ok {
 					registerUserPayload.Email = email.(string)
 				}
+				if photo, ok := res.Claims["photoURL"]; ok {
+					registerUserPayload.Photo = photo.(string)
+				}
 				authService.Register(registerUserPayload)
 			} else {
 				ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 					"message": err.Error(),
 				})
+				return
 			}
 		}
 

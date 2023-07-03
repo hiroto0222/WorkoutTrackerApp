@@ -47,9 +47,12 @@ func (s *AuthService) Login(payload LoginUserPayload) (string, error) {
 }
 
 type RegisterUserPayload struct {
-	UID            string
-	Email          string
+	ID             string
 	Name           string
+	Email          string
+	Role           string
+	Photo          string
+	Verified       bool
 	SignInProvider string
 }
 
@@ -58,7 +61,7 @@ func (s *AuthService) Register(payload RegisterUserPayload) error {
 	// create new user
 	now := time.Now()
 	user := models.User{
-		ID:        payload.UID,
+		ID:        payload.ID,
 		Name:      payload.Name,
 		Email:     strings.ToLower(payload.Email),
 		Role:      "user",
