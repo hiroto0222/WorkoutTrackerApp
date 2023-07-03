@@ -26,19 +26,39 @@ WebBrowser.maybeCompleteAuthSession();
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [request, response, promptAsync] = Google.useAuthRequest({
+  const [_, response, promptAsync] = Google.useAuthRequest({
     iosClientId: IOS_CLIENT_ID,
     androidClientId: ANDROID_CLIENT_ID,
   });
 
-  const userState = useSelector((state: RootState) => state.auth);
+  const user = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (response?.type == "success") {
       const { id_token } = response.params;
       const credential = GoogleAuthProvider.credential(id_token);
-      signInWithCredential(auth, credential).then((userCreds) => {
+      signInWithCredential(auth, credential)
+        .then((userCreds) => {
+          const user = userCreds.user;
+          user.getIdToken().then((accessToken) => {
+            dispatch(
+              setAuth({
+                userId: user.uid,
+                displayName: user.displayName || "",
+                accessToken,
+              })
+            );
+            console.log(JSON.stringify(user, null, 2));
+          });
+        })
+        .catch((err) => alert((err as Error).message));
+    }
+  }, [response]);
+
+  const handleSignUp = () => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCreds) => {
         const user = userCreds.user;
         user.getIdToken().then((accessToken) => {
           dispatch(
@@ -48,15 +68,8 @@ const LoginScreen = () => {
               accessToken,
             })
           );
+          console.log(JSON.stringify(user, null, 2));
         });
-      });
-    }
-  }, [response]);
-
-  const handleSignUp = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCreds) => {
-        const user = userCreds.user;
       })
       .catch((err) => {
         alert((err as Error).message);
@@ -67,6 +80,16 @@ const LoginScreen = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCreds) => {
         const user = userCreds.user;
+        user.getIdToken().then((accessToken) => {
+          dispatch(
+            setAuth({
+              userId: user.uid,
+              displayName: user.displayName || "",
+              accessToken,
+            })
+          );
+        });
+        console.log(JSON.stringify(user, null, 2));
       })
       .catch((err) => {
         alert((err as Error).message);
@@ -77,6 +100,7 @@ const LoginScreen = () => {
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <View style={styles.inputContainer}>
         <TextInput
+          autoCapitalize="none"
           placeholder="Email"
           value={email}
           onChangeText={(text) => setEmail(text)}
