@@ -10,19 +10,7 @@ import {
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setAuth } from "store/slices/auth";
-import axios from "../config/axios";
-
-type createUserRequest = {
-  id: string;
-  name: string;
-  email?: string;
-  role: string;
-  photo?: string;
-  verified: boolean;
-  provider: string;
-  weight?: number;
-  height?: number;
-};
+import axios, { ICreateUserRequest } from "../api";
 
 const useGoogleLogin = () => {
   const [_, response, promptAsync] = Google.useAuthRequest({
@@ -45,12 +33,12 @@ const useGoogleLogin = () => {
 
           // if first time login, POST /user/create
           if (firstTime) {
-            const data: createUserRequest = {
+            const data: ICreateUserRequest = {
               id: user.uid,
               name: user.displayName || "",
               email: user.email || undefined,
               role: "user",
-              photo: user.photoURL || undefined,
+              photo: user.photoURL || "",
               verified: user.emailVerified,
               provider: "google.com",
               weight: 67.0,
@@ -72,8 +60,8 @@ const useGoogleLogin = () => {
               accessToken,
             })
           );
-        } catch (error) {
-          console.log(error);
+        } catch (err) {
+          alert((err as Error).message);
         }
       }
     };

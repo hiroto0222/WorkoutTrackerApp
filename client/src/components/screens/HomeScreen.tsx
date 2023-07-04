@@ -5,7 +5,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { setAuth } from "store/slices/auth";
-import axios from "../../config/axios";
+import axios from "../../api";
 
 const HomeScreen = () => {
   const user = useSelector((state: RootState) => state.auth);

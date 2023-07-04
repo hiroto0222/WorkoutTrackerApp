@@ -1,14 +1,11 @@
 import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
 import useGoogleLogin from "hooks/useGoogleLogin";
+import useLogin from "hooks/useLogin";
+import useSignUp from "hooks/useSignUp";
 import React, { useState } from "react";
 import { SafeAreaView, StatusBar } from "react-native";
 import { Button, Div, Image, Input, Text } from "react-native-magnus";
-import { auth } from "../../config/firebase";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -16,16 +13,8 @@ const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { promptAsync } = useGoogleLogin();
-
-  const handleSignUp = () => {
-    createUserWithEmailAndPassword(auth, email, password);
-  };
-
-  const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password).catch((err) => {
-      alert((err as Error).message);
-    });
-  };
+  const { signUp } = useSignUp();
+  const { login } = useLogin();
 
   return (
     <>
@@ -60,7 +49,7 @@ const LoginScreen = () => {
             secureTextEntry
           />
           <Button
-            onPress={handleLogin}
+            onPress={() => login(email, password)}
             mx="xl"
             mt="xl"
             mb="xl"
@@ -72,7 +61,7 @@ const LoginScreen = () => {
             Sign In
           </Button>
           <Button
-            onPress={handleSignUp}
+            onPress={() => signUp(email, password)}
             mx="xl"
             mb="xl"
             py="lg"
