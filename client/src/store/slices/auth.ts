@@ -3,15 +3,11 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 export interface AuthState {
   accessToken?: string;
   userId?: string;
-  displayName?: string;
-  photoURL?: string;
 }
 
 const initialState: AuthState = {
   accessToken: undefined,
   userId: undefined,
-  displayName: undefined,
-  photoURL: undefined,
 };
 
 export const authSlice = createSlice({
@@ -20,7 +16,6 @@ export const authSlice = createSlice({
   reducers: {
     setAuth: (state, action: PayloadAction<AuthState>) => {
       state.accessToken = action.payload.accessToken;
-      state.displayName = action.payload.displayName;
       state.userId = action.payload.userId;
     },
   },

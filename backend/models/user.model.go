@@ -17,29 +17,3 @@ type User struct {
 	CreatedAt time.Time `gorm:"not null"`
 	UpdatedAt time.Time `gorm:"not null"`
 }
-
-type UserResponse struct {
-	ID        string  `json:"id,omitempty"`
-	Name      string  `json:"name,omitempty"`
-	Email     string  `json:"email,omitempty"`
-	Photo     string  `json:"photo,omitempty"`
-	Provider  string  `json:"provider,omitempty"`
-	Weight    float64 `json:"weight,omitempty"`
-	Height    float64 `json:"height,omitempty"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-}
-
-func FilteredResponse(user *User) UserResponse {
-	return UserResponse{
-		ID:        user.ID,
-		Email:     user.Email,
-		Name:      user.Name,
-		Photo:     user.Photo,
-		Provider:  user.Provider,
-		Weight:    user.Weight,
-		Height:    user.Height,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
-	}
-}

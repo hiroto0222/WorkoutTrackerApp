@@ -2,12 +2,14 @@ import { auth } from "config/firebase";
 import { signOut } from "firebase/auth";
 import React, { useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
+import { setAuth } from "store/slices/auth";
 import axios from "../../config/axios";
 
 const HomeScreen = () => {
   const user = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     axios
@@ -22,12 +24,13 @@ const HomeScreen = () => {
 
   const handleLogout = () => {
     signOut(auth);
+    dispatch(setAuth({}));
   };
 
   return (
     <View style={styles.container}>
       <Text>HomeScreen</Text>
-      <Text>Welcome: {user.displayName}</Text>
+      <Text>Welcome: {user.userId}</Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           onPress={handleLogout}

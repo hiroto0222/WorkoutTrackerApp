@@ -40,7 +40,6 @@ const LoginScreen = () => {
             dispatch(
               setAuth({
                 userId: user.uid,
-                displayName: user.displayName || "",
                 accessToken,
               })
             );
@@ -52,43 +51,13 @@ const LoginScreen = () => {
   }, [response]);
 
   const handleSignUp = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCreds) => {
-        const user = userCreds.user;
-        user.getIdToken().then((accessToken) => {
-          dispatch(
-            setAuth({
-              userId: user.uid,
-              displayName: user.displayName || "",
-              accessToken,
-            })
-          );
-          console.log(JSON.stringify(user, null, 2));
-        });
-      })
-      .catch((err) => {
-        alert((err as Error).message);
-      });
+    createUserWithEmailAndPassword(auth, email, password);
   };
 
   const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCreds) => {
-        const user = userCreds.user;
-        user.getIdToken().then((accessToken) => {
-          dispatch(
-            setAuth({
-              userId: user.uid,
-              displayName: user.displayName || "",
-              accessToken,
-            })
-          );
-        });
-        console.log(JSON.stringify(user, null, 2));
-      })
-      .catch((err) => {
-        alert((err as Error).message);
-      });
+    signInWithEmailAndPassword(auth, email, password).catch((err) => {
+      alert((err as Error).message);
+    });
   };
 
   return (
