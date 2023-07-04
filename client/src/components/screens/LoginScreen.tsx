@@ -1,54 +1,21 @@
-import { ANDROID_CLIENT_ID, IOS_CLIENT_ID } from "@env";
-import * as Google from "expo-auth-session/providers/google";
 import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
 import {
-  GoogleAuthProvider,
   createUserWithEmailAndPassword,
-  signInWithCredential,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import React, { useEffect, useState } from "react";
+import useGoogleLogin from "hooks/useGoogleLogin";
+import React, { useState } from "react";
 import { SafeAreaView, StatusBar } from "react-native";
 import { Button, Div, Image, Input, Text } from "react-native-magnus";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "store";
 import { auth } from "../../config/firebase";
-import { setAuth } from "../../store/slices/auth";
 
 WebBrowser.maybeCompleteAuthSession();
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [_, response, promptAsync] = Google.useAuthRequest({
-    iosClientId: IOS_CLIENT_ID,
-    androidClientId: ANDROID_CLIENT_ID,
-  });
-
-  const user = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (response?.type == "success") {
-      const { id_token } = response.params;
-      const credential = GoogleAuthProvider.credential(id_token);
-      signInWithCredential(auth, credential)
-        .then((userCreds) => {
-          const user = userCreds.user;
-          user.getIdToken().then((accessToken) => {
-            dispatch(
-              setAuth({
-                userId: user.uid,
-                accessToken,
-              })
-            );
-            console.log(JSON.stringify(user, null, 2));
-          });
-        })
-        .catch((err) => alert((err as Error).message));
-    }
-  }, [response]);
+  const { promptAsync } = useGoogleLogin();
 
   const handleSignUp = () => {
     createUserWithEmailAndPassword(auth, email, password);
