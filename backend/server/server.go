@@ -11,12 +11,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/hiroto0222/workout-tracker-app/config"
 	"github.com/hiroto0222/workout-tracker-app/controllers"
-	"github.com/hiroto0222/workout-tracker-app/middleware"
-	services "github.com/hiroto0222/workout-tracker-app/services/auth"
+	"github.com/hiroto0222/workout-tracker-app/middlewares"
+	"github.com/hiroto0222/workout-tracker-app/services"
 	"gorm.io/gorm"
 )
 
-var UserController controllers.UserController
+var (
+	userService    services.UserServiceImpl
+	userController controllers.UserControllerImpl
+)
 
 type Server struct {
 	Config   config.Config
@@ -31,15 +34,22 @@ func NewServer(conf config.Config, db *gorm.DB) *Server {
 		DB:     db,
 	}
 
+	// init Firebase auth client
 	authClient, err := config.InitAuth()
 	if err != nil {
 		log.Fatal("failed to create firebase auth instance")
 	}
 	server.FireAuth = authClient
 
-	UserController = *controllers.NewUserController(db)
+	// init services
+	userService = *services.NewUserService(server.DB)
 
+	// init controllers
+	userController = *controllers.NewUserController(&userService)
+
+	// init router
 	server.setupRouter()
+
 	return server
 }
 
@@ -60,11 +70,6 @@ func (server *Server) setupRouter() {
 		MaxAge: 15 * time.Second,
 	}))
 
-	authService := services.AuthService{
-		DB:       server.DB,
-		FireAuth: server.FireAuth,
-	}
-
 	apiRoutes := router.Group("/api/v1")
 	apiRoutes.GET("/health", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
@@ -73,7 +78,12 @@ func (server *Server) setupRouter() {
 		})
 	})
 
-	apiRoutes.GET("/user/me", middleware.AuthMiddleware(&authService), UserController.GetUser)
+	{
+		userRoutes := apiRoutes.Group("/user")
+		userRoutes.Use(middlewares.AuthMiddleware(server.FireAuth))
+		userRoutes.GET("/me", userController.GetUser)
+		userRoutes.POST("/create", userController.CreateUser)
+	}
 
 	server.Router = router
 }
