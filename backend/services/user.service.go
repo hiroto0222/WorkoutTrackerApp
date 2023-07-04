@@ -38,6 +38,7 @@ func (s *UserServiceImpl) CreateUser(ctx *gin.Context) {
 	var req createUserRequest
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
+		log.Println("binding json req failed")
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}

@@ -27,6 +27,9 @@ const useAuth = () => {
     };
 
     const unsub = onAuthStateChanged(auth, handleOnAuthStateChanged);
+
+    // unsub after launch onAuthStateChanged called
+    // auth state changed handle through hook
     return unsub();
   }, []);
 

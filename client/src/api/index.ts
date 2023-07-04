@@ -8,4 +8,16 @@ const instance = axios.create({
   },
 });
 
+export interface ICreateUserRequest {
+  id: string;
+  name: string;
+  email?: string;
+  role: string;
+  photo: string;
+  verified: boolean;
+  provider: string;
+  weight?: number;
+  height?: number;
+}
+
 export default instance;
