@@ -31,6 +31,21 @@
         "projectId": "137520aa-7615-4172-8be1-088338fdd756"
       }
     },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 31,
+            "targetSdkVersion": 31,
+            "buildToolsVersion": "31.0.0"
+          },
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ],
     "scheme": "workout-tracker"
   }
 }
