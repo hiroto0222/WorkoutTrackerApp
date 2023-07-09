@@ -16,6 +16,8 @@ services:
   db:
     image: postgres:13
     container_name: workout-tracker-app-postgres
+    environment:
+      TZ: "Asia/Tokyo"
     ports:
       - 5432:5432
     volumes:
