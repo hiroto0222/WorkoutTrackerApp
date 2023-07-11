@@ -83,3 +83,9 @@ func (s *WorkoutServiceImpl) DeleteWorkout(ctx *gin.Context) {
 	s.db.Delete(&workout)
 	ctx.JSON(http.StatusOK, gin.H{"message": "Successfully deleted workout"})
 }
+
+func NewWorkoutService(db *gorm.DB) *WorkoutServiceImpl {
+	return &WorkoutServiceImpl{
+		db: db,
+	}
+}
