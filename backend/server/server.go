@@ -17,8 +17,10 @@ import (
 )
 
 var (
-	userService    services.UserServiceImpl
-	userController controllers.UserControllerImpl
+	userService       services.UserServiceImpl
+	userController    controllers.UserControllerImpl
+	workoutService    services.WorkoutServiceImpl
+	workoutController controllers.WorkoutControllerImpl
 )
 
 type Server struct {
@@ -43,9 +45,11 @@ func NewServer(conf config.Config, db *gorm.DB) *Server {
 
 	// init services
 	userService = *services.NewUserService(server.DB)
+	workoutService = *services.NewWorkoutService(server.DB)
 
 	// init controllers
 	userController = *controllers.NewUserController(&userService)
+	workoutController = *controllers.NewWorkoutController(&workoutService)
 
 	// init router
 	server.setupRouter()
@@ -83,6 +87,13 @@ func (server *Server) setupRouter() {
 		userRoutes.Use(middlewares.AuthMiddleware(server.FireAuth))
 		userRoutes.GET("/me", userController.GetUser)
 		userRoutes.POST("/create", userController.CreateUser)
+	}
+
+	{
+		workoutRoutes := apiRoutes.Group("/workout")
+		workoutRoutes.Use(middlewares.AuthMiddleware(server.FireAuth))
+		workoutRoutes.POST("/create", workoutController.CreateWorkout)
+		workoutRoutes.POST("/delete", workoutController.DeleteWorkout)
 	}
 
 	server.Router = router
