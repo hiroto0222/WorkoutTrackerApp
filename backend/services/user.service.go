@@ -44,7 +44,11 @@ func (s *UserServiceImpl) CreateUser(ctx *gin.Context) {
 	}
 
 	// check if authenticated user is the owner of the request
-	userID := ctx.MustGet(middlewares.USER_ID).(string)
+	userID, ok := ctx.MustGet(middlewares.USER_ID).(string)
+	if !ok {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user id for request"})
+		return
+	}
 	if userID != req.ID {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "You do not have permission"})
 		return
