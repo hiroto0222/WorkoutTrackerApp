@@ -1,19 +1,18 @@
-import { StyleSheet, Text, View } from "react-native";
+import Constants from "expo-constants";
+import { SafeAreaView } from "react-native";
+import { StatusBar, Text } from "react-native-magnus";
 
 const WorkoutScreen = () => {
   return (
-    <View style={styles.container}>
-      <Text>WorkoutScreen</Text>
-    </View>
+    <>
+      <StatusBar barStyle="dark-content" />
+      <SafeAreaView style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
+        <Text mt="sm" mx="xl" w="70%" fontWeight="bold" fontSize="5xl">
+          WorkoutScreen
+        </Text>
+      </SafeAreaView>
+    </>
   );
 };
 
 export default WorkoutScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

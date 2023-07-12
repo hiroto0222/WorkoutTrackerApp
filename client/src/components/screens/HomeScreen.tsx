@@ -51,7 +51,7 @@ const HomeScreen = () => {
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
-        <Text mt="3xl" mx="xl" w="70%" fontWeight="bold" fontSize="5xl">
+        <Text mt="sm" mx="xl" w="70%" fontWeight="bold" fontSize="5xl">
           HomeScreen
         </Text>
         <Div mt="2xl" alignItems="center" justifyContent="center">
