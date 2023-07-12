@@ -77,7 +77,6 @@ func (server *Server) setupRouter() {
 	apiRoutes := router.Group("/api/v1")
 	apiRoutes.GET("/health", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
-			"status":  "success",
 			"message": "service is healthy",
 		})
 	})

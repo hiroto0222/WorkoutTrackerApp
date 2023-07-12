@@ -101,7 +101,7 @@ func (s *UserServiceImpl) GetUser(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": user})
+	ctx.JSON(http.StatusOK, gin.H{"message": "success", "data": user})
 }
 
 func NewUserService(db *gorm.DB) *UserServiceImpl {
