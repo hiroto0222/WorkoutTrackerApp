@@ -1,19 +1,15 @@
 package config
 
 import (
-	"time"
+	"os"
 
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
 
 type Config struct {
 	Origin string `mapstructure:"ORIGIN"`
 	Port   string `mapstructure:"PORT"`
-
-	// jwt config
-	JWTSecret      string        `mapstructure:"JWT_SECRET"`
-	TokenExpiresIn time.Duration `mapstructure:"TOKEN_EXPIRES_IN"`
-	TokenMaxAge    int           `mapstructure:"TOKEN_MAX_AGE"`
 
 	// db config
 	DBDriver string `mapstructure:"POSTGRES_DRIVER"`
@@ -26,6 +22,19 @@ type Config struct {
 }
 
 func LoadConfig(path string) (config Config, err error) {
+	ginMode := os.Getenv("GIN_MODE")
+	if ginMode == "release" {
+		gin.SetMode(gin.ReleaseMode)
+		config.Origin = os.Getenv("ORIGIN")
+		config.Port = os.Getenv("PORT")
+		config.DBDriver = os.Getenv("POSTGRES_DRIVER")
+		config.DBSource = os.Getenv("POSTGRES_SOURCE")
+		config.GoogleOAuthClientID = os.Getenv("GOOGLE_OAUTH_CLIENT_ID")
+		config.GoogleOAuthClientSecret = os.Getenv("GOOGLE_OAUTH_CLIENT_SECRET")
+		config.GoogleOAuthRedirectURL = os.Getenv("GOOGLE_OAUTH_REDIRECT_URL")
+		return
+	}
+
 	viper.AddConfigPath(path)
 	viper.SetConfigType("env")
 	viper.SetConfigName("app")
