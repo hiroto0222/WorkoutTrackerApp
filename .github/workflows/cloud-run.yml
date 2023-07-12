@@ -1,0 +1,59 @@
+name: deploy to cloud run
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: ${{ secrets.CLOUD_RUN_PROJECT_NAME }}
+  REGION: ${{ secrets.CLOUD_RUN_REGION }}
+  REPO_NAME: workout-tracker-app
+
+jobs:
+  build-and-deploy:
+    name: Setup, Build and Deploy
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v0.4.0
+        with:
+          credentials_json: ${{ secrets.CLOUD_RUN_SA_KEY }}
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker
+
+      - name: Build and push Docker image
+        run: |
+          TAG=$(echo $GITHUB_SHA | head -c7)
+          docker build -t gcr.io/${PROJECT_ID}/${REPO_NAME}:${TAG} .
+          docker push gcr.io/${PROJECT_ID}/${REPO_NAME}:${TAG}
+
+      - name: Deploy to Cloud Run
+        run: |
+          TAG=$(echo $GITHUB_SHA | head -c7)
+          gcloud run deploy ${REPO_NAME} \
+            --image gcr.io/${PROJECT_ID}/${REPO_NAME}:${TAG} \
+            --platform managed \
+            --region ${REGION} \
+            --allow-unauthenticated \
+            --set-env-vars "DB_DRIVER=${{ secrets.DB_DRIVER }}" \
+            --set-env-vars "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" \
+            --set-env-vars "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" \
+            --set-env-vars "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" \
+            --set-env-vars "POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}" \
+            --set-env-vars "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" \
+            --set-env-vars "POSTGRES_SOURCE=${{ secrets.POSTGRES_SOURCE }}" \
+            --set-env-vars "ORIGIN=${{ secrets.ORIGIN }}" \
+            --set-env-vars "PORT=${{ secrets.PORT }}" \
+            --set-env-vars "FIREBASE_SERVICE_ACCOUNT_KEY=${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" \
+            --set-env-vars "GOOGLE_OAUTH_CLIENT_ID=${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}" \
+            --set-env-vars "GOOGLE_OAUTH_CLIENT_SECRET=${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}" \
+            --set-env-vars "GOOGLE_OAUTH_REDIRECT_URL=${{ secrets.GOOGLE_OAUTH_REDIRECT_URL }}"
