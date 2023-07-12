@@ -37,7 +37,7 @@ func NewServer(conf config.Config, db *gorm.DB) *Server {
 	}
 
 	// init Firebase auth client
-	authClient, err := config.InitAuth()
+	authClient, err := config.InitAuth(conf)
 	if err != nil {
 		log.Fatal("failed to create firebase auth instance")
 	}

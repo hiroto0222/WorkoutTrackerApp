@@ -15,6 +15,9 @@ type Config struct {
 	DBDriver string `mapstructure:"POSTGRES_DRIVER"`
 	DBSource string `mapstructure:"POSTGRES_SOURCE"`
 
+	// firebase config
+	FirebaseServiceAcccountKey string `mapstructure:"FIREBASE_SERVICE_ACCOUNT_KEY"`
+
 	// oauth config
 	GoogleOAuthClientID     string `mapstructure:"GOOGLE_OAUTH_CLIENT_ID"`
 	GoogleOAuthClientSecret string `mapstructure:"GOOGLE_OAUTH_CLIENT_SECRET"`
@@ -29,6 +32,7 @@ func LoadConfig(path string) (config Config, err error) {
 		config.Port = os.Getenv("PORT")
 		config.DBDriver = os.Getenv("POSTGRES_DRIVER")
 		config.DBSource = os.Getenv("POSTGRES_SOURCE")
+		config.FirebaseServiceAcccountKey = os.Getenv("FIREBASE_SERVICE_ACCOUNT_KEY")
 		config.GoogleOAuthClientID = os.Getenv("GOOGLE_OAUTH_CLIENT_ID")
 		config.GoogleOAuthClientSecret = os.Getenv("GOOGLE_OAUTH_CLIENT_SECRET")
 		config.GoogleOAuthRedirectURL = os.Getenv("GOOGLE_OAUTH_REDIRECT_URL")
