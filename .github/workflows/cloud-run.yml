@@ -52,7 +52,6 @@ jobs:
             --set-env-vars "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" \
             --set-env-vars "POSTGRES_SOURCE=${{ secrets.POSTGRES_SOURCE }}" \
             --set-env-vars "ORIGIN=${{ secrets.ORIGIN }}" \
-            --set-env-vars "PORT=${{ secrets.PORT }}" \
             --set-env-vars "FIREBASE_SERVICE_ACCOUNT_KEY=${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" \
             --set-env-vars "GOOGLE_OAUTH_CLIENT_ID=${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}" \
             --set-env-vars "GOOGLE_OAUTH_CLIENT_SECRET=${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}" \
