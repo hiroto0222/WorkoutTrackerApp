@@ -1,6 +1,7 @@
 package config
 
 import (
+	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -33,6 +34,12 @@ func LoadConfig(path string) (config Config, err error) {
 		config.FirebaseServiceAcccountKey = os.Getenv("FIREBASE_SERVICE_ACCOUNT_KEY")
 		config.GoogleOAuthClientID = os.Getenv("GOOGLE_OAUTH_CLIENT_ID")
 		config.GoogleOAuthClientSecret = os.Getenv("GOOGLE_OAUTH_CLIENT_SECRET")
+		log.Printf("Origin: %v", config.Origin)
+		log.Printf("Port: %v", config.Port)
+		log.Printf("DBSource: %v", config.DBSource)
+		log.Printf("FirebaseServiceAccountKey: %v", config.FirebaseServiceAcccountKey)
+		log.Printf("GoogleOAuthClientID: %v", config.GoogleOAuthClientID)
+		log.Printf("GoogleOAuthClientSecret: %v", config.GoogleOAuthClientSecret)
 		return
 	}
 
