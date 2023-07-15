@@ -1,19 +1,13 @@
 package models
 
-import "time"
+import "github.com/lib/pq"
 
 type Exercise struct {
-	ID          int       `gorm:"type:int AUTO_INCREMENT;primary_key"`
-	Name        string    `gorm:"type:varchar(255);uniqueIndex;not null"`
-	Description string    `gorm:"type:text"`
-	CreatedAt   time.Time `gorm:"not null"`
-	UpdatedAt   time.Time `gorm:"not null"`
-}
-
-type ExerciseResponse struct {
-	ID          int    `json:"id,omitempty"`
-	Name        string `json:"name,omitempty"`
-	Description string `json:"description,omitempty"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	ID               int            `json:"id" gorm:"type:int;primary_key"`
+	Name             string         `json:"name" gorm:"type:varchar(255);uniqueIndex;not null"`
+	Equipment        string         `json:"equipment" gorm:"type:varchar(255)"`
+	PrimaryMuscles   pq.StringArray `json:"primary_muscles" gorm:"type:text[]"`
+	SecondaryMuscles pq.StringArray `json:"secondary_muscles" gorm:"type:text[]"`
+	Instructions     pq.StringArray `json:"instructions" gorm:"type:text[]"`
+	Category         string         `json:"category"`
 }
