@@ -1,23 +1,19 @@
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack/lib/typescript/src/types";
 import Loading from "components/base/Loading";
 import { auth } from "config/firebase";
 import Constants from "expo-constants";
 import { signOut } from "firebase/auth";
-import useGetUser from "hooks/useGetUser";
-import { UserStackParams } from "navigation/UserStack";
+import useGetUser from "hooks/api/useGetUser";
+import useStartWorkout from "hooks/api/useStartWorkout";
 import React from "react";
 import { SafeAreaView, StatusBar } from "react-native";
 import { Button, Div, Image, Text } from "react-native-magnus";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { setAuth } from "store/slices/auth";
-import axios from "../../api";
 
 const HomeScreen = () => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<UserStackParams>>();
   const { loading: loadingGetUser } = useGetUser();
+  const { loading: loadingStartWorkout, startWorkout } = useStartWorkout();
   const authState = useSelector((state: RootState) => state.auth);
   const userState = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
@@ -25,24 +21,6 @@ const HomeScreen = () => {
   const handleLogout = () => {
     signOut(auth);
     dispatch(setAuth({}));
-  };
-
-  const handleStartWorkout = () => {
-    axios
-      .post(
-        "workout/create",
-        {},
-        {
-          headers: {
-            Authorization: "Bearer " + authState.accessToken,
-          },
-        }
-      )
-      .then((val) => {
-        console.log(val.data);
-        navigation.navigate("Workout");
-      })
-      .catch((err) => console.log(err));
   };
 
   return loadingGetUser ? (
@@ -66,7 +44,8 @@ const HomeScreen = () => {
           <Text>Name: {userState.user?.name}</Text>
           <Text>Email: {userState.user?.email}</Text>
           <Button
-            onPress={() => handleStartWorkout()}
+            loading={loadingStartWorkout}
+            onPress={() => startWorkout()}
             mx="xl"
             mt="xl"
             mb="xl"
