@@ -1,8 +1,8 @@
 import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
-import useGoogleLogin from "hooks/useGoogleLogin";
-import useLogin from "hooks/useLogin";
-import useSignUp from "hooks/useSignUp";
+import useGoogleLogin from "hooks/auth/useGoogleLogin";
+import useLogin from "hooks/auth/useLogin";
+import useSignUp from "hooks/auth/useSignUp";
 import React, { useState } from "react";
 import { SafeAreaView, StatusBar } from "react-native";
 import { Button, Div, Image, Input, Text } from "react-native-magnus";

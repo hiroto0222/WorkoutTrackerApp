@@ -4,7 +4,7 @@ import { auth } from "config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { setAuth } from "store/slices/auth";
-import axios from "../api";
+import axios from "../../api";
 
 const useSignUp = () => {
   const dispatch = useDispatch();

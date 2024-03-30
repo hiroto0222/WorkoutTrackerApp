@@ -10,7 +10,7 @@ import {
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setAuth } from "store/slices/auth";
-import axios, { ICreateUserRequest } from "../api";
+import axios, { ICreateUserRequest } from "../../api";
 
 const useGoogleLogin = () => {
   const [_, response, promptAsync] = Google.useAuthRequest({
