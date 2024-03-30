@@ -10,6 +10,11 @@ client:
 - TypeScript, React Native + Expo
 - Redux
 
+### Local Deployment
+client-android:
+- npx react-native run-android / yarn android
+- in case of crashes, run ./gradlew clean in ./android
+
 ### Backend Deployment Diagram
 ![workout-tracker-gcp drawio (1)](https://github.com/hiroto0222/WorkoutTrackerApp/assets/45121253/ed20fcd9-dbf5-4ded-9cbb-f9cf0eb2cd16)
 
