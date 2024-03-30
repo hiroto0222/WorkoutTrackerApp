@@ -8,6 +8,8 @@ const instance = axios.create({
   },
 });
 
+console.log(SERVER_ENDPOINT);
+
 export interface IUser {
   id: string;
   name: string;
@@ -32,6 +34,16 @@ export interface ICreateUserRequest {
   provider: string;
   weight?: number;
   height?: number;
+}
+
+export interface IExercise {
+  id: number;
+  name: string;
+  equipment: string;
+  primary_muscles: string[];
+  secondary_muscles: string[];
+  instructions: string[];
+  category: string;
 }
 
 export interface AxiosResponse<T = any, D = any> {

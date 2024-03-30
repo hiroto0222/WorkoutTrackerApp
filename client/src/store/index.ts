@@ -1,7 +1,10 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { compose, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/auth";
 import userReducer from "./slices/user";
 import workoutReducer from "./slices/workout";
+
+const composeEnhancers =
+  (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export const store = configureStore({
   reducer: {
@@ -9,6 +12,7 @@ export const store = configureStore({
     user: userReducer,
     workout: workoutReducer,
   },
+  enhancers: composeEnhancers,
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
