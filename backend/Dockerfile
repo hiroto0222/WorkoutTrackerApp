@@ -1,12 +1,12 @@
-FROM golang:1.20-alpine3.17
+FROM golang:1.22-alpine
 
 WORKDIR /app
-COPY . /app
-
-RUN go mod download
 
 # install air
 RUN go install github.com/cosmtrek/air@latest
+
+COPY go.mod go.sum ./
+RUN go mod download
 
 EXPOSE 8080
 CMD [ "air", "-c", ".air.toml" ]
