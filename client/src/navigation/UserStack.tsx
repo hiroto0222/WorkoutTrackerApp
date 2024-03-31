@@ -1,5 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import AddExerciseScreen from "components/screens/AddExerciseScreen";
 import HomeScreen from "components/screens/HomeScreen";
 import UserSettingScreen from "components/screens/UserSettingScreen";
 import WorkoutScreen from "components/screens/WorkoutScreen";
@@ -10,6 +11,7 @@ export type UserStackParams = {
   Home: undefined;
   Workout: undefined;
   UserSetting: undefined;
+  AddExercise: undefined;
 };
 
 const Stack = createNativeStackNavigator<UserStackParams>();
@@ -17,7 +19,7 @@ const Stack = createNativeStackNavigator<UserStackParams>();
 const UserStack = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ animation: "slide_from_bottom" }}>
         <Stack.Screen
           name="Root"
           component={BottomTabNavigator}
@@ -28,7 +30,20 @@ const UserStack = () => {
           component={HomeScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Workout" component={WorkoutScreen} />
+        <Stack.Screen
+          name="Workout"
+          component={WorkoutScreen}
+          options={{
+            headerTitle: "",
+          }}
+        />
+        <Stack.Screen
+          name="AddExercise"
+          component={AddExerciseScreen}
+          options={{
+            headerTitle: "",
+          }}
+        />
         <Stack.Screen
           name="UserSetting"
           component={UserSettingScreen}
