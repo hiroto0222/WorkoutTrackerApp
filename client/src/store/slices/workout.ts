@@ -1,8 +1,8 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface WorkoutState {
-  startedAt?: Date;
-  endedAt?: Date;
+  startedAt?: string;
+  endedAt?: string;
   exerciseLogs: string[];
 }
 
@@ -17,7 +17,8 @@ export const workoutSlice = createSlice({
   initialState,
   reducers: {
     setStartWorkingOut: (state, action: PayloadAction<void>) => {
-      state.startedAt = new Date();
+      const date = new Date();
+      state.startedAt = date.toString();
     },
   },
 });
