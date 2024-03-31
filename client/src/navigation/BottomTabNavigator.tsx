@@ -6,6 +6,7 @@ import { Icon } from "react-native-magnus";
 
 export type BottomTabParamList = {
   Home: undefined;
+  Workout: undefined;
   UserSetting: undefined;
 };
 
@@ -17,6 +18,10 @@ export type TabUserSettingParamList = {
   UserSettingScreen: undefined;
 };
 
+export type TabWorkoutParamList = {
+  WorkoutScreen: undefined;
+};
+
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
 const BottomTabNavigator = () => {
@@ -26,7 +31,7 @@ const BottomTabNavigator = () => {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarActiveTintColor: "#D84343",
+        tabBarActiveTintColor: "#ed8936",
         tabBarStyle: {
           marginLeft: 30,
           marginRight: 30,
@@ -44,7 +49,9 @@ const BottomTabNavigator = () => {
         name="Home"
         component={TabHomeNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="home" color={color} fontSize="4xl" />
+          ),
         }}
       />
       <BottomTab.Screen
@@ -52,7 +59,7 @@ const BottomTabNavigator = () => {
         component={TabUserSettingNavigator}
         options={{
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="setting" color={color} />
+            <TabBarIcon name="setting" color={color} fontSize="4xl" />
           ),
         }}
       />
@@ -62,14 +69,13 @@ const BottomTabNavigator = () => {
 
 export default BottomTabNavigator;
 
-const TabBarIcon = (props: { name: string; color: string }) => {
+const TabBarIcon = (props: {
+  name: string;
+  color: string;
+  fontSize: string;
+}) => {
   return (
-    <Icon
-      fontFamily="AntDesign"
-      fontSize="4xl"
-      style={{ marginBottom: -5 }}
-      {...props}
-    />
+    <Icon fontFamily="AntDesign" style={{ marginBottom: -5 }} {...props} />
   );
 };
 

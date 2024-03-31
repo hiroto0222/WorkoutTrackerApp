@@ -43,7 +43,7 @@ const HomeScreen = () => {
             </Div>
             <Avatar shadow={1} source={{ uri: userState.user?.photo }} />
           </Div>
-          <Div mt="2xl" alignItems="center" justifyContent="center">
+          <Div mt="lg" alignItems="center" justifyContent="center">
             <Button
               onPress={() => handleStartWorkout()}
               mx="xl"
