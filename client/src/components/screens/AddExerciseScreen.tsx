@@ -27,23 +27,63 @@ const AddExerciseScreen = () => {
     },
     {
       id: 4,
-      name: "Plank",
-      log_type: "timer",
+      name: "Squats",
+      log_type: "weight_reps",
     },
     {
       id: 5,
-      name: "Bench Press",
+      name: "Deadlift",
       log_type: "weight_reps",
     },
     {
       id: 6,
-      name: "Sit Up",
+      name: "Push-up",
       log_type: "reps",
     },
     {
       id: 7,
-      name: "Plank",
-      log_type: "timer",
+      name: "Pull-up",
+      log_type: "reps",
+    },
+    {
+      id: 8,
+      name: "Lunges",
+      log_type: "reps",
+    },
+    {
+      id: 9,
+      name: "Dumbbell Shoulder Press",
+      log_type: "weight_reps",
+    },
+    {
+      id: 10,
+      name: "Russian Twist",
+      log_type: "reps",
+    },
+    {
+      id: 11,
+      name: "Burpees",
+      log_type: "reps",
+    },
+    {
+      id: 12,
+      name: "Leg Raises",
+      log_type: "reps",
+    },
+    {
+      id: 13,
+      name: "Chest Fly",
+      log_type: "weight_reps",
+    },
+    {
+      id: 14,
+      name: "Triceps Dips",
+      log_type: "reps",
+    },
+    {
+      id: 15,
+      name: "Bicep Curls",
+      log_type: "weight_reps",
     },
   ];
 
