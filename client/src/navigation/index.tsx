@@ -9,7 +9,7 @@ const RootNavigation = () => {
   const { loading } = usePersistenceAuth();
   const authState = useSelector((state: RootState) => state.auth);
 
-  return loading ? (
+  return loading || authState.isAuthenticating ? (
     <Loading />
   ) : authState.userId ? (
     <UserStack />

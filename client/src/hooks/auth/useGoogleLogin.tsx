@@ -9,7 +9,7 @@ import {
 } from "firebase/auth";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setAuth } from "store/slices/auth";
+import { setAuth, setIsAuthenticating } from "store/slices/auth";
 import axios, { ICreateUserRequest } from "../../api";
 
 const useGoogleLogin = () => {
@@ -23,6 +23,9 @@ const useGoogleLogin = () => {
     const handleResponse = async () => {
       if (response?.type == "success") {
         try {
+          // set isAuthenticating to true
+          dispatch(setIsAuthenticating(true));
+
           // authenticate with Google
           const { id_token } = response.params;
           const credential = GoogleAuthProvider.credential(id_token);
@@ -62,6 +65,7 @@ const useGoogleLogin = () => {
           );
         } catch (err) {
           alert((err as Error).message);
+          dispatch(setIsAuthenticating(false));
         }
       }
     };
