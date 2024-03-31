@@ -1,5 +1,6 @@
 import { registerRootComponent } from "expo";
 import RootNavigation from "navigation";
+import { StatusBar } from "react-native";
 import { ThemeProvider } from "react-native-magnus";
 import { Provider } from "react-redux";
 import { store } from "./store";
@@ -9,6 +10,7 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider>
         <RootNavigation />
+        <StatusBar />
       </ThemeProvider>
     </Provider>
   );

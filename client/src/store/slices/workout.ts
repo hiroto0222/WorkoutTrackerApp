@@ -1,30 +1,27 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface WorkoutState {
-  isWorkingOut?: boolean;
-  id?: string;
-  logs?: string[];
+  startedAt?: Date;
+  endedAt?: Date;
+  exerciseLogs: string[];
 }
 
 const initialState: WorkoutState = {
-  isWorkingOut: false,
-  id: undefined,
-  logs: [],
+  startedAt: undefined,
+  endedAt: undefined,
+  exerciseLogs: [],
 };
 
 export const workoutSlice = createSlice({
   name: "workout",
   initialState,
   reducers: {
-    setIsWorkingOut: (state, action: PayloadAction<boolean>) => {
-      state.isWorkingOut = action.payload;
-    },
-    addLog: (state, action: PayloadAction<string>) => {
-      state.logs?.push(action.payload);
+    setStartWorkingOut: (state, action: PayloadAction<void>) => {
+      state.startedAt = new Date();
     },
   },
 });
 
-export const { setIsWorkingOut, addLog } = workoutSlice.actions;
+export const { setStartWorkingOut } = workoutSlice.actions;
 
 export default workoutSlice.reducer;

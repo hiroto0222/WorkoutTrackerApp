@@ -8,7 +8,7 @@ const WorkoutScreen = () => {
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
         <Text mt="sm" mx="xl" w="70%" fontWeight="bold" fontSize="5xl">
-          WorkoutScreen
+          Add Your Exercises
         </Text>
       </SafeAreaView>
     </>
