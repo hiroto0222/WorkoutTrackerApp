@@ -34,7 +34,7 @@ const ExerciseLogInputTable = ({ exercise }: Props) => {
       ))}
       <Div mt="md" alignItems="center" justifyContent="center">
         <Button
-          mx="2xl"
+          mx="3xl"
           mb="lg"
           bg="orange100"
           rounded="circle"

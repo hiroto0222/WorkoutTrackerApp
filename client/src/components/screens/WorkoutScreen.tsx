@@ -4,7 +4,7 @@ import ExerciseLogInputTable from "components/base/workout/table/ExerciseLogInpu
 import useTimer from "hooks/utils/useTimer";
 import { UserStackParams } from "navigation/UserStack";
 import { useEffect } from "react";
-import { SafeAreaView, ScrollView } from "react-native";
+import { SafeAreaView, ScrollView, View } from "react-native";
 import { Button, Div, Text } from "react-native-magnus";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
@@ -36,7 +36,8 @@ const WorkoutScreen = () => {
   }, [navigation]);
 
   return (
-    <SafeAreaView style={{ flex: 1, marginTop: 20 }}>
+    <View>
+      <SafeAreaView style={{ flex: 1, marginTop: 20 }} />
       <Div px={25}>
         <Text fontSize="3xl" fontWeight="bold">
           Workout
@@ -55,13 +56,20 @@ const WorkoutScreen = () => {
             Add Exercises
           </Button>
         </Div>
-        <ScrollView>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: 350,
+          }}
+        >
           {workoutState.currExercises.map((exercise) => (
             <ExerciseLogInputTable key={exercise.id} exercise={exercise} />
           ))}
         </ScrollView>
       </Div>
-    </SafeAreaView>
+    </View>
   );
 };
 

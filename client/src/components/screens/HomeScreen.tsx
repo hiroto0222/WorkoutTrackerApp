@@ -5,7 +5,7 @@ import Constants from "expo-constants";
 import useGetUser from "hooks/api/useGetUser";
 import { UserStackParams } from "navigation/UserStack";
 import React from "react";
-import { SafeAreaView, ScrollView } from "react-native";
+import { SafeAreaView, ScrollView, View } from "react-native";
 import { Avatar, Button, Div, Text } from "react-native-magnus";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
@@ -26,8 +26,18 @@ const HomeScreen = () => {
   return loadingGetUser ? (
     <Loading />
   ) : (
-    <SafeAreaView style={{ marginTop: Constants.statusBarHeight + 30 }}>
-      <ScrollView>
+    <View>
+      <SafeAreaView
+        style={{ flex: 1, marginTop: Constants.statusBarHeight + 30 }}
+      />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingBottom: 350,
+        }}
+      >
         <Div px={25}>
           <Div row justifyContent={"space-between"} alignItems="center">
             <Div>
@@ -59,7 +69,7 @@ const HomeScreen = () => {
           </Div>
         </Div>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

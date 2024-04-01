@@ -47,7 +47,15 @@ const AddExerciseScreen = () => {
         <Text fontSize="3xl" fontWeight="bold">
           Add Exercises
         </Text>
-        <ScrollView style={{ marginTop: 15 }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: 50,
+          }}
+          style={{ marginTop: 15 }}
+        >
           <Div>
             <Checkbox.Group>
               {exercises.map((exercise) => (
