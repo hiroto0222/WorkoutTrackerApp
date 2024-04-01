@@ -12,6 +12,7 @@ FROM alpine:3.17
 WORKDIR /app
 COPY --from=builder /app/main .
 COPY ./backend/start.sh .
+COPY ./backend/fixtures/exercises.json ./fixtures/exercises.json
 
 EXPOSE 8080
 CMD [ "/app/main" ]

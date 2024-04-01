@@ -8,7 +8,7 @@ const instance = axios.create({
   },
 });
 
-console.log(SERVER_ENDPOINT);
+console.log("current server: ", SERVER_ENDPOINT);
 
 export interface IUser {
   id: string;

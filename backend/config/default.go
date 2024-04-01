@@ -30,7 +30,7 @@ func LoadConfig(path string) (config Config, err error) {
 		gin.SetMode(gin.ReleaseMode)
 		config.Origin = "*"
 		config.Port = os.Getenv("PORT")
-		config.DBSource = os.Getenv("POSTGRES_SOURCE")
+		config.DBSource = os.Getenv("DATABASE_URL")
 		config.FirebaseServiceAcccountKey = os.Getenv("FIREBASE_SERVICE_ACCOUNT_KEY")
 		config.GoogleOAuthClientID = os.Getenv("GOOGLE_OAUTH_CLIENT_ID")
 		config.GoogleOAuthClientSecret = os.Getenv("GOOGLE_OAUTH_CLIENT_SECRET")
