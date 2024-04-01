@@ -1,11 +1,17 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { IExercise, ILog } from "api";
+import { IExercise } from "api";
+
+export type Log = {
+  weight?: number;
+  reps?: number;
+  timer?: number;
+};
 
 export interface WorkoutState {
   startedAt?: string;
   endedAt?: string;
   currExercises: IExercise[];
-  currLogs: { [exercise_id: number]: ILog[] };
+  currLogs: { [exercise_id: number]: Log[] };
 }
 
 const initialState: WorkoutState = {
@@ -26,17 +32,58 @@ export const workoutSlice = createSlice({
       state.currLogs = {};
     },
     addCurrExercises: (state, action: PayloadAction<IExercise[]>) => {
+      // add selected exercises
       state.currExercises = state.currExercises.concat(action.payload);
+      // initially populate exercise logs
+      action.payload.forEach((exercise) => {
+        const log: Log = {
+          weight: undefined,
+          reps: undefined,
+          timer: undefined,
+        };
+        state.currLogs[exercise.id] = [log];
+      });
     },
     removeCurrExercises: (state, action: PayloadAction<number>) => {
       state.currExercises = state.currExercises.filter(
         (exercise) => exercise.id != action.payload
       );
     },
+    addEmptyLog: (state, action: PayloadAction<IExercise>) => {
+      const emptyLog: Log = {
+        weight: undefined,
+        reps: undefined,
+        timer: undefined,
+      };
+      state.currLogs[action.payload.id] = [
+        ...state.currLogs[action.payload.id],
+        emptyLog,
+      ];
+    },
+    addCompletedLog: (
+      state,
+      action: PayloadAction<{
+        exercise: IExercise;
+        newLog: Log;
+        setNumber: number;
+      }>
+    ) => {
+      const exerciseId = action.payload.exercise.id;
+      const newLog = action.payload.newLog;
+      const setNumber = action.payload.setNumber;
+      state.currLogs[exerciseId] = state.currLogs[exerciseId].map((log, i) =>
+        i === setNumber ? newLog : log
+      );
+    },
   },
 });
 
-export const { setStartWorkingOut, addCurrExercises, removeCurrExercises } =
-  workoutSlice.actions;
+export const {
+  setStartWorkingOut,
+  addCurrExercises,
+  removeCurrExercises,
+  addEmptyLog,
+  addCompletedLog,
+} = workoutSlice.actions;
 
 export default workoutSlice.reducer;
