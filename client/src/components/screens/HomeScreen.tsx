@@ -26,7 +26,7 @@ const HomeScreen = () => {
   return loadingGetUser ? (
     <Loading />
   ) : (
-    <SafeAreaView style={{ marginTop: Constants.statusBarHeight }}>
+    <SafeAreaView style={{ marginTop: Constants.statusBarHeight + 30 }}>
       <ScrollView>
         <Div px={25}>
           <Div row justifyContent={"space-between"} alignItems="center">
