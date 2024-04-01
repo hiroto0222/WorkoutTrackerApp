@@ -36,14 +36,31 @@ export interface ICreateUserRequest {
   height?: number;
 }
 
+// export interface IExercise {
+//   id: number;
+//   name: string;
+//   equipment: string;
+//   primary_muscles: string[];
+//   secondary_muscles: string[];
+//   instructions: string[];
+//   category: string;
+// }
+
 export interface IExercise {
   id: number;
   name: string;
-  equipment: string;
-  primary_muscles: string[];
-  secondary_muscles: string[];
-  instructions: string[];
-  category: string;
+  log_type: string;
+}
+
+export interface ILog {
+  id?: number;
+  workout_id?: number;
+  workout_exercise_id?: number;
+  set_number: number;
+  weight: number;
+  reps: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AxiosResponse<T = any, D = any> {

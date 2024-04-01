@@ -1,18 +1,19 @@
+import { useNavigation } from "@react-navigation/native";
+import { IExercise } from "api";
 import ExerciseCheckBox from "components/utils/ExerciseCheckBox";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
 import { Checkbox, Div, Icon, Text } from "react-native-magnus";
-
-export type Exercise = {
-  id: number;
-  name: string;
-  log_type: string;
-};
+import { useDispatch } from "react-redux";
+import { addCurrExercises } from "store/slices/workout";
 
 const AddExerciseScreen = () => {
-  const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([]);
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
-  const handleOnCheckedExercise = (checked: boolean, exercise: Exercise) => {
+  const [selectedExercises, setSelectedExercises] = useState<IExercise[]>([]);
+
+  const handleOnCheckedExercise = (checked: boolean, exercise: IExercise) => {
     if (checked) {
       setSelectedExercises((prev) => [...prev, exercise]);
     } else {
@@ -23,9 +24,12 @@ const AddExerciseScreen = () => {
     }
   };
 
-  useEffect(() => {
+  // add selected exercises to current workout and navigate back to WorkoutScreen
+  const handleOnConfirmation = () => {
     console.log(selectedExercises);
-  }, [selectedExercises]);
+    dispatch(addCurrExercises(selectedExercises));
+    navigation.goBack();
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, marginTop: 20 }}>
@@ -46,7 +50,9 @@ const AddExerciseScreen = () => {
             </Checkbox.Group>
           </Div>
         </ScrollView>
-        {selectedExercises.length > 0 && <ConfirmSelectionButton />}
+        {selectedExercises.length > 0 && (
+          <ConfirmSelectionButton onPress={handleOnConfirmation} />
+        )}
       </Div>
     </SafeAreaView>
   );
@@ -54,13 +60,18 @@ const AddExerciseScreen = () => {
 
 export default AddExerciseScreen;
 
-const ConfirmSelectionButton = () => (
+type Props = {
+  onPress: () => void;
+};
+
+const ConfirmSelectionButton = ({ onPress }: Props) => (
   <TouchableOpacity
     style={{
       position: "absolute",
       bottom: 65,
       right: 15,
     }}
+    onPress={onPress}
   >
     <View
       style={{
@@ -77,7 +88,7 @@ const ConfirmSelectionButton = () => (
   </TouchableOpacity>
 );
 
-const exercises: Exercise[] = [
+const exercises: IExercise[] = [
   {
     id: 1,
     name: "Plank",

@@ -1,9 +1,9 @@
-import { Exercise } from "components/screens/AddExerciseScreen";
+import { IExercise } from "api";
 import { Checkbox, Div, Text } from "react-native-magnus";
 
 type Props = {
-  value: Exercise;
-  handleOnChecked: (checked: boolean, exercise: Exercise) => void;
+  value: IExercise;
+  handleOnChecked: (checked: boolean, exercise: IExercise) => void;
 };
 
 const ExerciseCheckBox = ({ value, handleOnChecked }: Props) => (
