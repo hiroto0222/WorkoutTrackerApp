@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -26,7 +25,6 @@ type Config struct {
 }
 
 func LoadConfig(path string) (config Config, err error) {
-	fmt.Println("TEST FLY CI!!")
 	ginMode := os.Getenv("GIN_MODE")
 	if ginMode == "release" {
 		gin.SetMode(gin.ReleaseMode)
