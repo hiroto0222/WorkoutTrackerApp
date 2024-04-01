@@ -1,16 +1,20 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import ExerciseLogInputTable from "components/base/workout/table/ExerciseLogInputTable";
 import useTimer from "hooks/utils/useTimer";
 import { UserStackParams } from "navigation/UserStack";
 import { useEffect } from "react";
 import { SafeAreaView, ScrollView } from "react-native";
 import { Button, Div, Text } from "react-native-magnus";
+import { useSelector } from "react-redux";
+import { RootState } from "store";
 import { formatTime } from "utils";
 
 const WorkoutScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<UserStackParams>>();
   const { seconds } = useTimer();
+  const workoutState = useSelector((state: RootState) => state.workout);
 
   const handleFinishWorkout = () => {
     console.log("workout finished");
@@ -51,7 +55,11 @@ const WorkoutScreen = () => {
             Add Exercises
           </Button>
         </Div>
-        <ScrollView />
+        <ScrollView>
+          {workoutState.currExercises.map((exercise) => (
+            <ExerciseLogInputTable key={exercise.id} exercise={exercise} />
+          ))}
+        </ScrollView>
       </Div>
     </SafeAreaView>
   );
