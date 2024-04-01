@@ -26,7 +26,6 @@ export const workoutSlice = createSlice({
       state.currLogs = {};
     },
     addCurrExercises: (state, action: PayloadAction<IExercise[]>) => {
-      console.log(action.payload);
       state.currExercises = state.currExercises.concat(action.payload);
     },
     removeCurrExercises: (state, action: PayloadAction<number>) => {
