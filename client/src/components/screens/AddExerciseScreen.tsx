@@ -1,7 +1,7 @@
 import ExerciseCheckBox from "components/utils/ExerciseCheckBox";
 import { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView } from "react-native";
-import { Checkbox, Div, Text } from "react-native-magnus";
+import { SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
+import { Checkbox, Div, Icon, Text } from "react-native-magnus";
 
 export type Exercise = {
   id: number;
@@ -46,12 +46,36 @@ const AddExerciseScreen = () => {
             </Checkbox.Group>
           </Div>
         </ScrollView>
+        {selectedExercises.length > 0 && <ConfirmSelectionButton />}
       </Div>
     </SafeAreaView>
   );
 };
 
 export default AddExerciseScreen;
+
+const ConfirmSelectionButton = () => (
+  <TouchableOpacity
+    style={{
+      position: "absolute",
+      bottom: 65,
+      right: 15,
+    }}
+  >
+    <View
+      style={{
+        width: 70,
+        height: 70,
+        borderRadius: 35,
+        backgroundColor: "#ed8936",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Icon fontSize="6xl" fontFamily="AntDesign" name="check" color="#fff" />
+    </View>
+  </TouchableOpacity>
+);
 
 const exercises: Exercise[] = [
   {
