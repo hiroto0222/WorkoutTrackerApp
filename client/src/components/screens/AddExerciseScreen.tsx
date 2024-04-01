@@ -4,12 +4,15 @@ import ExerciseCheckBox from "components/utils/ExerciseCheckBox";
 import { useState } from "react";
 import { SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
 import { Checkbox, Div, Icon, Text } from "react-native-magnus";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "store";
 import { addCurrExercises } from "store/slices/workout";
 
 const AddExerciseScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+
+  const workoutState = useSelector((state: RootState) => state.workout);
 
   const [selectedExercises, setSelectedExercises] = useState<IExercise[]>([]);
 
@@ -31,6 +34,14 @@ const AddExerciseScreen = () => {
     navigation.goBack();
   };
 
+  // check if exercise has already been added to current workout
+  const isDuplicateExercise = (exerciseId: number) => {
+    return (
+      workoutState.currExercises.filter((exercise) => exercise.id == exerciseId)
+        .length > 0
+    );
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, marginTop: 20 }}>
       <Div px={25}>
@@ -44,6 +55,7 @@ const AddExerciseScreen = () => {
                 <ExerciseCheckBox
                   key={exercise.id}
                   value={exercise}
+                  disabled={isDuplicateExercise(exercise.id)}
                   handleOnChecked={handleOnCheckedExercise}
                 />
               ))}

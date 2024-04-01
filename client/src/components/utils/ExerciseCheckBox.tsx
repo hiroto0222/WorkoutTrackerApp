@@ -3,12 +3,14 @@ import { Checkbox, Div, Text } from "react-native-magnus";
 
 type Props = {
   value: IExercise;
+  disabled: boolean;
   handleOnChecked: (checked: boolean, exercise: IExercise) => void;
 };
 
-const ExerciseCheckBox = ({ value, handleOnChecked }: Props) => (
+const ExerciseCheckBox = ({ value, disabled, handleOnChecked }: Props) => (
   <Checkbox
     value={value}
+    disabled={disabled}
     onChecked={(checked) => handleOnChecked(checked, value)}
   >
     {({ checked }) => (
