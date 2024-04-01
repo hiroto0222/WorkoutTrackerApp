@@ -1,9 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
 import { IExercise } from "api";
+import ConfirmSelectionButton from "components/utils/ConfirmSelectionButton";
 import ExerciseCheckBox from "components/utils/ExerciseCheckBox";
 import { useState } from "react";
-import { SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
-import { Checkbox, Div, Icon, Text } from "react-native-magnus";
+import { SafeAreaView, ScrollView } from "react-native";
+import { Checkbox, Div, Text } from "react-native-magnus";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { addCurrExercises } from "store/slices/workout";
@@ -11,7 +12,6 @@ import { addCurrExercises } from "store/slices/workout";
 const AddExerciseScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
   const workoutState = useSelector((state: RootState) => state.workout);
 
   const [selectedExercises, setSelectedExercises] = useState<IExercise[]>([]);
@@ -29,7 +29,6 @@ const AddExerciseScreen = () => {
 
   // add selected exercises to current workout and navigate back to WorkoutScreen
   const handleOnConfirmation = () => {
-    console.log(selectedExercises);
     dispatch(addCurrExercises(selectedExercises));
     navigation.goBack();
   };
@@ -71,34 +70,6 @@ const AddExerciseScreen = () => {
 };
 
 export default AddExerciseScreen;
-
-type Props = {
-  onPress: () => void;
-};
-
-const ConfirmSelectionButton = ({ onPress }: Props) => (
-  <TouchableOpacity
-    style={{
-      position: "absolute",
-      bottom: 65,
-      right: 15,
-    }}
-    onPress={onPress}
-  >
-    <View
-      style={{
-        width: 70,
-        height: 70,
-        borderRadius: 35,
-        backgroundColor: "#ed8936",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Icon fontSize="6xl" fontFamily="AntDesign" name="check" color="#fff" />
-    </View>
-  </TouchableOpacity>
-);
 
 const exercises: IExercise[] = [
   {
