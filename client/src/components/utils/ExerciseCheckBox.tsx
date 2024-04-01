@@ -1,12 +1,18 @@
-import { Exercise } from "components/screens/AddExerciseScreen";
+import { IExercise } from "api";
 import { Checkbox, Div, Text } from "react-native-magnus";
 
 type Props = {
-  value: Exercise;
+  value: IExercise;
+  disabled: boolean;
+  handleOnChecked: (checked: boolean, exercise: IExercise) => void;
 };
 
-const ExerciseCheckBox = ({ value }: Props) => (
-  <Checkbox value={value}>
+const ExerciseCheckBox = ({ value, disabled, handleOnChecked }: Props) => (
+  <Checkbox
+    value={value}
+    disabled={disabled}
+    onChecked={(checked) => handleOnChecked(checked, value)}
+  >
     {({ checked }) => (
       <Div
         flex={1}

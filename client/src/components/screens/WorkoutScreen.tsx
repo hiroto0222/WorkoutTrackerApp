@@ -33,28 +33,26 @@ const WorkoutScreen = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, marginTop: 20 }}>
-      <ScrollView>
-        <Div px={25}>
-          <Text fontSize="3xl" fontWeight="bold">
-            Workout
-          </Text>
-          <Text fontSize="3xl">{formatTime(seconds)}</Text>
-          <Div mt="sm" alignItems="center" justifyContent="center">
-            <Button
-              mx="xl"
-              mt="xl"
-              mb="xl"
-              py="lg"
-              bg="orange500"
-              rounded="circle"
-              block
-              onPress={() => navigation.navigate("AddExercise")}
-            >
-              Add Exercises
-            </Button>
-          </Div>
+      <Div px={25}>
+        <Text fontSize="3xl" fontWeight="bold">
+          Workout
+        </Text>
+        <Text fontSize="3xl">{formatTime(seconds)}</Text>
+        <Div mt="md" alignItems="center" justifyContent="center">
+          <Button
+            mx="xl"
+            mb="xl"
+            py="lg"
+            bg="orange500"
+            rounded="circle"
+            block
+            onPress={() => navigation.navigate("AddExercise")}
+          >
+            Add Exercises
+          </Button>
         </Div>
-      </ScrollView>
+        <ScrollView />
+      </Div>
     </SafeAreaView>
   );
 };
