@@ -10,7 +10,11 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider>
         <RootNavigation />
-        <StatusBar />
+        <StatusBar
+          translucent
+          backgroundColor="white"
+          barStyle="dark-content"
+        />
       </ThemeProvider>
     </Provider>
   );
