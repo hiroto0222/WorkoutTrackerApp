@@ -1,16 +1,17 @@
 package models
 
-import "time"
+import (
+	"github.com/google/uuid"
+)
 
 type Log struct {
 	ID                int       `gorm:"type:int AUTO_INCREMENT;primary_key;"`
-	WorkoutID         int       `gorm:"type:int;not null"`
+	WorkoutID         uuid.UUID `gorm:"type:uuid;not null"`
 	WorkoutExerciseID int       `gorm:"type:int;not null"`
 	SetNumber         int       `gorm:"not null"`
-	Weight            int       `gorm:"not null"`
-	Reps              int       `gorm:"not null"`
-	CreatedAt         time.Time `gorm:"not null"`
-	UpdatedAt         time.Time `gorm:"not null"`
+	Weight            int       `gorm:"type:int"`
+	Reps              int       `gorm:"type:int"`
+	Time              int       `gorm:"type:int"`
 
 	Workout         Workout         `gorm:"foreignKey:WorkoutID"`
 	WorkoutExercise WorkoutExercise `gorm:"foreignKey:WorkoutExerciseID"`
