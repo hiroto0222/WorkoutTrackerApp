@@ -16,16 +16,13 @@ const WorkoutScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<UserStackParams>>();
   const workoutState = useSelector((state: RootState) => state.workout);
-  const authState = useSelector((state: RootState) => state.auth);
 
   const { seconds } = useTimer();
   const { exercises } = useGetExercises();
   const { finishWorkout } = useFinishWorkout();
 
   const handleFinishWorkout = () => {
-    if (authState.userId) {
-      finishWorkout(authState.userId);
-    }
+    finishWorkout();
   };
 
   const handleOnAddExercises = () => {

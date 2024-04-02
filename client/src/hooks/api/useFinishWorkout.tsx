@@ -2,12 +2,14 @@ import { ICreateWorkoutRequest, ILogRequest } from "api/types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { setFinishWorkout } from "store/slices/workout";
+import axios from "../../api";
 
 const useFinishWorkout = () => {
   const dispatch = useDispatch();
   const workoutState = useSelector((state: RootState) => state.workout);
+  const authState = useSelector((state: RootState) => state.auth);
 
-  const finishWorkout = (userId: string) => {
+  const finishWorkout = async () => {
     const exercise_ids: number[] = [];
     const logs: { [exercise_id: number]: ILogRequest[] } = {};
 
@@ -44,9 +46,13 @@ const useFinishWorkout = () => {
     }
 
     // else send to server
+    if (authState.userId === undefined) {
+      console.log("no user id");
+      return;
+    }
     const endedAt = new Date().toJSON();
     const data: ICreateWorkoutRequest = {
-      user_id: userId,
+      user_id: authState.userId,
       started_at: workoutState.startedAt,
       ended_at: endedAt,
       exercise_ids,
@@ -54,6 +60,18 @@ const useFinishWorkout = () => {
     };
 
     console.log(data);
+
+    try {
+      const res = await axios.post("workout/create", data, {
+        headers: {
+          Authorization: "Bearer " + authState.accessToken,
+        },
+      });
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+      alert((err as Error).message);
+    }
 
     dispatch(setFinishWorkout());
   };
