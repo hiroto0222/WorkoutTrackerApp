@@ -17,10 +17,12 @@ import (
 )
 
 var (
-	userService       services.UserServiceImpl
-	userController    controllers.UserControllerImpl
-	workoutService    services.WorkoutServiceImpl
-	workoutController controllers.WorkoutControllerImpl
+	userService        services.UserServiceImpl
+	userController     controllers.UserControllerImpl
+	workoutService     services.WorkoutServiceImpl
+	workoutController  controllers.WorkoutControllerImpl
+	exerciseService    services.ExerciseServiceImpl
+	exerciseController controllers.ExerciseControllerImpl
 )
 
 type Server struct {
@@ -46,10 +48,12 @@ func NewServer(conf config.Config, db *gorm.DB) *Server {
 	// init services
 	userService = *services.NewUserService(server.DB)
 	workoutService = *services.NewWorkoutService(server.DB)
+	exerciseService = *services.NewExerciseService(server.DB)
 
 	// init controllers
 	userController = *controllers.NewUserController(&userService)
 	workoutController = *controllers.NewWorkoutController(&workoutService)
+	exerciseController = *controllers.NewExerciseController(&exerciseService)
 
 	// init router
 	server.setupRouter()
@@ -74,6 +78,7 @@ func (server *Server) setupRouter() {
 		MaxAge: 15 * time.Second,
 	}))
 
+	// health check route
 	apiRoutes := router.Group("/api/v1")
 	apiRoutes.GET("/health", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
@@ -81,6 +86,7 @@ func (server *Server) setupRouter() {
 		})
 	})
 
+	// authentication routes
 	{
 		userRoutes := apiRoutes.Group("/user")
 		userRoutes.Use(middlewares.AuthMiddleware(server.FireAuth))
@@ -88,11 +94,18 @@ func (server *Server) setupRouter() {
 		userRoutes.POST("/create", userController.CreateUser)
 	}
 
+	// workout routes
 	{
 		workoutRoutes := apiRoutes.Group("/workout")
 		workoutRoutes.Use(middlewares.AuthMiddleware(server.FireAuth))
 		workoutRoutes.POST("/create", workoutController.CreateWorkout)
 		workoutRoutes.POST("/delete", workoutController.DeleteWorkout)
+	}
+
+	// exercise routes
+	{
+		exerciseRoutes := apiRoutes.Group("/exercises")
+		exerciseRoutes.GET("", exerciseController.GetExercises)
 	}
 
 	server.Router = router
