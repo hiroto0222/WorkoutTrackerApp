@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { IExercise } from "api";
+import { IExercise } from "api/types";
 import ConfirmSelectionButton from "components/utils/ConfirmSelectionButton";
 import ExerciseCheckBox from "components/utils/ExerciseCheckBox";
 import { useState } from "react";

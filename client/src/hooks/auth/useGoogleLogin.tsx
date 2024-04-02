@@ -1,4 +1,5 @@
 import { ANDROID_CLIENT_ID, IOS_CLIENT_ID } from "@env";
+import { ICreateUserRequest } from "api/types";
 import { HttpStatusCode } from "axios";
 import { auth } from "config/firebase";
 import * as Google from "expo-auth-session/providers/google";
@@ -10,7 +11,7 @@ import {
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setAuth, setIsAuthenticating } from "store/slices/auth";
-import axios, { ICreateUserRequest } from "../../api";
+import axios from "../../api";
 
 const useGoogleLogin = () => {
   const [_, response, promptAsync] = Google.useAuthRequest({

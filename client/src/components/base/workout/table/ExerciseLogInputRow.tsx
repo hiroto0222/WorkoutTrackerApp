@@ -1,4 +1,4 @@
-import { IExercise } from "api";
+import { IExercise } from "api/types";
 import { useState } from "react";
 import { View } from "react-native";
 import { Div, Input, Text } from "react-native-magnus";
