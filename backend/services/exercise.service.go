@@ -26,3 +26,9 @@ func (s *ExerciseServiceImpl) GetExercises(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, exercises)
 }
+
+func NewExerciseService(db *gorm.DB) *ExerciseServiceImpl {
+	return &ExerciseServiceImpl{
+		db: db,
+	}
+}
