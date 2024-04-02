@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import ExerciseLogInputTable from "components/base/workout/table/ExerciseLogInputTable";
+import useGetExercises from "hooks/utils/useGetExercises";
 import useTimer from "hooks/utils/useTimer";
 import { UserStackParams } from "navigation/UserStack";
 import { useEffect } from "react";
@@ -13,11 +14,19 @@ import { formatTime } from "utils";
 const WorkoutScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<UserStackParams>>();
-  const { seconds } = useTimer();
   const workoutState = useSelector((state: RootState) => state.workout);
+
+  const { seconds } = useTimer();
+  const { exercises } = useGetExercises();
 
   const handleFinishWorkout = () => {
     console.log("workout finished");
+  };
+
+  const handleOnAddExercises = () => {
+    if (exercises.length > 0) {
+      navigation.navigate("AddExercise", { exercises });
+    }
   };
 
   useEffect(() => {
@@ -51,7 +60,7 @@ const WorkoutScreen = () => {
             bg="orange500"
             rounded="circle"
             block
-            onPress={() => navigation.navigate("AddExercise")}
+            onPress={handleOnAddExercises}
           >
             Add Exercises
           </Button>

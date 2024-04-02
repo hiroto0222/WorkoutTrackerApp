@@ -1,7 +1,8 @@
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { IExercise } from "api/types";
 import ConfirmSelectionButton from "components/utils/ConfirmSelectionButton";
 import ExerciseCheckBox from "components/utils/ExerciseCheckBox";
+import { UserStackParams } from "navigation/UserStack";
 import { useState } from "react";
 import { SafeAreaView, ScrollView } from "react-native";
 import { Checkbox, Div, Text } from "react-native-magnus";
@@ -12,6 +13,7 @@ import { addCurrExercises } from "store/slices/workout";
 const AddExerciseScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const route = useRoute<RouteProp<UserStackParams, "AddExercise">>();
   const workoutState = useSelector((state: RootState) => state.workout);
 
   const [selectedExercises, setSelectedExercises] = useState<IExercise[]>([]);
@@ -58,7 +60,7 @@ const AddExerciseScreen = () => {
         >
           <Div>
             <Checkbox.Group>
-              {exercises.map((exercise) => (
+              {route.params.exercises.map((exercise) => (
                 <ExerciseCheckBox
                   key={exercise.id}
                   value={exercise}
@@ -78,81 +80,3 @@ const AddExerciseScreen = () => {
 };
 
 export default AddExerciseScreen;
-
-const exercises: IExercise[] = [
-  {
-    id: 1,
-    name: "Plank",
-    log_type: "timer",
-  },
-  {
-    id: 2,
-    name: "Bench Press",
-    log_type: "weight_reps",
-  },
-  {
-    id: 3,
-    name: "Sit Up",
-    log_type: "reps",
-  },
-  {
-    id: 4,
-    name: "Squats",
-    log_type: "weight_reps",
-  },
-  {
-    id: 5,
-    name: "Deadlift",
-    log_type: "weight_reps",
-  },
-  {
-    id: 6,
-    name: "Push-up",
-    log_type: "reps",
-  },
-  {
-    id: 7,
-    name: "Pull-up",
-    log_type: "reps",
-  },
-  {
-    id: 8,
-    name: "Lunges",
-    log_type: "reps",
-  },
-  {
-    id: 9,
-    name: "Dumbbell Shoulder Press",
-    log_type: "weight_reps",
-  },
-  {
-    id: 10,
-    name: "Russian Twist",
-    log_type: "reps",
-  },
-  {
-    id: 11,
-    name: "Burpees",
-    log_type: "reps",
-  },
-  {
-    id: 12,
-    name: "Leg Raises",
-    log_type: "reps",
-  },
-  {
-    id: 13,
-    name: "Chest Fly",
-    log_type: "weight_reps",
-  },
-  {
-    id: 14,
-    name: "Triceps Dips",
-    log_type: "reps",
-  },
-  {
-    id: 15,
-    name: "Bicep Curls",
-    log_type: "weight_reps",
-  },
-];
