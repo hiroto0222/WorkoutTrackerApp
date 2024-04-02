@@ -21,15 +21,21 @@ const ExerciseLogInputTable = ({ exercise }: Props) => {
 
   return (
     <View>
-      <Text style={{ marginBottom: 10 }} fontSize="2xl" color="orange600">
+      <Text
+        px={25}
+        style={{ marginBottom: 10 }}
+        fontSize="2xl"
+        color="orange600"
+      >
         {exercise.name}
       </Text>
       <ExerciseLogHeader logType={exercise.log_type} />
-      {workoutState.currLogs[exercise.id].map((_, setNumber) => (
+      {workoutState.currLogs[exercise.id].map((log, setNumber) => (
         <ExerciseLogInputRow
           key={setNumber}
           exercise={exercise}
           setNumber={setNumber}
+          isCompleted={log.isCompleted}
         />
       ))}
       <Div mt="md" alignItems="center" justifyContent="center">

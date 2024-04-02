@@ -1,9 +1,13 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Workout struct {
-	ID        int       `json:"id" gorm:"type:int AUTO_INCREMENT;primary_key;"`
+	ID        uuid.UUID `json:"id" gorm:"type:uuid;default:gen_random_uuid();primary_key;"`
 	UserID    string    `json:"user_id" gorm:"type:varchar;not null"`
 	StartedAt time.Time `json:"started_at" gorm:"not null"`
 	EndedAt   time.Time `json:"ended_at" gorm:"null"`

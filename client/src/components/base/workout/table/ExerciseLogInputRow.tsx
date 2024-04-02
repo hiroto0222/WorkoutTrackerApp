@@ -1,4 +1,4 @@
-import { IExercise } from "api/types";
+import { IExercise, LogType } from "api/types";
 import { useState } from "react";
 import { View } from "react-native";
 import { Div, Input, Text } from "react-native-magnus";
@@ -10,17 +10,30 @@ import { tableStyles } from "./TableStyles";
 type Props = {
   exercise: IExercise;
   setNumber: number;
+  isCompleted: boolean;
 };
 
-const ExerciseLogInputRow = ({ exercise, setNumber }: Props) => {
+const ExerciseLogInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
   return (
     <>
       {exercise.log_type === "weight_reps" ? (
-        <WeightRepsInputRow exercise={exercise} setNumber={setNumber} />
+        <WeightRepsInputRow
+          exercise={exercise}
+          setNumber={setNumber}
+          isCompleted={isCompleted}
+        />
       ) : exercise.log_type === "timer" ? (
-        <TimerInputRow exercise={exercise} setNumber={setNumber} />
+        <TimerInputRow
+          exercise={exercise}
+          setNumber={setNumber}
+          isCompleted={isCompleted}
+        />
       ) : (
-        <RepsInputRow exercise={exercise} setNumber={setNumber} />
+        <RepsInputRow
+          exercise={exercise}
+          setNumber={setNumber}
+          isCompleted={isCompleted}
+        />
       )}
     </>
   );
@@ -28,7 +41,7 @@ const ExerciseLogInputRow = ({ exercise, setNumber }: Props) => {
 
 export default ExerciseLogInputRow;
 
-const WeightRepsInputRow = ({ exercise, setNumber }: Props) => {
+const WeightRepsInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
   const dispatch = useDispatch();
 
   const [weight, setWeight] = useState("");
@@ -43,13 +56,26 @@ const WeightRepsInputRow = ({ exercise, setNumber }: Props) => {
   };
 
   const handleOnCompleted = () => {
-    console.log(`${exercise.name}: weight-${weight}kg, reps-${reps}`);
-    const newLog: Log = { weight: parseInt(weight), reps: parseInt(reps) };
+    const newLog: Log = {
+      weight: parseInt(weight) || undefined,
+      reps: parseInt(reps) || undefined,
+      isCompleted: true,
+    };
+    if (!validateOnComplete(exercise.log_type, newLog)) {
+      alert("invalid set!");
+      return;
+    }
     dispatch(addCompletedLog({ exercise, setNumber, newLog }));
   };
 
   return (
-    <View style={tableStyles.tableRow}>
+    <View
+      style={
+        isCompleted
+          ? tableStyles.tableRowComplete
+          : tableStyles.tableRowInComplete
+      }
+    >
       <View style={tableStyles.columnOne}>
         <Text fontSize="2xl">{setNumber + 1}</Text>
       </View>
@@ -84,7 +110,7 @@ const WeightRepsInputRow = ({ exercise, setNumber }: Props) => {
   );
 };
 
-const TimerInputRow = ({ exercise, setNumber }: Props) => {
+const TimerInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
   const dispatch = useDispatch();
 
   const [seconds, setSeconds] = useState("");
@@ -94,13 +120,25 @@ const TimerInputRow = ({ exercise, setNumber }: Props) => {
   };
 
   const handleOnCompleted = () => {
-    console.log(`${exercise.name}: timer-${seconds}s`);
-    const newLog: Log = { timer: parseInt(seconds) };
+    const newLog: Log = {
+      time: parseInt(seconds) || undefined,
+      isCompleted: true,
+    };
+    if (!validateOnComplete(exercise.log_type, newLog)) {
+      alert("invalid set!");
+      return;
+    }
     dispatch(addCompletedLog({ exercise, setNumber, newLog }));
   };
 
   return (
-    <View style={tableStyles.tableRow}>
+    <View
+      style={
+        isCompleted
+          ? tableStyles.tableRowComplete
+          : tableStyles.tableRowInComplete
+      }
+    >
       <View style={tableStyles.columnOne}>
         <Text fontSize="2xl">{setNumber + 1}</Text>
       </View>
@@ -124,7 +162,7 @@ const TimerInputRow = ({ exercise, setNumber }: Props) => {
   );
 };
 
-const RepsInputRow = ({ exercise, setNumber }: Props) => {
+const RepsInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
   const dispatch = useDispatch();
 
   const [reps, setReps] = useState("");
@@ -134,13 +172,25 @@ const RepsInputRow = ({ exercise, setNumber }: Props) => {
   };
 
   const handleOnCompleted = () => {
-    console.log(`${exercise.name}: reps-${reps}`);
-    const newLog: Log = { reps: parseInt(reps) };
+    const newLog: Log = {
+      reps: parseInt(reps) || undefined,
+      isCompleted: true,
+    };
+    if (!validateOnComplete(exercise.log_type, newLog)) {
+      alert("invalid set!");
+      return;
+    }
     dispatch(addCompletedLog({ exercise, setNumber, newLog }));
   };
 
   return (
-    <View style={tableStyles.tableRow}>
+    <View
+      style={
+        isCompleted
+          ? tableStyles.tableRowComplete
+          : tableStyles.tableRowInComplete
+      }
+    >
       <View style={tableStyles.columnOne}>
         <Text fontSize="2xl">{setNumber + 1}</Text>
       </View>
@@ -162,4 +212,17 @@ const RepsInputRow = ({ exercise, setNumber }: Props) => {
       </View>
     </View>
   );
+};
+
+const validateOnComplete = (logType: LogType, log: Log) => {
+  switch (logType) {
+    case "weight_reps":
+      return log.weight != null && log.reps != null;
+    case "reps":
+      return log.reps != null;
+    case "timer":
+      return log.time != null;
+    default:
+      return false;
+  }
 };

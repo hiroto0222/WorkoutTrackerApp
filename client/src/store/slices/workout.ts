@@ -4,18 +4,19 @@ import { IExercise } from "api/types";
 export type Log = {
   weight?: number;
   reps?: number;
-  timer?: number;
+  time?: number;
+  isCompleted: boolean;
 };
 
 export interface WorkoutState {
-  startedAt?: string;
+  startedAt: string;
   endedAt?: string;
   currExercises: IExercise[];
   currLogs: { [exercise_id: number]: Log[] };
 }
 
 const initialState: WorkoutState = {
-  startedAt: undefined,
+  startedAt: Date.now().toString(),
   endedAt: undefined,
   currExercises: [],
   currLogs: {},
@@ -26,8 +27,8 @@ export const workoutSlice = createSlice({
   initialState,
   reducers: {
     setStartWorkingOut: (state, action: PayloadAction<void>) => {
-      const date = new Date();
-      state.startedAt = date.toString();
+      const date = new Date().toJSON();
+      state.startedAt = date;
       state.currExercises = [];
       state.currLogs = {};
     },
@@ -39,7 +40,8 @@ export const workoutSlice = createSlice({
         const log: Log = {
           weight: undefined,
           reps: undefined,
-          timer: undefined,
+          time: undefined,
+          isCompleted: false,
         };
         state.currLogs[exercise.id] = [log];
       });
@@ -53,7 +55,8 @@ export const workoutSlice = createSlice({
       const emptyLog: Log = {
         weight: undefined,
         reps: undefined,
-        timer: undefined,
+        time: undefined,
+        isCompleted: false,
       };
       state.currLogs[action.payload.id] = [
         ...state.currLogs[action.payload.id],
@@ -75,6 +78,10 @@ export const workoutSlice = createSlice({
         i === setNumber ? newLog : log
       );
     },
+    setFinishWorkout: (state, action: PayloadAction) => {
+      state.currExercises = [];
+      state.currLogs = {};
+    },
   },
 });
 
@@ -84,6 +91,7 @@ export const {
   removeCurrExercises,
   addEmptyLog,
   addCompletedLog,
+  setFinishWorkout,
 } = workoutSlice.actions;
 
 export default workoutSlice.reducer;

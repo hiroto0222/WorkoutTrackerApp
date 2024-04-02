@@ -1,6 +1,8 @@
 package services
 
 import (
+	"encoding/json"
+	"io"
 	"log"
 	"net/http"
 	"time"
@@ -13,75 +15,107 @@ import (
 
 type WorkoutService interface {
 	CreateWorkout(ctx *gin.Context)
-	DeleteWorkout(ctx *gin.Context)
 }
 
 type WorkoutServiceImpl struct {
 	db *gorm.DB
 }
 
-// CreateWorkout adds a new Workout record
+type LogRequest struct {
+	Weight int `json:"weight"`
+	Reps   int `json:"reps"`
+	Time   int `json:"time"`
+}
+
+type createWorkoutRequest struct {
+	UserId      string               `json:"user_id" binding:"required"`
+	StartedAt   time.Time            `json:"started_at" binding:"required"`
+	EndedAt     time.Time            `json:"ended_at" binding:"required"`
+	ExerciseIds []int                `json:"exercise_ids" binding:"required"`
+	Logs        map[int][]LogRequest `json:"logs" binding:"required"`
+}
+
+// CreateWorkout adds a new workout record for the user
 func (s *WorkoutServiceImpl) CreateWorkout(ctx *gin.Context) {
-	// get authenticated user's ID
+	rawJSON, _ := io.ReadAll(ctx.Request.Body)
+	var req createWorkoutRequest
+	if err := json.Unmarshal(rawJSON, &req); err != nil {
+		log.Println("JSON unmarshalling failed:", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid workout data recieved"})
+		return
+	}
+
+	// check if authenticated user is the owner of the request
 	userID, ok := ctx.MustGet(middlewares.USER_ID).(string)
 	if !ok {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user id for request"})
 		return
 	}
+	if userID != req.UserId {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "You do not have permission"})
+		return
+	}
+
+	// start database transaction
+	tx := s.db.Begin()
 
 	// create workout
-	now := time.Now()
 	workout := models.Workout{
 		UserID:    userID,
-		StartedAt: now,
-		UpdatedAt: now,
+		StartedAt: req.StartedAt,
+		EndedAt:   req.EndedAt,
+		UpdatedAt: req.StartedAt,
 	}
 	res := s.db.Create(&workout)
-
 	if res.Error != nil {
 		log.Printf("failed to create workout: %v", res.Error)
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": res.Error.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, workout)
-}
+	// create workout_exercise for each exercise
+	for _, exerciseId := range req.ExerciseIds {
+		workoutExercise := models.WorkoutExercise{
+			WorkoutID:  workout.ID,
+			ExerciseID: exerciseId,
+		}
+		res := s.db.Create(&workoutExercise)
+		if res.Error != nil {
+			log.Printf("failed to create workout_exercise: %v", res.Error)
+			ctx.JSON(http.StatusBadRequest, gin.H{"message": res.Error.Error()})
+			return
+		}
 
-type deleteWorkoutRequest struct {
-	ID string `json:"id" binding:"required"`
-}
+		// create exercise logs for each exercise
+		if logSlice, ok := req.Logs[exerciseId]; ok {
+			for setNumber, logReq := range logSlice {
+				newLog := models.Log{
+					WorkoutID:         workout.ID,
+					WorkoutExerciseID: workoutExercise.ID,
+					SetNumber:         setNumber + 1,
+					Weight:            logReq.Weight,
+					Reps:              logReq.Reps,
+					Time:              logReq.Time,
+				}
+				res := s.db.Create(&newLog)
+				if res.Error != nil {
+					log.Printf("failed to create exercise log: %v", res.Error)
+					ctx.JSON(http.StatusBadRequest, gin.H{"message": res.Error.Error()})
+					return
+				}
+			}
+		}
+	}
 
-// DeleteWorkout deletes a Workout record
-func (s *WorkoutServiceImpl) DeleteWorkout(ctx *gin.Context) {
-	var req deleteWorkoutRequest
-
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		log.Println("binding json req failed")
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+	// Commit the transaction if all operations succeed
+	if err := tx.Commit().Error; err != nil {
+		// Handle transaction commit error
+		tx.Rollback() // Rollback changes to ensure data integrity
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to commit transaction"})
 		return
 	}
 
-	// get authenticated user's ID
-	userID, ok := ctx.MustGet(middlewares.USER_ID).(string)
-	if !ok {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user id for request"})
-		return
-	}
-
-	// check if workout exists and is of authenticated user
-	var workout models.Workout
-	res := s.db.First(&workout, "id = ?", req.ID)
-	if res.Error != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Workout does not exist"})
-		return
-	}
-	if workout.UserID != userID {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "You do not have permission"})
-		return
-	}
-
-	s.db.Delete(&workout)
-	ctx.JSON(http.StatusOK, gin.H{"message": "Successfully deleted workout"})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "Successfully added workout entry"})
 }
 
 func NewWorkoutService(db *gorm.DB) *WorkoutServiceImpl {
