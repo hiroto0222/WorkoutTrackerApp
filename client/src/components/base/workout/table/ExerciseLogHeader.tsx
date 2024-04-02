@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import { Text } from "react-native-magnus";
-import { tableStyles } from "./ExerciseLogInputTable";
+import { tableStyles } from "./TableStyles";
 
 type Props = {
   logType: string;

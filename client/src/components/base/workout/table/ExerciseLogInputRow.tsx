@@ -5,7 +5,7 @@ import { Div, Input, Text } from "react-native-magnus";
 import { useDispatch } from "react-redux";
 import { Log, addCompletedLog } from "store/slices/workout";
 import ExerciseLogInputConfirmButton from "./ExerciseLogInputConfirmButton";
-import { tableStyles } from "./ExerciseLogInputTable";
+import { tableStyles } from "./TableStyles";
 
 type Props = {
   exercise: IExercise;
