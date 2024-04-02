@@ -8,9 +8,6 @@ const useFinishWorkout = () => {
   const workoutState = useSelector((state: RootState) => state.workout);
 
   const finishWorkout = (userId: string) => {
-    console.log("finish workout!");
-    console.log(workoutState);
-
     const exercise_ids: number[] = [];
     const logs: { [exercise_id: number]: ILogRequest[] } = {};
 

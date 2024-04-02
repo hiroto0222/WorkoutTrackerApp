@@ -61,7 +61,6 @@ const WeightRepsInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
       reps: parseInt(reps) || undefined,
       isCompleted: true,
     };
-    console.log(newLog);
     if (!validateOnComplete(exercise.log_type, newLog)) {
       alert("invalid set!");
       return;
