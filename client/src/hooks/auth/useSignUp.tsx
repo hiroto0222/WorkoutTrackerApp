@@ -1,4 +1,4 @@
-import { ICreateUserRequest } from "api";
+import { ICreateUserRequest } from "api/types";
 import { HttpStatusCode } from "axios";
 import { auth } from "config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";

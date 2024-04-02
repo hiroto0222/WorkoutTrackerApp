@@ -1,4 +1,4 @@
-import { IExercise } from "api";
+import { IExercise } from "api/types";
 import { View } from "react-native";
 import { Button, Div, Icon, Text } from "react-native-magnus";
 import { useDispatch, useSelector } from "react-redux";

@@ -24,7 +24,7 @@ func (s *ExerciseServiceImpl) GetExercises(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to retrieve exercises"})
 	}
 
-	ctx.JSON(http.StatusOK, exercises)
+	ctx.JSON(http.StatusOK, gin.H{"message": "success", "data": exercises})
 }
 
 func NewExerciseService(db *gorm.DB) *ExerciseServiceImpl {

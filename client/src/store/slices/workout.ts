@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { IExercise } from "api";
+import { IExercise } from "api/types";
 
 export type Log = {
   weight?: number;

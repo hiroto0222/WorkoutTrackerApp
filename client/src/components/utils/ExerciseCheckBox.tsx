@@ -1,4 +1,4 @@
-import { IExercise } from "api";
+import { IExercise } from "api/types";
 import { Checkbox, Div, Text } from "react-native-magnus";
 
 type Props = {

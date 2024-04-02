@@ -1,5 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { IExercise } from "api/types";
 import AddExerciseScreen from "components/screens/AddExerciseScreen";
 import HomeScreen from "components/screens/HomeScreen";
 import UserSettingScreen from "components/screens/UserSettingScreen";
@@ -11,7 +12,7 @@ export type UserStackParams = {
   Home: undefined;
   Workout: undefined;
   UserSetting: undefined;
-  AddExercise: undefined;
+  AddExercise: { exercises: IExercise[] };
 };
 
 const Stack = createNativeStackNavigator<UserStackParams>();

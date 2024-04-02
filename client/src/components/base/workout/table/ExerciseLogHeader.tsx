@@ -1,9 +1,10 @@
+import { LogType } from "api/types";
 import { View } from "react-native";
 import { Text } from "react-native-magnus";
 import { tableStyles } from "./TableStyles";
 
 type Props = {
-  logType: string;
+  logType: LogType;
 };
 
 const ExerciseLogHeader = ({ logType }: Props) => {
