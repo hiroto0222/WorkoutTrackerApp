@@ -8,7 +8,7 @@ const instance = axios.create({
   },
 });
 
-console.log("current server: ", SERVER_ENDPOINT);
+console.log("current api endpoint, ", SERVER_ENDPOINT);
 
 export interface AxiosResponse<T = any, D = any> {
   data: {

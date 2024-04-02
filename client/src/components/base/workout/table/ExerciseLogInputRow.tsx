@@ -95,7 +95,7 @@ const TimerInputRow = ({ exercise, setNumber }: Props) => {
 
   const handleOnCompleted = () => {
     console.log(`${exercise.name}: timer-${seconds}s`);
-    const newLog: Log = { timer: parseInt(seconds) };
+    const newLog: Log = { time: parseInt(seconds) };
     dispatch(addCompletedLog({ exercise, setNumber, newLog }));
   };
 

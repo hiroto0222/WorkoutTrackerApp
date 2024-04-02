@@ -4,7 +4,7 @@ import { IExercise } from "api/types";
 export type Log = {
   weight?: number;
   reps?: number;
-  timer?: number;
+  time?: number;
 };
 
 export interface WorkoutState {
@@ -39,7 +39,7 @@ export const workoutSlice = createSlice({
         const log: Log = {
           weight: undefined,
           reps: undefined,
-          timer: undefined,
+          time: undefined,
         };
         state.currLogs[exercise.id] = [log];
       });
@@ -53,7 +53,7 @@ export const workoutSlice = createSlice({
       const emptyLog: Log = {
         weight: undefined,
         reps: undefined,
-        timer: undefined,
+        time: undefined,
       };
       state.currLogs[action.payload.id] = [
         ...state.currLogs[action.payload.id],
