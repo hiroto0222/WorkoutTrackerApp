@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import ExerciseLogInputTable from "components/base/workout/table/ExerciseLogInputTable";
+import useFinishWorkout from "hooks/api/useFinishWorkout";
 import useGetExercises from "hooks/utils/useGetExercises";
 import useTimer from "hooks/utils/useTimer";
 import { UserStackParams } from "navigation/UserStack";
@@ -15,12 +16,16 @@ const WorkoutScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<UserStackParams>>();
   const workoutState = useSelector((state: RootState) => state.workout);
+  const authState = useSelector((state: RootState) => state.auth);
 
   const { seconds } = useTimer();
   const { exercises } = useGetExercises();
+  const { finishWorkout } = useFinishWorkout();
 
   const handleFinishWorkout = () => {
-    console.log("workout finished");
+    if (authState.userId) {
+      finishWorkout(authState.userId);
+    }
   };
 
   const handleOnAddExercises = () => {
@@ -36,13 +41,13 @@ const WorkoutScreen = () => {
           bg="white"
           color="orange500"
           underlayColor="orange100"
-          onPress={handleFinishWorkout}
+          onPress={() => handleFinishWorkout()}
         >
           FINISH
         </Button>
       ),
     });
-  }, [navigation]);
+  }, [workoutState]);
 
   return (
     <View>
@@ -65,19 +70,19 @@ const WorkoutScreen = () => {
             Add Exercises
           </Button>
         </Div>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            flexGrow: 1,
-            paddingBottom: 350,
-          }}
-        >
-          {workoutState.currExercises.map((exercise) => (
-            <ExerciseLogInputTable key={exercise.id} exercise={exercise} />
-          ))}
-        </ScrollView>
       </Div>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingBottom: 350,
+        }}
+      >
+        {workoutState.currExercises.map((exercise) => (
+          <ExerciseLogInputTable key={exercise.id} exercise={exercise} />
+        ))}
+      </ScrollView>
     </View>
   );
 };

@@ -36,14 +36,18 @@ export interface IExercise {
   log_type: LogType;
 }
 
-// TODO: Log data to send/recieve
-export interface ILog {
-  id?: number;
-  workout_id?: number;
-  workout_exercise_id?: number;
-  set_number: number;
-  weight: number;
-  reps: number;
-  createdAt: string;
-  updatedAt: string;
+// Log data to send as POST request
+export interface ILogRequest {
+  weight?: number;
+  reps?: number;
+  time?: number;
+}
+
+// Workout data to send as POST request
+export interface ICreateWorkoutRequest {
+  user_id: string;
+  started_at: string;
+  ended_at: string;
+  exercise_ids: number[];
+  logs: { [exercise_id: number]: ILogRequest[] };
 }
