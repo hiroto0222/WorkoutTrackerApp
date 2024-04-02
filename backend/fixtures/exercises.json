@@ -2,29 +2,98 @@
   "exercises": [
     {
       "id": 1,
-      "name": "Plank",
-      "equipment": "body only",
-      "primary_muscles": ["abdominals"],
-      "secondary_muscles": [],
-      "instructions": [
-        "Get into a prone position on the floor, supporting your weight on your toes and your forearms. Your arms are bent and directly below the shoulder.",
-        "Keep your body straight at all times, and hold this position as long as possible. To increase difficulty, an arm or leg can be raised."
-      ],
-      "category": "strength"
+      "name": "Bench Press",
+      "log_type": "weight_reps"
     },
     {
       "id": 2,
-      "name": "Bench Press",
-      "equipment": "barbell",
-      "primary_muscles": ["chest"],
-      "secondary_muscles": ["triceps", "forearms", "lats", "shoulders"],
-      "instructions": [
-        "Begin by lying on the bench, getting your head beyond the bar if possible. Tuck your feet underneath you and arch your back. Using the bar to help support your weight, lift your shoulder off the bench and retract them, squeezing the shoulder blades together. Use your feet to drive your traps into the bench. Maintain this tight body position throughout the movement.",
-        "However wide your grip, it should cover the ring on the bar. Pull the bar out of the rack without protracting your shoulders. Focus on squeezing the bar and trying to pull it apart.",
-        "Lower the bar to your lower chest or upper stomach. The bar, wrist, and elbow should stay in line at all times.",
-        "Pause when the barbell touches your torso, and then drive the bar up with as much force as possible. The elbows should be tucked in until lockout."
-      ],
-      "category": "strength"
+      "name": "Squat",
+      "log_type": "weight_reps"
+    },
+    {
+      "id": 3,
+      "name": "Deadlift",
+      "log_type": "weight_reps"
+    },
+    {
+      "id": 4,
+      "name": "Bicep Curls",
+      "log_type": "weight_reps"
+    },
+    {
+      "id": 5,
+      "name": "Push-ups",
+      "log_type": "reps"
+    },
+    {
+      "id": 6,
+      "name": "Pull-ups",
+      "log_type": "reps"
+    },
+    {
+      "id": 7,
+      "name": "Sit-ups",
+      "log_type": "reps"
+    },
+    {
+      "id": 8,
+      "name": "Plank",
+      "log_type": "timer"
+    },
+    {
+      "id": 9,
+      "name": "Running",
+      "log_type": "cardio"
+    },
+    {
+      "id": 10,
+      "name": "Cycling",
+      "log_type": "cardio"
+    },
+    {
+      "id": 11,
+      "name": "Leg Press",
+      "log_type": "weight_reps"
+    },
+    {
+      "id": 12,
+      "name": "Shoulder Press",
+      "log_type": "weight_reps"
+    },
+    {
+      "id": 13,
+      "name": "Tricep Dips",
+      "log_type": "weight_reps"
+    },
+    {
+      "id": 14,
+      "name": "Dumbbell Chest Fly",
+      "log_type": "weight_reps"
+    },
+    {
+      "id": 15,
+      "name": "Cable Fly",
+      "log_type": "weight_reps"
+    },
+    {
+      "id": 16,
+      "name": "Lateral Raises",
+      "log_type": "weight_reps"
+    },
+    {
+      "id": 17,
+      "name": "Dumbbell Rows",
+      "log_type": "weight_reps"
+    },
+    {
+      "id": 18,
+      "name": "Lat Pulldown",
+      "log_type": "weight_reps"
+    },
+    {
+      "id": 19,
+      "name": "Walking",
+      "log_type": "cardio"
     }
   ]
 }
