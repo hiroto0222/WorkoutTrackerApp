@@ -78,7 +78,10 @@ export const workoutSlice = createSlice({
         i === setNumber ? newLog : log
       );
     },
-    setFinishWorkout: (state, action: PayloadAction) => {},
+    setFinishWorkout: (state, action: PayloadAction) => {
+      state.currExercises = [];
+      state.currLogs = {};
+    },
   },
 });
 

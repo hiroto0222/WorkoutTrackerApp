@@ -1,4 +1,7 @@
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ICreateWorkoutRequest, ILogRequest } from "api/types";
+import { UserStackParams } from "navigation/UserStack";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { setFinishWorkout } from "store/slices/workout";
@@ -6,6 +9,8 @@ import axios from "../../api";
 
 const useFinishWorkout = () => {
   const dispatch = useDispatch();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<UserStackParams>>();
   const workoutState = useSelector((state: RootState) => state.workout);
   const authState = useSelector((state: RootState) => state.auth);
 
@@ -68,12 +73,12 @@ const useFinishWorkout = () => {
         },
       });
       console.log(res);
+      dispatch(setFinishWorkout());
+      navigation.popToTop();
     } catch (err) {
       console.log(err);
       alert((err as Error).message);
     }
-
-    dispatch(setFinishWorkout());
   };
 
   return { finishWorkout };
