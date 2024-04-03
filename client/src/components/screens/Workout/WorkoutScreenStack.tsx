@@ -31,7 +31,6 @@ const WorkoutScreenStack = () => {
         options={{
           headerTitle: "",
           animation: "slide_from_bottom",
-          animationDuration: 100,
         }}
       />
       <WorkoutStack.Screen
@@ -40,7 +39,6 @@ const WorkoutScreenStack = () => {
         options={{
           headerTitle: "",
           animation: "slide_from_right",
-          animationDuration: 100,
         }}
       />
     </WorkoutStack.Navigator>
