@@ -56,6 +56,15 @@ const WorkoutScreen = () => {
   // add finish workout button to header
   useEffect(() => {
     navigation.setOptions({
+      headerLeft: () => (
+        <Button
+          bg="white"
+          color={UIConstants.COLORS.GRAY.REGULAR}
+          onPress={() => navigation.goBack()}
+        >
+          CANCEL
+        </Button>
+      ),
       headerRight: () => (
         <Button
           bg="white"
