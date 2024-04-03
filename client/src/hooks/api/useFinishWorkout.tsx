@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ICreateWorkoutRequest, ILogRequests } from "api/types";
-import { UserStackParams } from "navigation/UserStack";
+import { RootStackParams } from "navigation/RootStack";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { setFinishWorkout } from "store/slices/workout";
@@ -10,7 +10,7 @@ import axios from "../../api";
 const useFinishWorkout = () => {
   const dispatch = useDispatch();
   const navigation =
-    useNavigation<NativeStackNavigationProp<UserStackParams>>();
+    useNavigation<NativeStackNavigationProp<RootStackParams>>();
   const workoutState = useSelector((state: RootState) => state.workout);
   const authState = useSelector((state: RootState) => state.auth);
 

@@ -1,10 +1,9 @@
-import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
 import useGoogleLogin from "hooks/auth/useGoogleLogin";
 import useLogin from "hooks/auth/useLogin";
 import useSignUp from "hooks/auth/useSignUp";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native";
+import { View } from "react-native";
 import { Button, Div, Image, Input, Text } from "react-native-magnus";
 
 WebBrowser.maybeCompleteAuthSession();
@@ -17,7 +16,7 @@ const LoginScreen = () => {
   const { login } = useLogin();
 
   return (
-    <SafeAreaView style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
+    <View>
       <Div flex={1} mt="2xl">
         <Text mt="3xl" mx="xl" w="70%" fontWeight="bold" fontSize="5xl">
           Get Started
@@ -107,7 +106,7 @@ const LoginScreen = () => {
                 h={20}
                 w={20}
                 mr="md"
-                source={require("../../assets/google.png")}
+                source={require("../../../assets/google.png")}
               />
             }
           >
@@ -115,7 +114,7 @@ const LoginScreen = () => {
           </Button>
         </Div>
       </Div>
-    </SafeAreaView>
+    </View>
   );
 };
 

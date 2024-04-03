@@ -1,10 +1,10 @@
 import { auth } from "config/firebase";
-import Constants from "expo-constants";
 import { signOut } from "firebase/auth";
-import { SafeAreaView } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-magnus";
 import { useDispatch } from "react-redux";
 import { setAuth } from "store/slices/auth";
+import Constants from "../../../constants";
 
 const UserSettingScreen = () => {
   const dispatch = useDispatch();
@@ -15,9 +15,7 @@ const UserSettingScreen = () => {
   };
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, marginTop: Constants.statusBarHeight + 30 }}
-    >
+    <View style={styles.container}>
       <Text mt="sm" mx="xl" w="70%" fontWeight="bold" fontSize="5xl">
         User Setting
       </Text>
@@ -34,8 +32,14 @@ const UserSettingScreen = () => {
       >
         Sign Out
       </Button>
-    </SafeAreaView>
+    </View>
   );
 };
 
 export default UserSettingScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: Constants.SCREEN_MARGIN_TOP,
+  },
+});
