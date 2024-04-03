@@ -46,7 +46,7 @@ const HomeScreen = () => {
                   Hi,
                 </Text>
                 <Text fontSize="5xl" fontWeight="bold">
-                  {userState.user?.name}
+                  {userState.user?.name.split(" ")[0]}
                 </Text>
               </Div>
               <Text fontSize="lg">Get some exercise in!</Text>

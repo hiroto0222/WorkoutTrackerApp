@@ -15,10 +15,14 @@ export const tableStyles = StyleSheet.create({
     alignItems: "center",
     width: "50%",
   },
-  tableRow: {
+  tableRowInComplete: {
     paddingVertical: 5,
-    borderRadius: 15,
     flexDirection: "row",
+  },
+  tableRowComplete: {
+    paddingVertical: 5,
+    flexDirection: "row",
+    backgroundColor: "#9ae6b4",
   },
   columnOneInput: {
     justifyContent: "center",

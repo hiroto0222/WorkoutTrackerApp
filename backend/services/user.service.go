@@ -50,7 +50,7 @@ func (s *UserServiceImpl) CreateUser(ctx *gin.Context) {
 		return
 	}
 	if userID != req.ID {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "You do not have permission"})
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "You do not have permission"})
 		return
 	}
 

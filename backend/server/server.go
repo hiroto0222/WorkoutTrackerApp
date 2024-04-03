@@ -99,7 +99,7 @@ func (server *Server) setupRouter() {
 		workoutRoutes := apiRoutes.Group("/workout")
 		workoutRoutes.Use(middlewares.AuthMiddleware(server.FireAuth))
 		workoutRoutes.POST("/create", workoutController.CreateWorkout)
-		workoutRoutes.POST("/delete", workoutController.DeleteWorkout)
+		// workoutRoutes.POST("/delete", workoutController.DeleteWorkout) TODO:
 	}
 
 	// exercise routes
