@@ -15,7 +15,7 @@ jobs:
     environment: production
     defaults:
       run:
-        working-directory: ./client
+        working-directory: client
     steps:
       - name: Check for EXPO_TOKEN
         run: |
