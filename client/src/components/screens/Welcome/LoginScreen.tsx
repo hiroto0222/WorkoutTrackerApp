@@ -5,6 +5,7 @@ import useLogin from "hooks/auth/useLogin";
 import useSignUp from "hooks/auth/useSignUp";
 import React, { useState } from "react";
 import { Button, Div, Image, Input, Text } from "react-native-magnus";
+import UIConstants from "../../../constants";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -57,7 +58,7 @@ const LoginScreen = () => {
           mt="xl"
           mb="xl"
           py="lg"
-          bg="orange500"
+          bg={UIConstants.COLORS.PRIMARY.REGULAR}
           rounded="circle"
           block
         >
@@ -68,7 +69,7 @@ const LoginScreen = () => {
           mx="xl"
           mb="xl"
           py="lg"
-          bg="gray300"
+          bg={UIConstants.COLORS.GRAY.LIGHT}
           rounded="circle"
           block
           color="black"
