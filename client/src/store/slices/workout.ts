@@ -9,6 +9,7 @@ export type Log = {
 };
 
 export interface WorkoutState {
+  isFinished: boolean;
   startedAt: string;
   endedAt?: string;
   currExercises: IExercise[];
@@ -16,6 +17,7 @@ export interface WorkoutState {
 }
 
 const initialState: WorkoutState = {
+  isFinished: false,
   startedAt: Date.now().toString(),
   endedAt: undefined,
   currExercises: [],
@@ -29,6 +31,7 @@ export const workoutSlice = createSlice({
     setStartWorkingOut: (state, action: PayloadAction<void>) => {
       const date = new Date().toJSON();
       state.startedAt = date;
+      state.isFinished = false;
       state.currExercises = [];
       state.currLogs = {};
     },
@@ -79,8 +82,7 @@ export const workoutSlice = createSlice({
       );
     },
     setFinishWorkout: (state, action: PayloadAction) => {
-      state.currExercises = [];
-      state.currLogs = {};
+      state.isFinished = true;
     },
   },
 });
