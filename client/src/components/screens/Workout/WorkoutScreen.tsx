@@ -11,7 +11,7 @@ import { Button, Div, Text } from "react-native-magnus";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
 import { formatTime } from "utils";
-import Constants from "../../../constants";
+import UIConstants from "../../../constants";
 import { WorkoutStackParams } from "./WorkoutScreenStack";
 
 const WorkoutScreen = () => {
@@ -59,8 +59,7 @@ const WorkoutScreen = () => {
       headerRight: () => (
         <Button
           bg="white"
-          color="orange500"
-          underlayColor="orange100"
+          color={UIConstants.COLORS.PRIMARY.REGULAR}
           onPress={() => handleFinishWorkout()}
         >
           FINISH
@@ -98,8 +97,8 @@ const WorkoutScreen = () => {
   }, [navigation, workoutState.isFinished]);
 
   return (
-    <View style={styles.container}>
-      <Div px={25}>
+    <View>
+      <Div px={25} style={styles.container}>
         <Text fontSize="3xl" style={globalStyles.textMedium}>
           Workout
         </Text>
@@ -111,7 +110,7 @@ const WorkoutScreen = () => {
             mx="xl"
             mb="xl"
             py="lg"
-            bg="orange500"
+            bg={UIConstants.COLORS.PRIMARY.REGULAR}
             rounded="circle"
             block
             onPress={handleOnAddExercises}
@@ -126,6 +125,7 @@ const WorkoutScreen = () => {
         automaticallyAdjustKeyboardInsets={true}
         contentContainerStyle={{
           flexGrow: 1,
+          marginTop: 15,
           paddingBottom: 250,
         }}
       >
@@ -141,6 +141,9 @@ export default WorkoutScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Constants.SCREEN_MARGIN_TOP - 5,
+    paddingTop: UIConstants.SCREEN_MARGIN_TOP - 5,
+    backgroundColor: UIConstants.COLORS.GRAY.LIGHT,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
 });

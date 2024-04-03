@@ -9,7 +9,7 @@ import { Checkbox, Div, Text } from "react-native-magnus";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { addCurrExercises } from "store/slices/workout";
-import Constants from "../../../constants";
+import UIConstants from "../../../constants";
 import { WorkoutStackParams } from "./WorkoutScreenStack";
 
 const AddExerciseScreen = () => {
@@ -82,10 +82,10 @@ export default AddExerciseScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Constants.SCREEN_MARGIN_TOP - 5,
+    marginTop: UIConstants.SCREEN_MARGIN_TOP - 5,
   },
   scrollViewContainer: {
     flexGrow: 1,
-    paddingBottom: 120,
+    paddingBottom: 130,
   },
 });

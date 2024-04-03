@@ -1,6 +1,7 @@
 import { IExercise } from "api/types";
 import globalStyles from "components/styles";
 import { Checkbox, Div, Text } from "react-native-magnus";
+import UIConstants from "../../../constants";
 
 type Props = {
   value: IExercise;
@@ -17,7 +18,11 @@ const ExerciseCheckBox = ({ value, disabled, handleOnChecked }: Props) => (
     {({ checked }) => (
       <Div
         flex={1}
-        bg={checked ? "orange600" : "orange100"}
+        bg={
+          checked
+            ? UIConstants.COLORS.PRIMARY.REGULAR
+            : UIConstants.COLORS.GRAY.LIGHT
+        }
         px="xl"
         py="lg"
         mr="md"
@@ -27,14 +32,14 @@ const ExerciseCheckBox = ({ value, disabled, handleOnChecked }: Props) => (
         <Div>
           <Text
             fontSize="2xl"
-            color={checked ? "white" : "gray800"}
+            color={checked ? "white" : "black"}
             style={globalStyles.textRegular}
           >
             {value.name}
           </Text>
           <Text
             fontSize="sm"
-            color={checked ? "white" : "gray800"}
+            color={checked ? "white" : "black"}
             style={globalStyles.textLight}
           >
             {value.log_type}

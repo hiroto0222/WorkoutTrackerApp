@@ -5,7 +5,7 @@ import { StyleSheet, View } from "react-native";
 import { Button, Div, Text } from "react-native-magnus";
 import { useDispatch } from "react-redux";
 import { setStartWorkingOut } from "store/slices/workout";
-import Constants from "../../../constants";
+import UIConstants from "../../../constants";
 import { WorkoutStackParams } from "./WorkoutScreenStack";
 
 const WorkoutHomeScreen = () => {
@@ -40,7 +40,7 @@ const WorkoutHomeScreen = () => {
             mt="xl"
             mb="xl"
             py="lg"
-            bg="orange500"
+            bg={UIConstants.COLORS.PRIMARY.REGULAR}
             rounded="circle"
             block
           >
@@ -56,6 +56,6 @@ export default WorkoutHomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Constants.SCREEN_MARGIN_TOP,
+    marginTop: UIConstants.SCREEN_MARGIN_TOP,
   },
 });

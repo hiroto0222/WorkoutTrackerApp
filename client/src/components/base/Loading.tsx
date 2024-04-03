@@ -1,9 +1,13 @@
 import { ActivityIndicator, StyleSheet, View } from "react-native";
+import UIConstants from "../../constants";
 
 const Loading = () => {
   return (
     <View style={styles.loading}>
-      <ActivityIndicator size="large" color="#ed8936" />
+      <ActivityIndicator
+        size="large"
+        color={UIConstants.COLORS.PRIMARY.REGULAR}
+      />
     </View>
   );
 };

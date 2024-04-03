@@ -5,7 +5,7 @@ import { StyleSheet, View } from "react-native";
 import { Button, Div, Text } from "react-native-magnus";
 import { useDispatch } from "react-redux";
 import { setAuth } from "store/slices/auth";
-import Constants from "../../../constants";
+import UIConstants from "../../../constants";
 
 const UserSettingScreen = () => {
   const dispatch = useDispatch();
@@ -43,6 +43,6 @@ export default UserSettingScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Constants.SCREEN_MARGIN_TOP,
+    marginTop: UIConstants.SCREEN_MARGIN_TOP,
   },
 });

@@ -5,6 +5,7 @@ import { Button, Div, Icon, Text } from "react-native-magnus";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { addEmptyLog } from "store/slices/workout";
+import UIConstants from "../../../../constants";
 import ExerciseLogHeader from "./ExerciseLogHeader";
 import ExerciseLogInputRow from "./ExerciseLogInputRow";
 
@@ -27,7 +28,7 @@ const ExerciseLogInputTable = ({ exercise }: Props) => {
         mb={10}
         style={globalStyles.textRegular}
         fontSize="2xl"
-        color="orange600"
+        color={UIConstants.COLORS.PRIMARY.REGULAR}
       >
         {exercise.name}
       </Text>
@@ -40,11 +41,11 @@ const ExerciseLogInputTable = ({ exercise }: Props) => {
           isCompleted={log.isCompleted}
         />
       ))}
-      <Div mt="md" alignItems="center" justifyContent="center">
+      <Div mx="3xl" mt="md" alignItems="center" justifyContent="center">
         <Button
           mx="3xl"
           mb="lg"
-          bg="orange100"
+          bg={UIConstants.COLORS.GRAY.LIGHT}
           rounded="circle"
           onPress={handleAddEmptySet}
           block

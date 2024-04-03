@@ -6,7 +6,7 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { Avatar, Div, Text } from "react-native-magnus";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
-import Constants from "../../../constants";
+import UIConstants from "../../../constants";
 
 const HomeScreen = () => {
   const { loading: loadingGetUser } = useGetUser();
@@ -55,7 +55,7 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Constants.SCREEN_MARGIN_TOP,
+    marginTop: UIConstants.SCREEN_MARGIN_TOP,
   },
   scrollViewContainer: {
     marginTop: 50,

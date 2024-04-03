@@ -1,34 +1,34 @@
 import { StyleSheet } from "react-native";
-import Constants from "../../constants";
+import UIConstants from "../../constants";
 
 const globalStyles = StyleSheet.create({
   textLight: {
-    fontFamily: Constants.FONTS.LIGHT,
+    fontFamily: UIConstants.FONTS.LIGHT,
     includeFontPadding: false,
     textAlignVertical: "center",
   },
   textRegular: {
-    fontFamily: Constants.FONTS.REGULAR,
+    fontFamily: UIConstants.FONTS.REGULAR,
     includeFontPadding: false,
     textAlignVertical: "center",
   },
   textMedium: {
-    fontFamily: Constants.FONTS.MEDIUM,
+    fontFamily: UIConstants.FONTS.MEDIUM,
     includeFontPadding: false,
     textAlignVertical: "center",
   },
   textSemiBold: {
-    fontFamily: Constants.FONTS.SEMI_BOLD,
+    fontFamily: UIConstants.FONTS.SEMI_BOLD,
     includeFontPadding: false,
     textAlignVertical: "center",
   },
   textBold: {
-    fontFamily: Constants.FONTS.BOLD,
+    fontFamily: UIConstants.FONTS.BOLD,
     includeFontPadding: false,
     textAlignVertical: "center",
   },
   textExtraBold: {
-    fontFamily: Constants.FONTS.EXTRA_BOLD,
+    fontFamily: UIConstants.FONTS.EXTRA_BOLD,
     includeFontPadding: false,
     textAlignVertical: "center",
   },

@@ -1,4 +1,4 @@
-const Constants = {
+const UIConstants = {
   SCREEN_MARGIN_TOP: 30,
   FONTS: {
     LIGHT: "Poppins_300Light",
@@ -8,6 +8,24 @@ const Constants = {
     BOLD: "Poppins_700Bold",
     EXTRA_BOLD: "Poppins_800ExtraBold",
   },
+  COLORS: {
+    PRIMARY: {
+      LIGHT: "#fed7d7",
+      REGULAR: "#e53e3e",
+    },
+    SECONDARY: {
+      LIGHT: "#e9d8fd",
+      REGULAR: "#805ad5",
+    },
+    SUCCESS: {
+      LIGHT: "#b3e0b9",
+      REGULAR: "#71d97f",
+    },
+    GRAY: {
+      LIGHT: "#e2e8f0",
+      REGULAR: "#718096",
+    },
+  },
 };
 
-export default Constants;
+export default UIConstants;
