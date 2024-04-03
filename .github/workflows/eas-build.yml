@@ -17,15 +17,16 @@ jobs:
       run:
         working-directory: client
     steps:
+      # checkout first to ensure client directory exists
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Check for EXPO_TOKEN
         run: |
           if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
             echo "You must provide an EXPO_TOKEN"
             exit 1
           fi
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
