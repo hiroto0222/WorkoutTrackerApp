@@ -32,6 +32,7 @@ const RootStack = () => {
             paddingHorizontal: 20,
             backgroundColor: "#fff",
           },
+          tabBarHideOnKeyboard: true,
         }}
       >
         <BottomTabStack.Screen

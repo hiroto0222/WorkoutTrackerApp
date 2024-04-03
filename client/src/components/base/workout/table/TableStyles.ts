@@ -36,4 +36,7 @@ export const tableStyles = StyleSheet.create({
     width: "50%",
     padding: 5,
   },
+  input: {
+    borderRadius: 20,
+  },
 });

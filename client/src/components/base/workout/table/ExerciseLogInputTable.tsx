@@ -1,4 +1,5 @@
 import { IExercise } from "api/types";
+import globalStyles from "components/styles";
 import { View } from "react-native";
 import { Button, Div, Icon, Text } from "react-native-magnus";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +24,8 @@ const ExerciseLogInputTable = ({ exercise }: Props) => {
     <View>
       <Text
         px={25}
-        style={{ marginBottom: 10 }}
+        mb={10}
+        style={globalStyles.textRegular}
         fontSize="2xl"
         color="orange600"
       >

@@ -1,7 +1,8 @@
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { IExercise } from "api/types";
-import ConfirmSelectionButton from "components/utils/ConfirmSelectionButton";
-import ExerciseCheckBox from "components/utils/ExerciseCheckBox";
+import ConfirmSelectionButton from "components/base/workout/ConfirmSelectionButton";
+import ExerciseCheckBox from "components/base/workout/ExerciseCheckBox";
+import globalStyles from "components/styles";
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Checkbox, Div, Text } from "react-native-magnus";
@@ -47,7 +48,7 @@ const AddExerciseScreen = () => {
   return (
     <View style={styles.container}>
       <Div px={25}>
-        <Text fontSize="3xl" fontWeight="bold">
+        <Text fontSize="3xl" style={globalStyles.textMedium}>
           Add Exercises
         </Text>
         <ScrollView
@@ -81,7 +82,7 @@ export default AddExerciseScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Constants.SCREEN_MARGIN_TOP,
+    marginTop: Constants.SCREEN_MARGIN_TOP - 5,
   },
   scrollViewContainer: {
     flexGrow: 1,

@@ -9,7 +9,7 @@ const ConfirmSelectionButton = ({ onPress }: Props) => (
   <TouchableOpacity
     style={{
       position: "absolute",
-      bottom: 65,
+      bottom: 140,
       right: 15,
     }}
     onPress={onPress}

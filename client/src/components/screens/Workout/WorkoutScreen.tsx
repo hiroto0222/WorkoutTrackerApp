@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import ExerciseLogInputTable from "components/base/workout/table/ExerciseLogInputTable";
+import globalStyles from "components/styles";
 import useFinishWorkout from "hooks/api/useFinishWorkout";
 import useGetExercises from "hooks/utils/useGetExercises";
 import useTimer from "hooks/utils/useTimer";
@@ -99,10 +100,12 @@ const WorkoutScreen = () => {
   return (
     <View style={styles.container}>
       <Div px={25}>
-        <Text fontSize="3xl" fontWeight="bold">
+        <Text fontSize="3xl" style={globalStyles.textMedium}>
           Workout
         </Text>
-        <Text fontSize="3xl">{formatTime(seconds)}</Text>
+        <Text fontSize="3xl" style={globalStyles.textLight}>
+          {formatTime(seconds)}
+        </Text>
         <Div mt="md" alignItems="center" justifyContent="center">
           <Button
             mx="xl"
@@ -120,9 +123,10 @@ const WorkoutScreen = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
+        automaticallyAdjustKeyboardInsets={true}
         contentContainerStyle={{
           flexGrow: 1,
-          paddingBottom: 350,
+          paddingBottom: 250,
         }}
       >
         {workoutState.currExercises.map((exercise) => (
@@ -137,6 +141,6 @@ export default WorkoutScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Constants.SCREEN_MARGIN_TOP,
+    marginTop: Constants.SCREEN_MARGIN_TOP - 5,
   },
 });

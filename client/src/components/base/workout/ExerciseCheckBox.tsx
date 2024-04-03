@@ -1,4 +1,5 @@
 import { IExercise } from "api/types";
+import globalStyles from "components/styles";
 import { Checkbox, Div, Text } from "react-native-magnus";
 
 type Props = {
@@ -24,10 +25,18 @@ const ExerciseCheckBox = ({ value, disabled, handleOnChecked }: Props) => (
         rounded="circle"
       >
         <Div>
-          <Text fontSize="2xl" color={checked ? "white" : "gray800"}>
+          <Text
+            fontSize="2xl"
+            color={checked ? "white" : "gray800"}
+            style={globalStyles.textRegular}
+          >
             {value.name}
           </Text>
-          <Text fontSize="sm" color={checked ? "white" : "gray800"}>
+          <Text
+            fontSize="sm"
+            color={checked ? "white" : "gray800"}
+            style={globalStyles.textLight}
+          >
             {value.log_type}
           </Text>
         </Div>

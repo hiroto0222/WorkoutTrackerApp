@@ -1,4 +1,5 @@
 import Loading from "components/base/Loading";
+import globalStyles from "components/styles";
 import useGetUser from "hooks/api/useGetUser";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
@@ -19,14 +20,16 @@ const HomeScreen = () => {
         <Div row justifyContent={"space-between"} alignItems="center">
           <Div>
             <Div row>
-              <Text fontSize="5xl" mr={5}>
+              <Text fontSize="6xl" mr={5} style={globalStyles.textLight}>
                 Hi,
               </Text>
-              <Text fontSize="5xl" fontWeight="bold">
+              <Text fontSize="6xl" style={globalStyles.textMedium}>
                 {userState.user?.name.split(" ")[0]}
               </Text>
             </Div>
-            <Text fontSize="lg">Get some exercise in!</Text>
+            <Text style={globalStyles.textMedium} fontSize="lg">
+              Get some exercise in!
+            </Text>
           </Div>
           <Avatar shadow={1} source={{ uri: userState.user?.photo }} />
         </Div>
@@ -35,7 +38,11 @@ const HomeScreen = () => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.scrollViewContainer}
         >
-          <Text textAlign="center" fontSize="xl">
+          <Text
+            textAlign="center"
+            fontSize="xl"
+            style={globalStyles.textMedium}
+          >
             looks empty...
           </Text>
         </ScrollView>
