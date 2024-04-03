@@ -52,7 +52,7 @@ const ExerciseLogInputTable = ({ exercise }: Props) => {
         >
           <Icon
             fontSize="xl"
-            fontFamily="AntDesign"
+            fontFamily="MaterialCommunityIcons"
             name="plus"
             color="black"
           />

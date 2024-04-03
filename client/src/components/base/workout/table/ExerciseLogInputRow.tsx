@@ -2,10 +2,10 @@ import { IExercise, LogType } from "api/types";
 import globalStyles from "components/styles";
 import { useState } from "react";
 import { View } from "react-native";
-import { Div, Input, Text } from "react-native-magnus";
+import { Div, Text } from "react-native-magnus";
 import { useDispatch } from "react-redux";
-import { Log, addCompletedLog } from "store/slices/workout";
-import UIConstants from "../../../../constants";
+import { Log, addCompletedLog, setInCompleteLog } from "store/slices/workout";
+import ExerciseLogInput from "./ExerciseLogInput";
 import ExerciseLogInputConfirmButton from "./ExerciseLogInputConfirmButton";
 import { tableStyles } from "./TableStyles";
 
@@ -70,6 +70,10 @@ const WeightRepsInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
     dispatch(addCompletedLog({ exercise, setNumber, newLog }));
   };
 
+  const handleOnEdit = () => {
+    dispatch(setInCompleteLog({ exercise, setNumber }));
+  };
+
   return (
     <View
       style={
@@ -84,40 +88,26 @@ const WeightRepsInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
         </Text>
       </View>
       <View style={tableStyles.columnOneInput}>
-        <Input
+        <ExerciseLogInput
+          isCompleted={isCompleted}
           value={weight}
-          onChangeText={handleChangeWeight}
-          keyboardType="numeric"
-          fontSize="xl"
-          borderWidth={0}
-          textAlign="center"
-          style={tableStyles.input}
-          bg={
-            isCompleted
-              ? UIConstants.COLORS.PRIMARY.LIGHT
-              : UIConstants.COLORS.GRAY.LIGHT
-          }
+          handleOnChangeText={handleChangeWeight}
         />
       </View>
       <View style={tableStyles.columnOneInput}>
-        <Input
+        <ExerciseLogInput
+          isCompleted={isCompleted}
           value={reps}
-          onChangeText={handleChangeReps}
-          keyboardType="numeric"
-          fontSize="xl"
-          borderWidth={0}
-          textAlign="center"
-          style={tableStyles.input}
-          bg={
-            isCompleted
-              ? UIConstants.COLORS.PRIMARY.LIGHT
-              : UIConstants.COLORS.GRAY.LIGHT
-          }
+          handleOnChangeText={handleChangeReps}
         />
       </View>
       <View style={tableStyles.columnOne}>
         <Div>
-          <ExerciseLogInputConfirmButton onPress={handleOnCompleted} />
+          <ExerciseLogInputConfirmButton
+            isComplete={isCompleted}
+            onComplete={handleOnCompleted}
+            onEdit={handleOnEdit}
+          />
         </Div>
       </View>
     </View>
@@ -145,6 +135,10 @@ const TimerInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
     dispatch(addCompletedLog({ exercise, setNumber, newLog }));
   };
 
+  const handleOnEdit = () => {
+    dispatch(setInCompleteLog({ exercise, setNumber }));
+  };
+
   return (
     <View
       style={
@@ -159,24 +153,19 @@ const TimerInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
         </Text>
       </View>
       <View style={tableStyles.columnTwoInput}>
-        <Input
+        <ExerciseLogInput
+          isCompleted={isCompleted}
           value={seconds}
-          onChangeText={handleChangeTimer}
-          keyboardType="numeric"
-          fontSize="xl"
-          borderWidth={0}
-          textAlign="center"
-          style={tableStyles.input}
-          bg={
-            isCompleted
-              ? UIConstants.COLORS.PRIMARY.LIGHT
-              : UIConstants.COLORS.GRAY.LIGHT
-          }
+          handleOnChangeText={handleChangeTimer}
         />
       </View>
       <View style={tableStyles.columnOne}>
         <Div>
-          <ExerciseLogInputConfirmButton onPress={handleOnCompleted} />
+          <ExerciseLogInputConfirmButton
+            isComplete={isCompleted}
+            onComplete={handleOnCompleted}
+            onEdit={handleOnEdit}
+          />
         </Div>
       </View>
     </View>
@@ -204,6 +193,10 @@ const RepsInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
     dispatch(addCompletedLog({ exercise, setNumber, newLog }));
   };
 
+  const handleOnEdit = () => {
+    dispatch(setInCompleteLog({ exercise, setNumber }));
+  };
+
   return (
     <View
       style={
@@ -218,24 +211,19 @@ const RepsInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
         </Text>
       </View>
       <View style={tableStyles.columnTwoInput}>
-        <Input
+        <ExerciseLogInput
+          isCompleted={isCompleted}
           value={reps}
-          onChangeText={handleChangeReps}
-          keyboardType="numeric"
-          fontSize="xl"
-          borderWidth={0}
-          textAlign="center"
-          style={tableStyles.input}
-          bg={
-            isCompleted
-              ? UIConstants.COLORS.PRIMARY.LIGHT
-              : UIConstants.COLORS.GRAY.LIGHT
-          }
+          handleOnChangeText={handleChangeReps}
         />
       </View>
       <View style={tableStyles.columnOne}>
         <Div>
-          <ExerciseLogInputConfirmButton onPress={handleOnCompleted} />
+          <ExerciseLogInputConfirmButton
+            isComplete={isCompleted}
+            onComplete={handleOnCompleted}
+            onEdit={handleOnEdit}
+          />
         </Div>
       </View>
     </View>
