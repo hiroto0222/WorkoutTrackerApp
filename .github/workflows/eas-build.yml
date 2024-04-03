@@ -32,7 +32,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.x
-          cache: yarn
+          cache: npm
 
       - name: Setup EAS
         uses: expo/expo-github-action@v8
@@ -42,7 +42,7 @@ jobs:
           expo-cache: true
 
       - name: Install dependencies
-        run: yarn install
+        run: npm install
 
       - name: Check env vars
         run: eas secret:list
