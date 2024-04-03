@@ -1,0 +1,50 @@
+name: EAS build
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - client/**
+
+jobs:
+  build:
+    name: Update EAS build
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - name: Check for EXPO_TOKEN
+        run: |
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "You must provide an EXPO_TOKEN"
+            exit 1
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: yarn
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+          expo-cache: true
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Check env vars
+        run: eas secret:list
+
+      - name: Publish update
+        run: eas build --profile preview --platform android
