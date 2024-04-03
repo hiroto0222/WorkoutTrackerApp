@@ -2,18 +2,18 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { IExercise } from "api/types";
 import ConfirmSelectionButton from "components/utils/ConfirmSelectionButton";
 import ExerciseCheckBox from "components/utils/ExerciseCheckBox";
-import { UserStackParams } from "navigation/UserStack";
 import { useState } from "react";
 import { SafeAreaView, ScrollView } from "react-native";
 import { Checkbox, Div, Text } from "react-native-magnus";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { addCurrExercises } from "store/slices/workout";
+import { WorkoutStackParams } from "./WorkoutScreenStack";
 
 const AddExerciseScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const route = useRoute<RouteProp<UserStackParams, "AddExercise">>();
+  const route = useRoute<RouteProp<WorkoutStackParams, "AddExercise">>();
   const workoutState = useSelector((state: RootState) => state.workout);
 
   const [selectedExercises, setSelectedExercises] = useState<IExercise[]>([]);

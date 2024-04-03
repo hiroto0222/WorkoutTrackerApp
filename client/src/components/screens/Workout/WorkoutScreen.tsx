@@ -4,23 +4,24 @@ import ExerciseLogInputTable from "components/base/workout/table/ExerciseLogInpu
 import useFinishWorkout from "hooks/api/useFinishWorkout";
 import useGetExercises from "hooks/utils/useGetExercises";
 import useTimer from "hooks/utils/useTimer";
-import { UserStackParams } from "navigation/UserStack";
 import { useEffect } from "react";
 import { Alert, SafeAreaView, ScrollView, View } from "react-native";
 import { Button, Div, Text } from "react-native-magnus";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
 import { formatTime } from "utils";
+import { WorkoutStackParams } from "./WorkoutScreenStack";
 
 const WorkoutScreen = () => {
   const navigation =
-    useNavigation<NativeStackNavigationProp<UserStackParams>>();
+    useNavigation<NativeStackNavigationProp<WorkoutStackParams>>();
   const workoutState = useSelector((state: RootState) => state.workout);
 
   const { seconds } = useTimer();
   const { exercises } = useGetExercises();
   const { validateAndCreateWorkoutData, sendWorkoutData } = useFinishWorkout();
 
+  // validate and send workout data
   const handleFinishWorkout = () => {
     const { isValid, exercise_ids, logs } = validateAndCreateWorkoutData();
     if (!isValid) {
@@ -70,7 +71,6 @@ const WorkoutScreen = () => {
   useEffect(() => {
     const removeListener = navigation.addListener("beforeRemove", (e) => {
       // if user has already finished workout, ignore
-      console.log(workoutState.isFinished);
       if (workoutState.isFinished) {
         return;
       }

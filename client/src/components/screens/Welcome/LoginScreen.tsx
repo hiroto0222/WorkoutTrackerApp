@@ -107,7 +107,7 @@ const LoginScreen = () => {
                 h={20}
                 w={20}
                 mr="md"
-                source={require("../../assets/google.png")}
+                source={require("../../../assets/google.png")}
               />
             }
           >

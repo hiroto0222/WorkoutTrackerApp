@@ -1,21 +1,15 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import Loading from "components/base/Loading";
 import Constants from "expo-constants";
-import useGetUser from "hooks/api/useGetUser";
-import { UserStackParams } from "navigation/UserStack";
-import React from "react";
 import { SafeAreaView, ScrollView, View } from "react-native";
-import { Avatar, Button, Div, Text } from "react-native-magnus";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "store";
+import { Button, Div, Text } from "react-native-magnus";
+import { useDispatch } from "react-redux";
 import { setStartWorkingOut } from "store/slices/workout";
+import { WorkoutStackParams } from "./WorkoutScreenStack";
 
-const HomeScreen = () => {
+const WorkoutHomeScreen = () => {
   const navigation =
-    useNavigation<NativeStackNavigationProp<UserStackParams>>();
-  const { loading: loadingGetUser } = useGetUser();
-  const userState = useSelector((state: RootState) => state.user);
+    useNavigation<NativeStackNavigationProp<WorkoutStackParams>>();
   const dispatch = useDispatch();
 
   const handleStartWorkout = () => {
@@ -23,9 +17,7 @@ const HomeScreen = () => {
     navigation.navigate("Workout");
   };
 
-  return loadingGetUser ? (
-    <Loading />
-  ) : (
+  return (
     <View>
       <SafeAreaView
         style={{ flex: 1, marginTop: Constants.statusBarHeight + 30 }}
@@ -43,15 +35,11 @@ const HomeScreen = () => {
             <Div>
               <Div row>
                 <Text fontSize="5xl" mr={5}>
-                  Hi,
-                </Text>
-                <Text fontSize="5xl" fontWeight="bold">
-                  {userState.user?.name.split(" ")[0]}
+                  Workout
                 </Text>
               </Div>
               <Text fontSize="lg">Get some exercise in!</Text>
             </Div>
-            <Avatar shadow={1} source={{ uri: userState.user?.photo }} />
           </Div>
           <Div mt="lg" alignItems="center" justifyContent="center">
             <Button
@@ -73,4 +61,4 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default WorkoutHomeScreen;
