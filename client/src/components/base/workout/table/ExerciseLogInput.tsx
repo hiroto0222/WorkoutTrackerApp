@@ -22,6 +22,7 @@ const ExerciseLogInput = ({
     borderWidth={0}
     textAlign="center"
     style={tableStyles.input}
+    maxLength={6}
     bg={
       isCompleted
         ? UIConstants.COLORS.PRIMARY.LIGHT
