@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    name: Update EAS build
+    name: Build EAS internal distribution
     runs-on: ubuntu-latest
     environment: production
     defaults:
@@ -48,5 +48,5 @@ jobs:
       - name: Check env vars
         run: eas secret:list
 
-      - name: Publish update
-        run: eas build --profile preview --platform android
+      - name: Publish preview build
+        run: eas build --profile preview --platform android --non-interactive --no-wait
