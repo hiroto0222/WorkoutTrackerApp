@@ -3,11 +3,12 @@ import { IExercise } from "api/types";
 import ConfirmSelectionButton from "components/utils/ConfirmSelectionButton";
 import ExerciseCheckBox from "components/utils/ExerciseCheckBox";
 import { useState } from "react";
-import { SafeAreaView, ScrollView } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { Checkbox, Div, Text } from "react-native-magnus";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { addCurrExercises } from "store/slices/workout";
+import Constants from "../../../constants";
 import { WorkoutStackParams } from "./WorkoutScreenStack";
 
 const AddExerciseScreen = () => {
@@ -44,7 +45,7 @@ const AddExerciseScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, marginTop: 20 }}>
+    <View style={styles.container}>
       <Div px={25}>
         <Text fontSize="3xl" fontWeight="bold">
           Add Exercises
@@ -52,10 +53,7 @@ const AddExerciseScreen = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            flexGrow: 1,
-            paddingBottom: 50,
-          }}
+          contentContainerStyle={styles.scrollViewContainer}
           style={{ marginTop: 15 }}
         >
           <Div>
@@ -75,8 +73,18 @@ const AddExerciseScreen = () => {
           <ConfirmSelectionButton onPress={handleOnConfirmation} />
         )}
       </Div>
-    </SafeAreaView>
+    </View>
   );
 };
 
 export default AddExerciseScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: Constants.SCREEN_MARGIN_TOP,
+  },
+  scrollViewContainer: {
+    flexGrow: 1,
+    paddingBottom: 120,
+  },
+});
