@@ -15,7 +15,7 @@ export type RootStackParams = {
   UserSetting: undefined;
 };
 
-const MyTheme = {
+export const MyTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
