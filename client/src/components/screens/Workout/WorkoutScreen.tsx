@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import ExerciseLogInputTable from "components/base/workout/table/ExerciseLogInputTable";
+import globalStyles from "components/styles";
 import useFinishWorkout from "hooks/api/useFinishWorkout";
 import useGetExercises from "hooks/utils/useGetExercises";
 import useTimer from "hooks/utils/useTimer";
@@ -10,7 +11,7 @@ import { Button, Div, Text } from "react-native-magnus";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
 import { formatTime } from "utils";
-import Constants from "../../../constants";
+import UIConstants from "../../../constants";
 import { WorkoutStackParams } from "./WorkoutScreenStack";
 
 const WorkoutScreen = () => {
@@ -58,8 +59,7 @@ const WorkoutScreen = () => {
       headerRight: () => (
         <Button
           bg="white"
-          color="orange500"
-          underlayColor="orange100"
+          color={UIConstants.COLORS.PRIMARY.REGULAR}
           onPress={() => handleFinishWorkout()}
         >
           FINISH
@@ -97,18 +97,20 @@ const WorkoutScreen = () => {
   }, [navigation, workoutState.isFinished]);
 
   return (
-    <View style={styles.container}>
-      <Div px={25}>
-        <Text fontSize="3xl" fontWeight="bold">
+    <View>
+      <Div px={25} style={styles.container}>
+        <Text fontSize="3xl" style={globalStyles.textMedium}>
           Workout
         </Text>
-        <Text fontSize="3xl">{formatTime(seconds)}</Text>
+        <Text fontSize="3xl" style={globalStyles.textLight}>
+          {formatTime(seconds)}
+        </Text>
         <Div mt="md" alignItems="center" justifyContent="center">
           <Button
             mx="xl"
             mb="xl"
             py="lg"
-            bg="orange500"
+            bg={UIConstants.COLORS.PRIMARY.REGULAR}
             rounded="circle"
             block
             onPress={handleOnAddExercises}
@@ -120,9 +122,11 @@ const WorkoutScreen = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
+        automaticallyAdjustKeyboardInsets={true}
         contentContainerStyle={{
           flexGrow: 1,
-          paddingBottom: 350,
+          marginTop: 15,
+          paddingBottom: 250,
         }}
       >
         {workoutState.currExercises.map((exercise) => (
@@ -137,6 +141,9 @@ export default WorkoutScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Constants.SCREEN_MARGIN_TOP,
+    paddingTop: UIConstants.SCREEN_MARGIN_TOP - 5,
+    backgroundColor: UIConstants.COLORS.GRAY.LIGHT,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
 });

@@ -1,9 +1,11 @@
 import { IExercise, LogType } from "api/types";
+import globalStyles from "components/styles";
 import { useState } from "react";
 import { View } from "react-native";
 import { Div, Input, Text } from "react-native-magnus";
 import { useDispatch } from "react-redux";
 import { Log, addCompletedLog } from "store/slices/workout";
+import UIConstants from "../../../../constants";
 import ExerciseLogInputConfirmButton from "./ExerciseLogInputConfirmButton";
 import { tableStyles } from "./TableStyles";
 
@@ -77,17 +79,24 @@ const WeightRepsInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
       }
     >
       <View style={tableStyles.columnOne}>
-        <Text fontSize="2xl">{setNumber + 1}</Text>
+        <Text fontSize="xl" style={globalStyles.textRegular}>
+          {setNumber + 1}
+        </Text>
       </View>
       <View style={tableStyles.columnOneInput}>
         <Input
           value={weight}
           onChangeText={handleChangeWeight}
           keyboardType="numeric"
-          fontSize="2xl"
+          fontSize="xl"
           borderWidth={0}
           textAlign="center"
-          style={{ borderRadius: 15 }}
+          style={tableStyles.input}
+          bg={
+            isCompleted
+              ? UIConstants.COLORS.PRIMARY.LIGHT
+              : UIConstants.COLORS.GRAY.LIGHT
+          }
         />
       </View>
       <View style={tableStyles.columnOneInput}>
@@ -95,10 +104,15 @@ const WeightRepsInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
           value={reps}
           onChangeText={handleChangeReps}
           keyboardType="numeric"
-          fontSize="2xl"
+          fontSize="xl"
           borderWidth={0}
           textAlign="center"
-          style={{ borderRadius: 15 }}
+          style={tableStyles.input}
+          bg={
+            isCompleted
+              ? UIConstants.COLORS.PRIMARY.LIGHT
+              : UIConstants.COLORS.GRAY.LIGHT
+          }
         />
       </View>
       <View style={tableStyles.columnOne}>
@@ -140,17 +154,24 @@ const TimerInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
       }
     >
       <View style={tableStyles.columnOne}>
-        <Text fontSize="2xl">{setNumber + 1}</Text>
+        <Text fontSize="xl" style={globalStyles.textRegular}>
+          {setNumber + 1}
+        </Text>
       </View>
       <View style={tableStyles.columnTwoInput}>
         <Input
           value={seconds}
           onChangeText={handleChangeTimer}
           keyboardType="numeric"
-          fontSize="2xl"
+          fontSize="xl"
           borderWidth={0}
           textAlign="center"
-          style={{ borderRadius: 15 }}
+          style={tableStyles.input}
+          bg={
+            isCompleted
+              ? UIConstants.COLORS.PRIMARY.LIGHT
+              : UIConstants.COLORS.GRAY.LIGHT
+          }
         />
       </View>
       <View style={tableStyles.columnOne}>
@@ -192,17 +213,24 @@ const RepsInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
       }
     >
       <View style={tableStyles.columnOne}>
-        <Text fontSize="2xl">{setNumber + 1}</Text>
+        <Text fontSize="xl" style={globalStyles.textRegular}>
+          {setNumber + 1}
+        </Text>
       </View>
       <View style={tableStyles.columnTwoInput}>
         <Input
           value={reps}
           onChangeText={handleChangeReps}
           keyboardType="numeric"
-          fontSize="2xl"
+          fontSize="xl"
           borderWidth={0}
           textAlign="center"
-          style={{ borderRadius: 15 }}
+          style={tableStyles.input}
+          bg={
+            isCompleted
+              ? UIConstants.COLORS.PRIMARY.LIGHT
+              : UIConstants.COLORS.GRAY.LIGHT
+          }
         />
       </View>
       <View style={tableStyles.columnOne}>

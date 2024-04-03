@@ -1,5 +1,6 @@
 import { TouchableOpacity, View } from "react-native";
 import { Icon } from "react-native-magnus";
+import UIConstants from "../../../constants";
 
 type Props = {
   onPress: () => void;
@@ -9,7 +10,7 @@ const ConfirmSelectionButton = ({ onPress }: Props) => (
   <TouchableOpacity
     style={{
       position: "absolute",
-      bottom: 65,
+      bottom: 140,
       right: 15,
     }}
     onPress={onPress}
@@ -19,7 +20,7 @@ const ConfirmSelectionButton = ({ onPress }: Props) => (
         width: 70,
         height: 70,
         borderRadius: 35,
-        backgroundColor: "#ed8936",
+        backgroundColor: UIConstants.COLORS.PRIMARY.REGULAR,
         alignItems: "center",
         justifyContent: "center",
       }}

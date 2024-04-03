@@ -1,11 +1,12 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
+import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import HomeScreen from "components/screens/Home/HomeScreen";
 import UserSettingScreen from "components/screens/UserSettings/UserSettingScreen";
 import WorkoutScreenStack, {
   WorkoutStackParams,
 } from "components/screens/Workout/WorkoutScreenStack";
 import { Icon } from "react-native-magnus";
+import UIConstants from "../constants";
 
 export type RootStackParams = {
   Root: undefined;
@@ -14,24 +15,33 @@ export type RootStackParams = {
   UserSetting: undefined;
 };
 
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: "#fff",
+  },
+};
+
 const BottomTabStack = createBottomTabNavigator<RootStackParams>();
 
 const RootStack = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={MyTheme}>
       <BottomTabStack.Navigator
         initialRouteName="Home"
         screenOptions={{
           headerShown: false,
-          tabBarActiveTintColor: "#ed8936",
+          tabBarShowLabel: false,
+          tabBarActiveTintColor: UIConstants.COLORS.PRIMARY.REGULAR,
           tabBarStyle: {
+            shadowColor: "#fff",
             height: 60,
-            borderTopLeftRadius: 30,
-            borderTopRightRadius: 30,
             position: "absolute",
             paddingHorizontal: 20,
             backgroundColor: "#fff",
           },
+          tabBarHideOnKeyboard: true,
         }}
       >
         <BottomTabStack.Screen

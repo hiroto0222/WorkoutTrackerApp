@@ -1,4 +1,5 @@
 import { LogType } from "api/types";
+import globalStyles from "components/styles";
 import { View } from "react-native";
 import { Text } from "react-native-magnus";
 import { tableStyles } from "./TableStyles";
@@ -26,13 +27,13 @@ export default ExerciseLogHeader;
 const WeightRepsInputHeader = () => (
   <View style={tableStyles.tableHeader}>
     <View style={tableStyles.columnOne}>
-      <Text>Set</Text>
+      <Text style={globalStyles.textRegular}>Set</Text>
     </View>
     <View style={tableStyles.columnOne}>
-      <Text>(+kg)</Text>
+      <Text style={globalStyles.textRegular}>(+kg)</Text>
     </View>
     <View style={tableStyles.columnOne}>
-      <Text>Reps</Text>
+      <Text style={globalStyles.textRegular}>Reps</Text>
     </View>
     <View style={tableStyles.columnOne} />
   </View>
@@ -41,10 +42,10 @@ const WeightRepsInputHeader = () => (
 const TimerInputHeader = () => (
   <View style={tableStyles.tableHeader}>
     <View style={tableStyles.columnOne}>
-      <Text>Set</Text>
+      <Text style={globalStyles.textRegular}>Set</Text>
     </View>
     <View style={tableStyles.columnTwo}>
-      <Text>Time</Text>
+      <Text style={globalStyles.textRegular}>Time</Text>
     </View>
     <View style={tableStyles.columnOne} />
   </View>
@@ -53,10 +54,10 @@ const TimerInputHeader = () => (
 const RepsInputHeader = () => (
   <View style={tableStyles.tableHeader}>
     <View style={tableStyles.columnOne}>
-      <Text>Set</Text>
+      <Text style={globalStyles.textRegular}>Set</Text>
     </View>
     <View style={tableStyles.columnTwo}>
-      <Text>Reps</Text>
+      <Text style={globalStyles.textRegular}>Reps</Text>
     </View>
     <View style={tableStyles.columnOne} />
   </View>

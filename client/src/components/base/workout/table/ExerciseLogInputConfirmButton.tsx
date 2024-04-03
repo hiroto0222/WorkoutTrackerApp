@@ -1,5 +1,6 @@
 import { TouchableOpacity, View } from "react-native";
 import { Icon } from "react-native-magnus";
+import UIConstants from "../../../../constants";
 
 type Props = {
   onPress: () => void;
@@ -9,10 +10,10 @@ const ExerciseLogInputConfirmButton = ({ onPress }: Props) => (
   <TouchableOpacity onPress={onPress}>
     <View
       style={{
-        width: 40,
-        height: 40,
-        borderRadius: 35,
-        backgroundColor: "#ed8936",
+        width: 50,
+        height: 30,
+        borderRadius: 20,
+        backgroundColor: UIConstants.COLORS.PRIMARY.REGULAR,
         alignItems: "center",
         justifyContent: "center",
       }}
