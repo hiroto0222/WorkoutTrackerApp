@@ -6,7 +6,7 @@ import useGetExercises from "hooks/utils/useGetExercises";
 import useTimer from "hooks/utils/useTimer";
 import { UserStackParams } from "navigation/UserStack";
 import { useEffect } from "react";
-import { SafeAreaView, ScrollView, View } from "react-native";
+import { Alert, SafeAreaView, ScrollView, View } from "react-native";
 import { Button, Div, Text } from "react-native-magnus";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
@@ -19,10 +19,29 @@ const WorkoutScreen = () => {
 
   const { seconds } = useTimer();
   const { exercises } = useGetExercises();
-  const { finishWorkout } = useFinishWorkout();
+  const { validateAndCreateWorkoutData, sendWorkoutData } = useFinishWorkout();
 
   const handleFinishWorkout = () => {
-    finishWorkout();
+    const { isValid, exercise_ids, logs } = validateAndCreateWorkoutData();
+    if (!isValid) {
+      Alert.alert(
+        "Please add some exercises and sets to finish your workout!",
+        undefined,
+        [{ text: "Ok", style: "default", onPress: () => {} }]
+      );
+      return;
+    }
+
+    Alert.alert("Finish workout?", "Any unfinished sets will be discarded", [
+      { text: "Cancel", style: "cancel", onPress: () => {} },
+      {
+        text: "Confirm",
+        style: "destructive",
+        onPress: () => {
+          sendWorkoutData(exercise_ids, logs);
+        },
+      },
+    ]);
   };
 
   const handleOnAddExercises = () => {
@@ -31,6 +50,7 @@ const WorkoutScreen = () => {
     }
   };
 
+  // add finish workout button to header
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -45,6 +65,35 @@ const WorkoutScreen = () => {
       ),
     });
   }, [workoutState]);
+
+  // warn user when going back
+  useEffect(() => {
+    const removeListener = navigation.addListener("beforeRemove", (e) => {
+      // if user has already finished workout, ignore
+      console.log(workoutState.isFinished);
+      if (workoutState.isFinished) {
+        return;
+      }
+
+      e.preventDefault();
+      Alert.alert(
+        "Discard workout?",
+        "All changes will be unsaved, do you want to discard your current workout?",
+        [
+          { text: "Don't leave", style: "cancel", onPress: () => {} },
+          {
+            text: "Discard",
+            style: "destructive",
+            onPress: () => navigation.dispatch(e.data.action),
+          },
+        ]
+      );
+    });
+
+    return () => {
+      removeListener();
+    };
+  }, [navigation, workoutState.isFinished]);
 
   return (
     <View>
