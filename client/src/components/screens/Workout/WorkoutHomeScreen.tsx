@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import globalStyles from "components/styles";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { Button, Div, Text } from "react-native-magnus";
 import { useDispatch } from "react-redux";
 import { setStartWorkingOut } from "store/slices/workout";
@@ -56,6 +56,9 @@ export default WorkoutHomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: UIConstants.SCREEN_MARGIN_TOP,
+    marginTop:
+      Platform.OS === "android"
+        ? UIConstants.SCREEN_MARGIN_TOP
+        : UIConstants.SCREEN_MARGIN_TOP + 30,
   },
 });

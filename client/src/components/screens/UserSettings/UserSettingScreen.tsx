@@ -1,7 +1,7 @@
 import globalStyles from "components/styles";
 import { auth } from "config/firebase";
 import { signOut } from "firebase/auth";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { Button, Div, Text } from "react-native-magnus";
 import { useDispatch } from "react-redux";
 import { setAuth } from "store/slices/auth";
@@ -43,6 +43,9 @@ export default UserSettingScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: UIConstants.SCREEN_MARGIN_TOP,
+    marginTop:
+      Platform.OS === "android"
+        ? UIConstants.SCREEN_MARGIN_TOP
+        : UIConstants.SCREEN_MARGIN_TOP + 30,
   },
 });
