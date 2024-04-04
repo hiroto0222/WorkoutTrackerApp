@@ -121,10 +121,6 @@ func (s *WorkoutServiceImpl) CreateWorkout(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Successfully added workout entry"})
 }
 
-type GetWorkoutsRequestParams struct {
-	userID string `uri:"user_id" binding:"required,min=1"`
-}
-
 type GetWorkoutsResponse struct {
 	ID        uuid.UUID `json:"id" binding:"required"`
 	StartedAt time.Time `json:"started_at" binding:"required"`
@@ -134,8 +130,8 @@ type GetWorkoutsResponse struct {
 // GetWorkouts gets workout records for the user
 func (s *WorkoutServiceImpl) GetWorkouts(ctx *gin.Context) {
 	// get req parameters
-	var reqParams GetWorkoutsRequestParams
-	if err := ctx.ShouldBindUri(&reqParams); err != nil {
+	reqUserId, ok := ctx.Params.Get("user_id")
+	if !ok {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Parameters not provided"})
 		return
 	}
@@ -154,7 +150,9 @@ func (s *WorkoutServiceImpl) GetWorkouts(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user id from request"})
 		return
 	}
-	if userID != reqParams.userID {
+	log.Println(userID)
+	log.Println(reqUserId)
+	if userID != reqUserId {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "You do not have permission"})
 		return
 	}
