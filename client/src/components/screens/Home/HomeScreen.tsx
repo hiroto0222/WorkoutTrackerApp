@@ -3,7 +3,7 @@ import Card from "components/base/home/Card";
 import WorkoutDetailCard from "components/base/home/WorkoutDetailCard";
 import globalStyles from "components/styles";
 import useGetUser from "hooks/api/useGetUser";
-import useGetWorkouts from "hooks/api/useGetWorkouts";
+import useGetWorkoutsData from "hooks/api/useGetWorkoutsData";
 import React from "react";
 import { FlatList, Platform, StyleSheet, View } from "react-native";
 import { Avatar, Div, Text } from "react-native-magnus";
@@ -15,7 +15,7 @@ const HomeScreen = () => {
   const userState = useSelector((state: RootState) => state.user);
 
   const { loading: loadingGetUser } = useGetUser();
-  const { loading: loadingGetWorkouts, workoutsData } = useGetWorkouts();
+  const { loading: loadingGetWorkouts, workoutsData } = useGetWorkoutsData();
 
   return loadingGetUser || loadingGetWorkouts ? (
     <Loading />

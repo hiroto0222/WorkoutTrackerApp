@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "store";
 import axios, { API_ENDPOINTS, AxiosResponse } from "../../api";
 
-const useGetWorkouts = () => {
+const useGetWorkoutsData = () => {
   const authState = useSelector((state: RootState) => state.auth);
   const [loading, setLoading] = useState(true);
   const [workoutsData, setWorkoutsData] = useState<IWorkoutsResponse[]>([]);
@@ -35,4 +35,4 @@ const useGetWorkouts = () => {
   return { loading, workoutsData };
 };
 
-export default useGetWorkouts;
+export default useGetWorkoutsData;
