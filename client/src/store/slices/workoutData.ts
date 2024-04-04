@@ -1,20 +1,29 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { IWorkoutsResponse } from "api/types";
+import { IWorkoutLogsResponse, IWorkoutsResponse } from "api/types";
 
 export interface WorkoutDataState {
   workouts: IWorkoutsResponse[];
+  workoutLogs: IWorkoutLogsResponse;
 }
 
 const initialState: WorkoutDataState = {
   workouts: [],
+  workoutLogs: {},
 };
 
 export const workoutDataSlice = createSlice({
   name: "workoutData",
   initialState,
   reducers: {
-    setWorkouts: (state, action: PayloadAction<IWorkoutsResponse[]>) => {
-      state.workouts = action.payload;
+    setWorkouts: (
+      state,
+      action: PayloadAction<{
+        workouts: IWorkoutsResponse[];
+        workoutLogs: IWorkoutLogsResponse;
+      }>
+    ) => {
+      state.workouts = action.payload.workouts;
+      state.workoutLogs = action.payload.workoutLogs;
     },
   },
 });

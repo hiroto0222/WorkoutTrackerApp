@@ -36,16 +36,16 @@ export interface IExerciseResponse {
   log_type: LogType;
 }
 
-// Log data to send as POST request
-export interface ILogRequest {
+// Log data to send/recieve
+export interface ILog {
   weight?: number;
   reps?: number;
   time?: number;
 }
 
 // List of log data to send as POST request
-export interface ILogRequests {
-  [exercise_id: number]: ILogRequest[];
+export interface ILogs {
+  [exercise_id: number]: ILog[];
 }
 
 // Workout data to send as POST request
@@ -54,12 +54,17 @@ export interface ICreateWorkoutRequest {
   started_at: string;
   ended_at: string;
   exercise_ids: number[];
-  logs: ILogRequests;
+  logs: ILogs;
 }
 
-// Workout data sent from server
+// WorkoutData.workouts sent from server
 export interface IWorkoutsResponse {
   id: string;
   started_at: string;
   ended_at: string;
+}
+
+// WorkoutData.workoutLogs sent from server
+export interface IWorkoutLogsResponse {
+  [workout_id: string]: ILogs;
 }

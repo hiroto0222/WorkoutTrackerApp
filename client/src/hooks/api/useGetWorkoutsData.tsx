@@ -2,7 +2,6 @@ import { IWorkoutsResponse } from "api/types";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
-import { setWorkouts } from "store/slices/workoutData";
 import axios, { API_ENDPOINTS, AxiosResponse } from "../../api";
 
 const useGetWorkoutsData = () => {
@@ -22,7 +21,7 @@ const useGetWorkoutsData = () => {
             },
           }
         );
-        dispatch(setWorkouts(resWorkouts.data.data));
+        // dispatch(setWorkouts(resWorkouts.data.data));
         setLoading(false);
       } catch (err) {
         console.log(err);
