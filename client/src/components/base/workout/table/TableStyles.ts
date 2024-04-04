@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import UIConstants from "../../../../constants";
 
 export const tableStyles = StyleSheet.create({
   tableHeader: {
@@ -18,11 +19,12 @@ export const tableStyles = StyleSheet.create({
   tableRowInComplete: {
     paddingVertical: 5,
     flexDirection: "row",
+    backgroundColor: "#fff",
   },
   tableRowComplete: {
     paddingVertical: 5,
     flexDirection: "row",
-    backgroundColor: "#9ae6b4",
+    backgroundColor: UIConstants.COLORS.SUCCESS.REGULAR,
   },
   columnOneInput: {
     justifyContent: "center",
@@ -35,5 +37,9 @@ export const tableStyles = StyleSheet.create({
     alignItems: "center",
     width: "50%",
     padding: 5,
+  },
+  input: {
+    borderRadius: 10,
+    paddingVertical: 3,
   },
 });

@@ -1,23 +1,46 @@
 import { TouchableOpacity, View } from "react-native";
 import { Icon } from "react-native-magnus";
+import UIConstants from "../../../../constants";
 
 type Props = {
-  onPress: () => void;
+  isComplete: boolean;
+  onComplete: () => void;
+  onEdit: () => void;
 };
 
-const ExerciseLogInputConfirmButton = ({ onPress }: Props) => (
-  <TouchableOpacity onPress={onPress}>
+const ExerciseLogInputConfirmButton = ({
+  isComplete,
+  onComplete,
+  onEdit,
+}: Props) => (
+  <TouchableOpacity onPress={isComplete ? onEdit : onComplete}>
     <View
       style={{
-        width: 40,
-        height: 40,
-        borderRadius: 35,
-        backgroundColor: "#ed8936",
+        width: 50,
+        height: 30,
+        borderRadius: 20,
+        backgroundColor: isComplete
+          ? UIConstants.COLORS.GRAY.LIGHT
+          : UIConstants.COLORS.PRIMARY.REGULAR,
         alignItems: "center",
         justifyContent: "center",
       }}
     >
-      <Icon fontSize="3xl" fontFamily="AntDesign" name="check" color="#fff" />
+      {isComplete ? (
+        <Icon
+          fontSize="3xl"
+          fontFamily="MaterialCommunityIcons"
+          name="pencil"
+          color="#000"
+        />
+      ) : (
+        <Icon
+          fontSize="3xl"
+          fontFamily="MaterialCommunityIcons"
+          name="check"
+          color="#fff"
+        />
+      )}
     </View>
   </TouchableOpacity>
 );

@@ -43,11 +43,16 @@ export interface ILogRequest {
   time?: number;
 }
 
+// List of log data to send as POST request
+export interface ILogRequests {
+  [exercise_id: number]: ILogRequest[];
+}
+
 // Workout data to send as POST request
 export interface ICreateWorkoutRequest {
   user_id: string;
   started_at: string;
   ended_at: string;
   exercise_ids: number[];
-  logs: { [exercise_id: number]: ILogRequest[] };
+  logs: ILogRequests;
 }

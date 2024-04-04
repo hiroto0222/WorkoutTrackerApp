@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { ICreateWorkoutRequest, ILogRequest } from "api/types";
-import { UserStackParams } from "navigation/UserStack";
+import { ICreateWorkoutRequest, ILogRequests } from "api/types";
+import { RootStackParams } from "navigation/RootStack";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { setFinishWorkout } from "store/slices/workout";
@@ -10,13 +10,14 @@ import axios from "../../api";
 const useFinishWorkout = () => {
   const dispatch = useDispatch();
   const navigation =
-    useNavigation<NativeStackNavigationProp<UserStackParams>>();
+    useNavigation<NativeStackNavigationProp<RootStackParams>>();
   const workoutState = useSelector((state: RootState) => state.workout);
   const authState = useSelector((state: RootState) => state.auth);
 
-  const finishWorkout = async () => {
+  const validateAndCreateWorkoutData = () => {
+    var isValid = false;
     const exercise_ids: number[] = [];
-    const logs: { [exercise_id: number]: ILogRequest[] } = {};
+    const logs: ILogRequests = {};
 
     // validate data
     workoutState.currExercises.forEach((exercise) => {
@@ -44,12 +45,18 @@ const useFinishWorkout = () => {
       }
     });
 
-    // if no valid log entries, alert user
-    if (exercise_ids.length < 1) {
-      alert("no valid log entries!");
-      return;
+    // check if valid entries
+    if (exercise_ids.length > 0) {
+      isValid = true;
     }
 
+    return { isValid, exercise_ids, logs };
+  };
+
+  const sendWorkoutData = async (
+    exercise_ids: number[],
+    logs: ILogRequests
+  ) => {
     // else send to server
     if (authState.userId === undefined) {
       console.log("no user id");
@@ -73,7 +80,8 @@ const useFinishWorkout = () => {
         },
       });
       console.log(res);
-      dispatch(setFinishWorkout());
+      // make sure isFinishWorkout is updated before navigation pop
+      await dispatch(setFinishWorkout());
       navigation.popToTop();
     } catch (err) {
       console.log(err);
@@ -81,7 +89,7 @@ const useFinishWorkout = () => {
     }
   };
 
-  return { finishWorkout };
+  return { validateAndCreateWorkoutData, sendWorkoutData };
 };
 
 export default useFinishWorkout;

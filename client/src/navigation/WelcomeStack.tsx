@@ -1,12 +1,13 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import LoginScreen from "components/screens/LoginScreen";
+import LoginScreen from "components/screens/Welcome/LoginScreen";
+import { MyTheme } from "./RootStack";
 
 const Stack = createNativeStackNavigator();
 
-const AuthStack = () => {
+const WelcomeStack = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={MyTheme}>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
@@ -18,4 +19,4 @@ const AuthStack = () => {
   );
 };
 
-export default AuthStack;
+export default WelcomeStack;

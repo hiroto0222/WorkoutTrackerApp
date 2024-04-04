@@ -1,11 +1,11 @@
-import Constants from "expo-constants";
+import globalStyles from "components/styles";
 import * as WebBrowser from "expo-web-browser";
 import useGoogleLogin from "hooks/auth/useGoogleLogin";
 import useLogin from "hooks/auth/useLogin";
 import useSignUp from "hooks/auth/useSignUp";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native";
 import { Button, Div, Image, Input, Text } from "react-native-magnus";
+import UIConstants from "../../../constants";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -17,9 +17,15 @@ const LoginScreen = () => {
   const { login } = useLogin();
 
   return (
-    <SafeAreaView style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
+    <>
       <Div flex={1} mt="2xl">
-        <Text mt="3xl" mx="xl" w="70%" fontWeight="bold" fontSize="5xl">
+        <Text
+          mt="3xl"
+          mx="xl"
+          w="70%"
+          fontSize="5xl"
+          style={globalStyles.textMedium}
+        >
           Get Started
         </Text>
         <Input
@@ -52,7 +58,7 @@ const LoginScreen = () => {
           mt="xl"
           mb="xl"
           py="lg"
-          bg="orange500"
+          bg={UIConstants.COLORS.PRIMARY.REGULAR}
           rounded="circle"
           block
         >
@@ -63,7 +69,7 @@ const LoginScreen = () => {
           mx="xl"
           mb="xl"
           py="lg"
-          bg="gray300"
+          bg={UIConstants.COLORS.GRAY.LIGHT}
           rounded="circle"
           block
           color="black"
@@ -107,7 +113,7 @@ const LoginScreen = () => {
                 h={20}
                 w={20}
                 mr="md"
-                source={require("../../assets/google.png")}
+                source={require("../../../assets/google.png")}
               />
             }
           >
@@ -115,7 +121,7 @@ const LoginScreen = () => {
           </Button>
         </Div>
       </Div>
-    </SafeAreaView>
+    </>
   );
 };
 

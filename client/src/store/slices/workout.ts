@@ -9,6 +9,7 @@ export type Log = {
 };
 
 export interface WorkoutState {
+  isFinished: boolean;
   startedAt: string;
   endedAt?: string;
   currExercises: IExercise[];
@@ -16,6 +17,7 @@ export interface WorkoutState {
 }
 
 const initialState: WorkoutState = {
+  isFinished: false,
   startedAt: Date.now().toString(),
   endedAt: undefined,
   currExercises: [],
@@ -29,6 +31,7 @@ export const workoutSlice = createSlice({
     setStartWorkingOut: (state, action: PayloadAction<void>) => {
       const date = new Date().toJSON();
       state.startedAt = date;
+      state.isFinished = false;
       state.currExercises = [];
       state.currLogs = {};
     },
@@ -78,9 +81,49 @@ export const workoutSlice = createSlice({
         i === setNumber ? newLog : log
       );
     },
+    setInCompleteLog: (
+      state,
+      action: PayloadAction<{
+        exercise: IExercise;
+        setNumber: number;
+      }>
+    ) => {
+      const exerciseId = action.payload.exercise.id;
+      const setNumber = action.payload.setNumber;
+      state.currLogs[exerciseId] = state.currLogs[exerciseId].map((log, i) => {
+        if (i === setNumber) {
+          log.isCompleted = false;
+          return log;
+        }
+        return log;
+      });
+    },
+    deleteLog: (
+      state,
+      action: PayloadAction<{
+        exercise: IExercise;
+        setNumber: number;
+      }>
+    ) => {
+      const exerciseId = action.payload.exercise.id;
+      const setNumber = action.payload.setNumber;
+      state.currLogs[exerciseId] = state.currLogs[exerciseId].filter(
+        (log, i) => {
+          if (i !== setNumber) {
+            return log;
+          }
+        }
+      );
+
+      // if last log was deleted, also delete the exercise
+      if (state.currLogs[exerciseId].length < 1) {
+        state.currExercises = state.currExercises.filter(
+          (exercise) => exercise.id != exerciseId
+        );
+      }
+    },
     setFinishWorkout: (state, action: PayloadAction) => {
-      state.currExercises = [];
-      state.currLogs = {};
+      state.isFinished = true;
     },
   },
 });
@@ -91,7 +134,9 @@ export const {
   removeCurrExercises,
   addEmptyLog,
   addCompletedLog,
+  setInCompleteLog,
   setFinishWorkout,
+  deleteLog,
 } = workoutSlice.actions;
 
 export default workoutSlice.reducer;
