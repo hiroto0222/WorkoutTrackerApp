@@ -25,7 +25,12 @@ const ConfirmSelectionButton = ({ onPress }: Props) => (
         justifyContent: "center",
       }}
     >
-      <Icon fontSize="6xl" fontFamily="AntDesign" name="check" color="#fff" />
+      <Icon
+        fontSize="6xl"
+        fontFamily="MaterialCommunityIcons"
+        name="check"
+        color="#fff"
+      />
     </View>
   </TouchableOpacity>
 );

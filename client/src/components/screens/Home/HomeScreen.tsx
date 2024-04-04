@@ -1,4 +1,5 @@
 import Loading from "components/base/Loading";
+import Card from "components/base/home/Card";
 import globalStyles from "components/styles";
 import useGetUser from "hooks/api/useGetUser";
 import React from "react";
@@ -17,7 +18,7 @@ const HomeScreen = () => {
   ) : (
     <View style={styles.container}>
       <Div px={25}>
-        <Div row justifyContent={"space-between"} alignItems="center">
+        <Div row style={styles.topContainer}>
           <Div>
             <Div row>
               <Text fontSize="6xl" mr={5} style={globalStyles.textLight}>
@@ -27,9 +28,19 @@ const HomeScreen = () => {
                 {userState.user?.name.split(" ")[0]}
               </Text>
             </Div>
-            <Text style={globalStyles.textMedium} fontSize="lg">
-              Get some exercise in!
-            </Text>
+            <Div row>
+              <Text
+                color={UIConstants.COLORS.PRIMARY.REGULAR}
+                mr={5}
+                style={globalStyles.textExtraBold}
+                fontSize="lg"
+              >
+                31
+              </Text>
+              <Text style={globalStyles.textMedium} fontSize="lg">
+                Days since your last workout
+              </Text>
+            </Div>
           </Div>
           <Avatar shadow={1} source={{ uri: userState.user?.photo }} />
         </Div>
@@ -38,12 +49,19 @@ const HomeScreen = () => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.scrollViewContainer}
         >
-          <Text
-            textAlign="center"
-            fontSize="xl"
-            style={globalStyles.textMedium}
-          >
-            looks empty...
+          <Text fontSize="3xl" style={globalStyles.textMedium}>
+            This week
+          </Text>
+          <Div row justifyContent="space-between">
+            <Card title="Workouts" width={"30%"} />
+            <Card title="Time" width={"30%"} />
+            <Card title="Workouts" width={"30%"} />
+          </Div>
+          <Div row justifyContent="center">
+            <Card title="Graph" width={"100%"} />
+          </Div>
+          <Text mt={10} fontSize="3xl" style={globalStyles.textMedium}>
+            History
           </Text>
         </ScrollView>
       </Div>
@@ -60,9 +78,17 @@ const styles = StyleSheet.create({
         ? UIConstants.SCREEN_MARGIN_TOP
         : UIConstants.SCREEN_MARGIN_TOP + 30,
   },
+  topContainer: {
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 50,
+  },
   scrollViewContainer: {
-    marginTop: 50,
     flexGrow: 1,
     paddingBottom: 350,
+  },
+  cardsContainer: {
+    justifyContent: "space-between",
+    marginBottom: 30,
   },
 });

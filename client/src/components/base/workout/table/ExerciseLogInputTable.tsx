@@ -26,7 +26,7 @@ const ExerciseLogInputTable = ({ exercise }: Props) => {
       <Text
         px={25}
         mb={10}
-        style={globalStyles.textRegular}
+        style={globalStyles.textMedium}
         fontSize="2xl"
         color={UIConstants.COLORS.PRIMARY.REGULAR}
       >
@@ -39,6 +39,9 @@ const ExerciseLogInputTable = ({ exercise }: Props) => {
           exercise={exercise}
           setNumber={setNumber}
           isCompleted={log.isCompleted}
+          isDeletable={
+            workoutState.currLogs[exercise.id].length === setNumber + 1
+          }
         />
       ))}
       <Div mx="3xl" mt="md" alignItems="center" justifyContent="center">
@@ -52,7 +55,7 @@ const ExerciseLogInputTable = ({ exercise }: Props) => {
         >
           <Icon
             fontSize="xl"
-            fontFamily="AntDesign"
+            fontFamily="MaterialCommunityIcons"
             name="plus"
             color="black"
           />

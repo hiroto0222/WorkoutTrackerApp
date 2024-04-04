@@ -81,6 +81,47 @@ export const workoutSlice = createSlice({
         i === setNumber ? newLog : log
       );
     },
+    setInCompleteLog: (
+      state,
+      action: PayloadAction<{
+        exercise: IExercise;
+        setNumber: number;
+      }>
+    ) => {
+      const exerciseId = action.payload.exercise.id;
+      const setNumber = action.payload.setNumber;
+      state.currLogs[exerciseId] = state.currLogs[exerciseId].map((log, i) => {
+        if (i === setNumber) {
+          log.isCompleted = false;
+          return log;
+        }
+        return log;
+      });
+    },
+    deleteLog: (
+      state,
+      action: PayloadAction<{
+        exercise: IExercise;
+        setNumber: number;
+      }>
+    ) => {
+      const exerciseId = action.payload.exercise.id;
+      const setNumber = action.payload.setNumber;
+      state.currLogs[exerciseId] = state.currLogs[exerciseId].filter(
+        (log, i) => {
+          if (i !== setNumber) {
+            return log;
+          }
+        }
+      );
+
+      // if last log was deleted, also delete the exercise
+      if (state.currLogs[exerciseId].length < 1) {
+        state.currExercises = state.currExercises.filter(
+          (exercise) => exercise.id != exerciseId
+        );
+      }
+    },
     setFinishWorkout: (state, action: PayloadAction) => {
       state.isFinished = true;
     },
@@ -93,7 +134,9 @@ export const {
   removeCurrExercises,
   addEmptyLog,
   addCompletedLog,
+  setInCompleteLog,
   setFinishWorkout,
+  deleteLog,
 } = workoutSlice.actions;
 
 export default workoutSlice.reducer;

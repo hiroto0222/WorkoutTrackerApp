@@ -19,7 +19,7 @@ const UIConstants = {
     },
     SUCCESS: {
       LIGHT: "#b3e0b9",
-      REGULAR: "#71d97f",
+      REGULAR: "#48bb78",
     },
     GRAY: {
       LIGHT: "#e2e8f0",
