@@ -20,7 +20,7 @@ const ExerciseLogInputConfirmButton = ({
         height: 30,
         borderRadius: 20,
         backgroundColor: isComplete
-          ? UIConstants.COLORS.GRAY.REGULAR
+          ? UIConstants.COLORS.GRAY.LIGHT
           : UIConstants.COLORS.PRIMARY.REGULAR,
         alignItems: "center",
         justifyContent: "center",
@@ -31,7 +31,7 @@ const ExerciseLogInputConfirmButton = ({
           fontSize="3xl"
           fontFamily="MaterialCommunityIcons"
           name="pencil"
-          color="#fff"
+          color="#000"
         />
       ) : (
         <Icon

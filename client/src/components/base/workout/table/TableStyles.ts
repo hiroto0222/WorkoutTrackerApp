@@ -19,11 +19,12 @@ export const tableStyles = StyleSheet.create({
   tableRowInComplete: {
     paddingVertical: 5,
     flexDirection: "row",
+    backgroundColor: "#fff",
   },
   tableRowComplete: {
     paddingVertical: 5,
     flexDirection: "row",
-    backgroundColor: UIConstants.COLORS.PRIMARY.LIGHT,
+    backgroundColor: UIConstants.COLORS.SUCCESS.REGULAR,
   },
   columnOneInput: {
     justifyContent: "center",

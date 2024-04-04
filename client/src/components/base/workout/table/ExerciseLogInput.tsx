@@ -14,6 +14,7 @@ const ExerciseLogInput = ({
   handleOnChangeText,
 }: Props) => (
   <Input
+    color={isCompleted ? "#fff" : "#000"}
     editable={!isCompleted}
     value={value}
     onChangeText={handleOnChangeText}
@@ -25,7 +26,7 @@ const ExerciseLogInput = ({
     maxLength={6}
     bg={
       isCompleted
-        ? UIConstants.COLORS.PRIMARY.LIGHT
+        ? UIConstants.COLORS.SUCCESS.REGULAR
         : UIConstants.COLORS.GRAY.LIGHT
     }
   />
