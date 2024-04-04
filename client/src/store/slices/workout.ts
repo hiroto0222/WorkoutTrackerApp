@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { IExercise } from "api/types";
+import { IExerciseResponse } from "api/types";
 
 export type Log = {
   weight?: number;
@@ -12,7 +12,7 @@ export interface WorkoutState {
   isFinished: boolean;
   startedAt: string;
   endedAt?: string;
-  currExercises: IExercise[];
+  currExercises: IExerciseResponse[];
   currLogs: { [exercise_id: number]: Log[] };
 }
 
@@ -35,7 +35,7 @@ export const workoutSlice = createSlice({
       state.currExercises = [];
       state.currLogs = {};
     },
-    addCurrExercises: (state, action: PayloadAction<IExercise[]>) => {
+    addCurrExercises: (state, action: PayloadAction<IExerciseResponse[]>) => {
       // add selected exercises
       state.currExercises = state.currExercises.concat(action.payload);
       // initially populate exercise logs
@@ -54,7 +54,7 @@ export const workoutSlice = createSlice({
         (exercise) => exercise.id != action.payload
       );
     },
-    addEmptyLog: (state, action: PayloadAction<IExercise>) => {
+    addEmptyLog: (state, action: PayloadAction<IExerciseResponse>) => {
       const emptyLog: Log = {
         weight: undefined,
         reps: undefined,
@@ -69,7 +69,7 @@ export const workoutSlice = createSlice({
     addCompletedLog: (
       state,
       action: PayloadAction<{
-        exercise: IExercise;
+        exercise: IExerciseResponse;
         newLog: Log;
         setNumber: number;
       }>
@@ -84,7 +84,7 @@ export const workoutSlice = createSlice({
     setInCompleteLog: (
       state,
       action: PayloadAction<{
-        exercise: IExercise;
+        exercise: IExerciseResponse;
         setNumber: number;
       }>
     ) => {
@@ -101,7 +101,7 @@ export const workoutSlice = createSlice({
     deleteLog: (
       state,
       action: PayloadAction<{
-        exercise: IExercise;
+        exercise: IExerciseResponse;
         setNumber: number;
       }>
     ) => {

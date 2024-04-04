@@ -5,7 +5,7 @@ import { RootStackParams } from "navigation/RootStack";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { setFinishWorkout } from "store/slices/workout";
-import axios from "../../api";
+import axios, { API_ENDPOINTS } from "../../api";
 
 const useFinishWorkout = () => {
   const dispatch = useDispatch();
@@ -74,7 +74,7 @@ const useFinishWorkout = () => {
     console.log(data);
 
     try {
-      const res = await axios.post("workout/create", data, {
+      const res = await axios.post(API_ENDPOINTS.WORKOUTS.CREATE, data, {
         headers: {
           Authorization: "Bearer " + authState.accessToken,
         },

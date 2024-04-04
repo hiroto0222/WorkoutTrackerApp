@@ -30,7 +30,7 @@ export interface ICreateUserRequest {
 export type LogType = "weight_reps" | "reps" | "timer" | "cardio";
 
 // Exercise data recieved
-export interface IExercise {
+export interface IExerciseResponse {
   id: number;
   name: string;
   log_type: LogType;
@@ -55,4 +55,11 @@ export interface ICreateWorkoutRequest {
   ended_at: string;
   exercise_ids: number[];
   logs: ILogRequests;
+}
+
+// Workout data sent from server
+export interface IWorkoutsResponse {
+  id: string;
+  started_at: string;
+  ended_at: string;
 }
