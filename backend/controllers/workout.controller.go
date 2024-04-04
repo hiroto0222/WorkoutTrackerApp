@@ -7,6 +7,7 @@ import (
 
 type WorkoutController interface {
 	CreateWorkout(ctx *gin.Context)
+	GetWorkouts(ctx *gin.Context)
 }
 
 type WorkoutControllerImpl struct {
@@ -15,6 +16,10 @@ type WorkoutControllerImpl struct {
 
 func (w *WorkoutControllerImpl) CreateWorkout(ctx *gin.Context) {
 	w.svc.CreateWorkout(ctx)
+}
+
+func (w *WorkoutControllerImpl) GetWorkouts(ctx *gin.Context) {
+	w.svc.GetWorkouts(ctx)
 }
 
 func NewWorkoutController(workoutService *services.WorkoutServiceImpl) *WorkoutControllerImpl {

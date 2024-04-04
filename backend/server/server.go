@@ -88,7 +88,7 @@ func (server *Server) setupRouter() {
 
 	// authentication routes
 	{
-		userRoutes := apiRoutes.Group("/user")
+		userRoutes := apiRoutes.Group("/users")
 		userRoutes.Use(middlewares.AuthMiddleware(server.FireAuth))
 		userRoutes.GET("/me", userController.GetUser)
 		userRoutes.POST("/create", userController.CreateUser)
@@ -96,9 +96,10 @@ func (server *Server) setupRouter() {
 
 	// workout routes
 	{
-		workoutRoutes := apiRoutes.Group("/workout")
+		workoutRoutes := apiRoutes.Group("/workouts")
 		workoutRoutes.Use(middlewares.AuthMiddleware(server.FireAuth))
 		workoutRoutes.POST("/create", workoutController.CreateWorkout)
+		workoutRoutes.POST("/:user_id", workoutController.GetWorkouts)
 		// workoutRoutes.POST("/delete", workoutController.DeleteWorkout) TODO:
 	}
 
