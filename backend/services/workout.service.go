@@ -5,7 +5,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -121,10 +120,25 @@ func (s *WorkoutServiceImpl) CreateWorkout(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Successfully added workout entry"})
 }
 
-type GetWorkoutsResponse struct {
+type workoutResponse struct {
 	ID        uuid.UUID `json:"id" binding:"required"`
 	StartedAt time.Time `json:"started_at" binding:"required"`
 	EndedAt   time.Time `json:"ended_at" binding:"required"`
+}
+
+type logResponse struct {
+	ExerciseId int `json:"exercise_id"`
+	Weight     int `json:"weight"`
+	Reps       int `json:"reps"`
+	Time       int `json:"time"`
+}
+
+// WorkoutLogsResponse is a map of workout_id -> []LogResponse
+type workoutLogsResponse map[uuid.UUID][]logResponse
+
+type GetWorkoutsResponse struct {
+	Workouts    []workoutResponse   `json:"workouts" binding:"required"`
+	WorkoutLogs workoutLogsResponse `json:"workout_logs" binding:"required"`
 }
 
 // GetWorkouts gets workout records for the user
@@ -136,13 +150,13 @@ func (s *WorkoutServiceImpl) GetWorkouts(ctx *gin.Context) {
 		return
 	}
 
-	// get req queries
-	limit := 1000
-	offset, err := strconv.Atoi(ctx.Query("offset"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Query not provided"})
-		return
-	}
+	// TODO: get req queries
+	// limit := 1000
+	// offset, err := strconv.Atoi(ctx.Query("offset"))
+	// if err != nil {
+	// 	ctx.JSON(http.StatusBadRequest, gin.H{"message": "Query not provided"})
+	// 	return
+	// }
 
 	// get id of user from middlewares and check if owner of request
 	userID, ok := ctx.MustGet(middlewares.USER_ID).(string)
@@ -150,28 +164,77 @@ func (s *WorkoutServiceImpl) GetWorkouts(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user id from request"})
 		return
 	}
-	log.Println(userID)
-	log.Println(reqUserId)
 	if userID != reqUserId {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "You do not have permission"})
 		return
 	}
 
-	// retrieve workouts for user
-	var workouts []models.Workout
-	res := s.db.Where("user_id = ?", userID).Limit(limit).Offset(offset).Find(&workouts)
-	if res.Error != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve workouts from database"})
+	// retrieve workouts data for user
+	rows, err := s.db.Raw(`
+		SELECT w.id, w.started_at, w.ended_at, we.exercise_id AS "exercise_id", l.weight, l.reps, l.time
+		FROM workouts w
+			INNER JOIN workout_exercises we
+				ON we.workout_id = w.id AND w.user_id = ?
+			INNER JOIN logs l
+				ON we.id = l.workout_exercise_id
+		ORDER BY w.started_at DESC, we.id, l.set_number;
+	`, userID).Rows()
+
+	if err != nil {
+		log.Panic("Failed to run sql query")
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to retrieve data"})
 		return
 	}
 
-	var data []GetWorkoutsResponse
-	for _, workout := range workouts {
-		data = append(data, GetWorkoutsResponse{
-			ID:        workout.ID,
-			StartedAt: workout.StartedAt,
-			EndedAt:   workout.EndedAt,
-		})
+	workoutLogs := workoutLogsResponse{}
+	workouts := []workoutResponse{}
+	var (
+		workoutId  uuid.UUID
+		startedAt  time.Time
+		EndedAt    time.Time
+		exerciseId int
+		logWeight  int
+		logReps    int
+		logTime    int
+	)
+
+	defer rows.Close()
+	for rows.Next() {
+		// scan sql row
+		err := rows.Scan(&workoutId, &startedAt, &EndedAt, &exerciseId, &logWeight, &logReps, &logTime)
+		if err != nil {
+			log.Panic("Failed to scan sql row")
+			ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to retrieve data"})
+			return
+		}
+
+		// create new log
+		newLogResponse := logResponse{
+			ExerciseId: exerciseId,
+			Weight:     logWeight,
+			Reps:       logReps,
+			Time:       logTime,
+		}
+
+		_, ok := workoutLogs[workoutId]
+		if !ok {
+			// add workout to workouts if not already added
+			workouts = append(workouts, workoutResponse{
+				ID:        workoutId,
+				StartedAt: startedAt,
+				EndedAt:   EndedAt,
+			})
+			// create log slice
+			workoutLogs[workoutId] = []logResponse{newLogResponse}
+		} else {
+			// append to log slice
+			workoutLogs[workoutId] = append(workoutLogs[workoutId], newLogResponse)
+		}
+	}
+
+	data := GetWorkoutsResponse{
+		Workouts:    workouts,
+		WorkoutLogs: workoutLogs,
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "success", "data": data})
