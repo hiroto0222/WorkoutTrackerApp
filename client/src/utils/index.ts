@@ -5,3 +5,5 @@ export const formatTime = (seconds: number) => {
     .toString()
     .padStart(2, "0")}`;
 };
+
+export const convertToDateObject

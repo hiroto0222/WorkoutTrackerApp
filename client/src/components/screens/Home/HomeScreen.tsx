@@ -1,5 +1,6 @@
 import Loading from "components/base/Loading";
 import Card from "components/base/home/Card";
+import WorkoutDetailCard from "components/base/home/WorkoutDetailCard";
 import globalStyles from "components/styles";
 import useGetUser from "hooks/api/useGetUser";
 import useGetWorkouts from "hooks/api/useGetWorkouts";
@@ -63,13 +64,7 @@ const HomeScreen = () => {
       <FlatList
         contentContainerStyle={styles.flatListContainer}
         data={workoutsData}
-        renderItem={({ item }) => (
-          <>
-            <Text>{item.id}</Text>
-            <Text>{item.started_at}</Text>
-            <Text>{item.ended_at}</Text>
-          </>
-        )}
+        renderItem={({ item }) => <WorkoutDetailCard workout={item} />}
         keyExtractor={(item) => item.id}
       />
     </View>
