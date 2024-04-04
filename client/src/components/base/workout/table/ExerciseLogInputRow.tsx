@@ -1,10 +1,21 @@
 import { IExercise, LogType } from "api/types";
 import globalStyles from "components/styles";
 import { useState } from "react";
-import { View } from "react-native";
-import { Div, Text } from "react-native-magnus";
+import { Animated, I18nManager, StyleSheet, View } from "react-native";
+import {
+  GestureHandlerRootView,
+  RectButton,
+} from "react-native-gesture-handler";
+import Swipeable from "react-native-gesture-handler/Swipeable";
+import { Div, Icon, Text } from "react-native-magnus";
 import { useDispatch } from "react-redux";
-import { Log, addCompletedLog, setInCompleteLog } from "store/slices/workout";
+import {
+  Log,
+  addCompletedLog,
+  deleteLog,
+  setInCompleteLog,
+} from "store/slices/workout";
+import UIConstants from "../../../../constants";
 import ExerciseLogInput from "./ExerciseLogInput";
 import ExerciseLogInputConfirmButton from "./ExerciseLogInputConfirmButton";
 import { tableStyles } from "./TableStyles";
@@ -13,9 +24,15 @@ type Props = {
   exercise: IExercise;
   setNumber: number;
   isCompleted: boolean;
+  isDeletable: boolean;
 };
 
-const ExerciseLogInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
+const ExerciseLogInputRow = ({
+  exercise,
+  setNumber,
+  isCompleted,
+  isDeletable,
+}: Props) => {
   return (
     <>
       {exercise.log_type === "weight_reps" ? (
@@ -23,18 +40,21 @@ const ExerciseLogInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
           exercise={exercise}
           setNumber={setNumber}
           isCompleted={isCompleted}
+          isDeletable={isDeletable}
         />
       ) : exercise.log_type === "timer" ? (
         <TimerInputRow
           exercise={exercise}
           setNumber={setNumber}
           isCompleted={isCompleted}
+          isDeletable={isDeletable}
         />
       ) : (
         <RepsInputRow
           exercise={exercise}
           setNumber={setNumber}
           isCompleted={isCompleted}
+          isDeletable={isDeletable}
         />
       )}
     </>
@@ -43,7 +63,12 @@ const ExerciseLogInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
 
 export default ExerciseLogInputRow;
 
-const WeightRepsInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
+const WeightRepsInputRow = ({
+  exercise,
+  setNumber,
+  isCompleted,
+  isDeletable,
+}: Props) => {
   const dispatch = useDispatch();
 
   const [weight, setWeight] = useState("");
@@ -74,47 +99,93 @@ const WeightRepsInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
     dispatch(setInCompleteLog({ exercise, setNumber }));
   };
 
-  return (
-    <View
-      style={
-        isCompleted
-          ? tableStyles.tableRowComplete
-          : tableStyles.tableRowInComplete
-      }
-    >
-      <View style={tableStyles.columnOne}>
-        <Text fontSize="xl" style={globalStyles.textRegular}>
-          {setNumber + 1}
-        </Text>
-      </View>
-      <View style={tableStyles.columnOneInput}>
-        <ExerciseLogInput
-          isCompleted={isCompleted}
-          value={weight}
-          handleOnChangeText={handleChangeWeight}
-        />
-      </View>
-      <View style={tableStyles.columnOneInput}>
-        <ExerciseLogInput
-          isCompleted={isCompleted}
-          value={reps}
-          handleOnChangeText={handleChangeReps}
-        />
-      </View>
-      <View style={tableStyles.columnOne}>
-        <Div>
-          <ExerciseLogInputConfirmButton
-            isComplete={isCompleted}
-            onComplete={handleOnCompleted}
-            onEdit={handleOnEdit}
+  const handleOnDelete = () => {
+    dispatch(deleteLog({ exercise, setNumber }));
+  };
+
+  const renderRightActions = (
+    _progress: Animated.AnimatedInterpolation<number>,
+    dragX: Animated.AnimatedInterpolation<number>
+  ) => {
+    const scale = dragX.interpolate({
+      inputRange: [-80, 0],
+      outputRange: [1, 0],
+      extrapolate: "clamp",
+    });
+    return (
+      <RectButton style={styles.rightAction} onPress={handleOnDelete}>
+        <Animated.View
+          style={[tableStyles.columnOne, { transform: [{ scale }] }]}
+        >
+          <Icon
+            fontSize="4xl"
+            fontFamily="MaterialCommunityIcons"
+            name="delete"
+            color="#fff"
           />
-        </Div>
-      </View>
-    </View>
+        </Animated.View>
+      </RectButton>
+    );
+  };
+
+  return (
+    <GestureHandlerRootView>
+      <Swipeable
+        enabled={isDeletable}
+        renderRightActions={renderRightActions}
+        rightThreshold={30}
+      >
+        <View
+          style={
+            isCompleted
+              ? tableStyles.tableRowComplete
+              : tableStyles.tableRowInComplete
+          }
+        >
+          <View style={tableStyles.columnOne}>
+            <Text
+              fontSize="xl"
+              style={globalStyles.textMedium}
+              color={isCompleted ? "#fff" : "#000"}
+            >
+              {setNumber + 1}
+            </Text>
+          </View>
+          <View style={tableStyles.columnOneInput}>
+            <ExerciseLogInput
+              isCompleted={isCompleted}
+              value={weight}
+              handleOnChangeText={handleChangeWeight}
+            />
+          </View>
+          <View style={tableStyles.columnOneInput}>
+            <ExerciseLogInput
+              isCompleted={isCompleted}
+              value={reps}
+              handleOnChangeText={handleChangeReps}
+            />
+          </View>
+          <View style={tableStyles.columnOne}>
+            <Div>
+              <ExerciseLogInputConfirmButton
+                isComplete={isCompleted}
+                onComplete={handleOnCompleted}
+                onEdit={handleOnEdit}
+              />
+            </Div>
+          </View>
+        </View>
+      </Swipeable>
+    </GestureHandlerRootView>
   );
 };
 
-const TimerInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
+const TimerInputRow = ({
+  exercise,
+  setNumber,
+  isCompleted,
+  isDeletable,
+}: Props) => {
   const dispatch = useDispatch();
 
   const [seconds, setSeconds] = useState("");
@@ -139,40 +210,82 @@ const TimerInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
     dispatch(setInCompleteLog({ exercise, setNumber }));
   };
 
-  return (
-    <View
-      style={
-        isCompleted
-          ? tableStyles.tableRowComplete
-          : tableStyles.tableRowInComplete
-      }
-    >
-      <View style={tableStyles.columnOne}>
-        <Text fontSize="xl" style={globalStyles.textRegular}>
-          {setNumber + 1}
-        </Text>
-      </View>
-      <View style={tableStyles.columnTwoInput}>
-        <ExerciseLogInput
-          isCompleted={isCompleted}
-          value={seconds}
-          handleOnChangeText={handleChangeTimer}
-        />
-      </View>
-      <View style={tableStyles.columnOne}>
-        <Div>
-          <ExerciseLogInputConfirmButton
-            isComplete={isCompleted}
-            onComplete={handleOnCompleted}
-            onEdit={handleOnEdit}
+  const handleOnDelete = () => {
+    dispatch(deleteLog({ exercise, setNumber }));
+  };
+
+  const renderRightActions = (
+    _progress: Animated.AnimatedInterpolation<number>,
+    dragX: Animated.AnimatedInterpolation<number>
+  ) => {
+    const scale = dragX.interpolate({
+      inputRange: [-80, 0],
+      outputRange: [1, 0],
+      extrapolate: "clamp",
+    });
+    return (
+      <RectButton style={styles.rightAction} onPress={handleOnDelete}>
+        <Animated.View
+          style={[tableStyles.columnOne, { transform: [{ scale }] }]}
+        >
+          <Icon
+            fontSize="4xl"
+            fontFamily="MaterialCommunityIcons"
+            name="delete"
+            color="#fff"
           />
-        </Div>
-      </View>
-    </View>
+        </Animated.View>
+      </RectButton>
+    );
+  };
+
+  return (
+    <GestureHandlerRootView>
+      <Swipeable
+        enabled={isDeletable}
+        renderRightActions={renderRightActions}
+        rightThreshold={30}
+      >
+        <View
+          style={
+            isCompleted
+              ? tableStyles.tableRowComplete
+              : tableStyles.tableRowInComplete
+          }
+        >
+          <View style={tableStyles.columnOne}>
+            <Text fontSize="xl" style={globalStyles.textMedium}>
+              {setNumber + 1}
+            </Text>
+          </View>
+          <View style={tableStyles.columnTwoInput}>
+            <ExerciseLogInput
+              isCompleted={isCompleted}
+              value={seconds}
+              handleOnChangeText={handleChangeTimer}
+            />
+          </View>
+          <View style={tableStyles.columnOne}>
+            <Div>
+              <ExerciseLogInputConfirmButton
+                isComplete={isCompleted}
+                onComplete={handleOnCompleted}
+                onEdit={handleOnEdit}
+              />
+            </Div>
+          </View>
+        </View>
+      </Swipeable>
+    </GestureHandlerRootView>
   );
 };
 
-const RepsInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
+const RepsInputRow = ({
+  exercise,
+  setNumber,
+  isCompleted,
+  isDeletable,
+}: Props) => {
   const dispatch = useDispatch();
 
   const [reps, setReps] = useState("");
@@ -197,36 +310,73 @@ const RepsInputRow = ({ exercise, setNumber, isCompleted }: Props) => {
     dispatch(setInCompleteLog({ exercise, setNumber }));
   };
 
-  return (
-    <View
-      style={
-        isCompleted
-          ? tableStyles.tableRowComplete
-          : tableStyles.tableRowInComplete
-      }
-    >
-      <View style={tableStyles.columnOne}>
-        <Text fontSize="xl" style={globalStyles.textRegular}>
-          {setNumber + 1}
-        </Text>
-      </View>
-      <View style={tableStyles.columnTwoInput}>
-        <ExerciseLogInput
-          isCompleted={isCompleted}
-          value={reps}
-          handleOnChangeText={handleChangeReps}
-        />
-      </View>
-      <View style={tableStyles.columnOne}>
-        <Div>
-          <ExerciseLogInputConfirmButton
-            isComplete={isCompleted}
-            onComplete={handleOnCompleted}
-            onEdit={handleOnEdit}
+  const handleOnDelete = () => {
+    dispatch(deleteLog({ exercise, setNumber }));
+  };
+
+  const renderRightActions = (
+    _progress: Animated.AnimatedInterpolation<number>,
+    dragX: Animated.AnimatedInterpolation<number>
+  ) => {
+    const scale = dragX.interpolate({
+      inputRange: [-80, 0],
+      outputRange: [1, 0],
+      extrapolate: "clamp",
+    });
+    return (
+      <RectButton style={styles.rightAction} onPress={handleOnDelete}>
+        <Animated.View
+          style={[tableStyles.columnOne, { transform: [{ scale }] }]}
+        >
+          <Icon
+            fontSize="4xl"
+            fontFamily="MaterialCommunityIcons"
+            name="delete"
+            color="#fff"
           />
-        </Div>
-      </View>
-    </View>
+        </Animated.View>
+      </RectButton>
+    );
+  };
+
+  return (
+    <GestureHandlerRootView>
+      <Swipeable
+        enabled={isDeletable}
+        renderRightActions={renderRightActions}
+        rightThreshold={30}
+      >
+        <View
+          style={
+            isCompleted
+              ? tableStyles.tableRowComplete
+              : tableStyles.tableRowInComplete
+          }
+        >
+          <View style={tableStyles.columnOne}>
+            <Text fontSize="xl" style={globalStyles.textMedium}>
+              {setNumber + 1}
+            </Text>
+          </View>
+          <View style={tableStyles.columnTwoInput}>
+            <ExerciseLogInput
+              isCompleted={isCompleted}
+              value={reps}
+              handleOnChangeText={handleChangeReps}
+            />
+          </View>
+          <View style={tableStyles.columnOne}>
+            <Div>
+              <ExerciseLogInputConfirmButton
+                isComplete={isCompleted}
+                onComplete={handleOnCompleted}
+                onEdit={handleOnEdit}
+              />
+            </Div>
+          </View>
+        </View>
+      </Swipeable>
+    </GestureHandlerRootView>
   );
 };
 
@@ -242,3 +392,19 @@ const validateOnComplete = (logType: LogType, log: Log) => {
       return false;
   }
 };
+
+const styles = StyleSheet.create({
+  rightAction: {
+    alignItems: "center",
+    flexDirection: I18nManager.isRTL ? "row-reverse" : "row",
+    backgroundColor: UIConstants.COLORS.PRIMARY.REGULAR,
+    flex: 1,
+    justifyContent: "flex-end",
+  },
+  actionIcon: {
+    width: 30,
+    marginHorizontal: 10,
+    backgroundColor: "plum",
+    height: 20,
+  },
+});
