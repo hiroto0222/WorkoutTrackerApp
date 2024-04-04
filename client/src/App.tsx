@@ -19,6 +19,7 @@ import {
   Poppins_900Black_Italic,
   useFonts,
 } from "@expo-google-fonts/poppins";
+import Loading from "components/base/Loading";
 import { registerRootComponent } from "expo";
 import * as SplashScreen from "expo-splash-screen";
 import RootNavigation from "navigation";
@@ -28,7 +29,8 @@ import { ThemeProvider } from "react-native-magnus";
 import changeNavigationBarColor from "react-native-navigation-bar-color";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
-import { store } from "./store";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor, store } from "./store";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -75,14 +77,16 @@ export default function App() {
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <Provider store={store}>
-          <ThemeProvider>
-            <RootNavigation />
-            <StatusBar
-              translucent
-              backgroundColor="white"
-              barStyle="dark-content"
-            />
-          </ThemeProvider>
+          <PersistGate loading={<Loading />} persistor={persistor}>
+            <ThemeProvider>
+              <RootNavigation />
+              <StatusBar
+                translucent
+                backgroundColor="white"
+                barStyle="dark-content"
+              />
+            </ThemeProvider>
+          </PersistGate>
         </Provider>
       </SafeAreaView>
     </View>

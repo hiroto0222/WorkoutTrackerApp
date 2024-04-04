@@ -13,9 +13,10 @@ import UIConstants from "../../../constants";
 
 const HomeScreen = () => {
   const userState = useSelector((state: RootState) => state.user);
+  const workoutDataState = useSelector((state: RootState) => state.workoutData);
 
   const { loading: loadingGetUser } = useGetUser();
-  const { loading: loadingGetWorkouts, workoutsData } = useGetWorkoutsData();
+  const { loading: loadingGetWorkouts } = useGetWorkoutsData();
 
   return loadingGetUser || loadingGetWorkouts ? (
     <Loading />
@@ -63,7 +64,7 @@ const HomeScreen = () => {
       </Text>
       <FlatList
         contentContainerStyle={styles.flatListContainer}
-        data={workoutsData}
+        data={workoutDataState.workouts}
         renderItem={({ item }) => <WorkoutDetailCard workout={item} />}
         keyExtractor={(item) => item.id}
       />

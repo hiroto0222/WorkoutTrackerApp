@@ -18,7 +18,7 @@ export interface WorkoutState {
 
 const initialState: WorkoutState = {
   isFinished: false,
-  startedAt: Date.now().toString(),
+  startedAt: "not yet",
   endedAt: undefined,
   currExercises: [],
   currLogs: {},
