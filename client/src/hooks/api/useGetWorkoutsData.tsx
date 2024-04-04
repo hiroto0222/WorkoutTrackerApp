@@ -1,7 +1,8 @@
-import { IWorkoutsResponse } from "api/types";
+import { IWorkoutDataResponse } from "api/types";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
+import { setWorkouts } from "store/slices/workoutData";
 import axios, { API_ENDPOINTS, AxiosResponse } from "../../api";
 
 const useGetWorkoutsData = () => {
@@ -13,15 +14,18 @@ const useGetWorkoutsData = () => {
   useEffect(() => {
     const getWorkouts = async () => {
       try {
-        const resWorkouts: AxiosResponse<IWorkoutsResponse[]> = await axios.get(
-          API_ENDPOINTS.WORKOUTS.GET + authState.userId + `?offset=${0}`,
-          {
-            headers: {
-              Authorization: "Bearer " + authState.accessToken,
-            },
-          }
-        );
-        // dispatch(setWorkouts(resWorkouts.data.data));
+        const resWorkouts: AxiosResponse<IWorkoutDataResponse> =
+          await axios.get(
+            API_ENDPOINTS.WORKOUTS.GET + authState.userId + `?offset=${0}`,
+            {
+              headers: {
+                Authorization: "Bearer " + authState.accessToken,
+              },
+            }
+          );
+        const workouts = resWorkouts.data.data.workouts;
+        const workoutLogs = resWorkouts.data.data.workout_logs;
+        dispatch(setWorkouts({ workouts, workoutLogs }));
         setLoading(false);
       } catch (err) {
         console.log(err);

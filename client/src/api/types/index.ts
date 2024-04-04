@@ -36,7 +36,7 @@ export interface IExerciseResponse {
   log_type: LogType;
 }
 
-// Log data to send/recieve
+// Log data to send
 export interface ILog {
   weight?: number;
   reps?: number;
@@ -64,7 +64,21 @@ export interface IWorkoutsResponse {
   ended_at: string;
 }
 
+// Log data sent from server
+export interface ILogResponse {
+  exercise_id: number;
+  weight?: number;
+  reps?: number;
+  time?: number;
+}
+
 // WorkoutData.workoutLogs sent from server
 export interface IWorkoutLogsResponse {
-  [workout_id: string]: ILogs;
+  [workout_id: string]: ILogResponse[];
+}
+
+// WorkoutData sent from server
+export interface IWorkoutDataResponse {
+  workouts: IWorkoutsResponse[];
+  workout_logs: IWorkoutLogsResponse;
 }
