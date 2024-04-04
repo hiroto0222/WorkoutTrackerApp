@@ -21,7 +21,7 @@ type UserServiceImpl struct {
 	db *gorm.DB
 }
 
-type createUserRequest struct {
+type CreateUserRequest struct {
 	ID       string  `json:"id" binding:"required"`
 	Name     string  `json:"name" binding:"required"`
 	Email    string  `json:"email" binding:"required"`
@@ -35,7 +35,7 @@ type createUserRequest struct {
 
 // CreateUser adds a new User record
 func (s *UserServiceImpl) CreateUser(ctx *gin.Context) {
-	var req createUserRequest
+	var req CreateUserRequest
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		log.Println("binding json req failed")

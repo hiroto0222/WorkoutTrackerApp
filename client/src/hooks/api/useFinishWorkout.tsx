@@ -1,11 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { ICreateWorkoutRequest, ILogRequests } from "api/types";
+import { ICreateWorkoutRequest, ILogs } from "api/types";
 import { RootStackParams } from "navigation/RootStack";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { setFinishWorkout } from "store/slices/workout";
-import axios from "../../api";
+import axios, { API_ENDPOINTS } from "../../api";
 
 const useFinishWorkout = () => {
   const dispatch = useDispatch();
@@ -17,7 +17,7 @@ const useFinishWorkout = () => {
   const validateAndCreateWorkoutData = () => {
     var isValid = false;
     const exercise_ids: number[] = [];
-    const logs: ILogRequests = {};
+    const logs: ILogs = {};
 
     // validate data
     workoutState.currExercises.forEach((exercise) => {
@@ -53,10 +53,7 @@ const useFinishWorkout = () => {
     return { isValid, exercise_ids, logs };
   };
 
-  const sendWorkoutData = async (
-    exercise_ids: number[],
-    logs: ILogRequests
-  ) => {
+  const sendWorkoutData = async (exercise_ids: number[], logs: ILogs) => {
     // else send to server
     if (authState.userId === undefined) {
       console.log("no user id");
@@ -74,7 +71,7 @@ const useFinishWorkout = () => {
     console.log(data);
 
     try {
-      const res = await axios.post("workout/create", data, {
+      const res = await axios.post(API_ENDPOINTS.WORKOUTS.CREATE, data, {
         headers: {
           Authorization: "Bearer " + authState.accessToken,
         },

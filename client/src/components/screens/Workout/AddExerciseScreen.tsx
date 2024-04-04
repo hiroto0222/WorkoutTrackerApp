@@ -1,5 +1,5 @@
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { IExercise } from "api/types";
+import { IExerciseResponse } from "api/types";
 import ConfirmSelectionButton from "components/base/workout/ConfirmSelectionButton";
 import ExerciseCheckBox from "components/base/workout/ExerciseCheckBox";
 import globalStyles from "components/styles";
@@ -18,9 +18,14 @@ const AddExerciseScreen = () => {
   const route = useRoute<RouteProp<WorkoutStackParams, "AddExercise">>();
   const workoutState = useSelector((state: RootState) => state.workout);
 
-  const [selectedExercises, setSelectedExercises] = useState<IExercise[]>([]);
+  const [selectedExercises, setSelectedExercises] = useState<
+    IExerciseResponse[]
+  >([]);
 
-  const handleOnCheckedExercise = (checked: boolean, exercise: IExercise) => {
+  const handleOnCheckedExercise = (
+    checked: boolean,
+    exercise: IExerciseResponse
+  ) => {
     if (checked) {
       setSelectedExercises((prev) => [...prev, exercise]);
     } else {

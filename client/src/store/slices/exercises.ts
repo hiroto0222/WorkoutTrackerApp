@@ -1,5 +1,5 @@
-import { IExercise } from "api/types";
+import { IExerciseResponse } from "api/types";
 
 export interface ExercisesState {
-  exercises: IExercise[];
+  exercises: IExerciseResponse[];
 }

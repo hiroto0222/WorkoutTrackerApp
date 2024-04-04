@@ -1,4 +1,4 @@
-import { IExercise } from "api/types";
+import { IExerciseResponse } from "api/types";
 import globalStyles from "components/styles";
 import { View } from "react-native";
 import { Button, Div, Icon, Text } from "react-native-magnus";
@@ -10,7 +10,7 @@ import ExerciseLogHeader from "./ExerciseLogHeader";
 import ExerciseLogInputRow from "./ExerciseLogInputRow";
 
 type Props = {
-  exercise: IExercise;
+  exercise: IExerciseResponse;
 };
 
 const ExerciseLogInputTable = ({ exercise }: Props) => {

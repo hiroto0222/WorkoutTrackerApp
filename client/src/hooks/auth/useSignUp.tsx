@@ -4,7 +4,7 @@ import { auth } from "config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { setAuth } from "store/slices/auth";
-import axios from "../../api";
+import axios, { API_ENDPOINTS } from "../../api";
 
 const useSignUp = () => {
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ const useSignUp = () => {
 
       console.log(data);
 
-      const res = await axios.post("user/create", data, {
+      const res = await axios.post(API_ENDPOINTS.USERS.CREATE, data, {
         headers: {
           Authorization: "Bearer " + accessToken,
         },
