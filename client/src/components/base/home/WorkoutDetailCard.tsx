@@ -24,7 +24,7 @@ export default WorkoutDetailCard;
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: UIConstants.COLORS.PRIMARY.LIGHT,
+    backgroundColor: UIConstants.COLORS.GRAY.LIGHT,
     padding: 20,
     borderRadius: 20,
     marginVertical: 10,

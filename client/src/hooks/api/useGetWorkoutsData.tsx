@@ -28,6 +28,7 @@ const useGetWorkoutsData = () => {
         dispatch(setWorkouts({ workouts, workoutLogs }));
         setLoading(false);
       } catch (err) {
+        setLoading(false);
         console.log(err);
         alert((err as Error).message);
       }
