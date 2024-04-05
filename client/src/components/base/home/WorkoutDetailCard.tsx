@@ -1,7 +1,8 @@
 import { IWorkoutsResponse } from "api/types";
 import globalStyles from "components/styles";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { Text } from "react-native-magnus";
+import { Div, Text } from "react-native-magnus";
+import { getNameOfWeekday } from "utils";
 import UIConstants from "../../../constants";
 
 type Props = {
@@ -9,15 +10,31 @@ type Props = {
 };
 
 const WorkoutDetailCard = ({ workout }: Props) => {
+  const workoutDate = new Date(workout.started_at);
+  const workoutWeekdayName = getNameOfWeekday(workoutDate);
+
   return (
     <TouchableOpacity style={styles.item}>
-      <Text style={globalStyles.textRegular}>id: {workout.id}</Text>
-      <Text style={globalStyles.textRegular}>
-        start date: {new Date(workout.started_at).toString()}
-      </Text>
-      <Text style={globalStyles.textRegular}>
-        end date: {new Date(workout.ended_at).toString()}
-      </Text>
+      <Div
+        row
+        justifyContent="space-between"
+        style={{ width: "100%", marginBottom: 5 }}
+      >
+        <Text fontSize="xl" style={globalStyles.textMedium}>
+          {workoutWeekdayName} Workout
+        </Text>
+        <Text fontSize="md" style={globalStyles.textRegular}>
+          {workoutDate.toDateString().substring(4)}
+        </Text>
+      </Div>
+      <Div row justifyContent="space-between" style={{ width: "100%" }}>
+        <Text fontSize="lg" style={globalStyles.textMedium}>
+          Exercises
+        </Text>
+        <Text fontSize="lg" style={globalStyles.textMedium}>
+          Best Set
+        </Text>
+      </Div>
     </TouchableOpacity>
   );
 };
@@ -29,8 +46,8 @@ const styles = StyleSheet.create({
     backgroundColor: UIConstants.COLORS.GRAY.LIGHT,
     padding: 20,
     borderRadius: 20,
-    marginVertical: 10,
-    paddingVertical: 20,
+    marginVertical: 5,
+    paddingVertical: 15,
     paddingHorizontal: 15,
     alignItems: "flex-start",
   },
