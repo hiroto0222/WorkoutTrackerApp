@@ -11,6 +11,7 @@ import {
   persistStore,
 } from "redux-persist";
 import authReducer from "./slices/auth";
+import exercisesReducer from "./slices/exercises";
 import userReducer from "./slices/user";
 import workoutReducer from "./slices/workout";
 import workoutDataReducer from "./slices/workoutData";
@@ -21,7 +22,7 @@ const composeEnhancers =
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["workoutData"], // only persist workoutData
+  whitelist: ["workoutData", "exercises"], // only persist workoutData and exercises
 };
 
 const rootReducer = combineReducers({
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   workout: workoutReducer,
   workoutData: workoutDataReducer,
+  exercises: exercisesReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
