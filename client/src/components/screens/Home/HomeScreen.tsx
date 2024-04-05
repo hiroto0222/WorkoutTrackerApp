@@ -1,3 +1,5 @@
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Loading from "components/base/Loading";
 import SummaryCard from "components/base/home/SummaryCard";
 import WorkoutsFlatList from "components/base/home/WorkoutsFlatList";
@@ -10,8 +12,12 @@ import { Avatar, Div, Icon, Text } from "react-native-magnus";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
 import UIConstants from "../../../constants";
+import { HomeStackParams } from "./HomeScreenStack";
 
 const HomeScreen = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+
   const userState = useSelector((state: RootState) => state.user);
 
   const { loading: loadingGetUser } = useGetUser();
@@ -49,6 +55,7 @@ const HomeScreen = () => {
           </Text>
           <TouchableOpacity
             style={{ flexDirection: "row", alignItems: "center" }}
+            onPress={() => navigation.navigate("WorkoutsList")}
           >
             <Text
               color={UIConstants.COLORS.GRAY.REGULAR}

@@ -1,7 +1,8 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
-import HomeScreen from "components/screens/Home/HomeScreen";
-import { HomeStackParams } from "components/screens/Home/HomeScreenStack";
+import HomeScreenStack, {
+  HomeStackParams,
+} from "components/screens/Home/HomeScreenStack";
 import UserSettingScreen from "components/screens/UserSettings/UserSettingScreen";
 import WorkoutScreenStack, {
   WorkoutStackParams,
@@ -47,7 +48,7 @@ const RootStack = () => {
       >
         <BottomTabStack.Screen
           name="HomeStack"
-          component={HomeScreen}
+          component={HomeScreenStack}
           options={{
             tabBarIcon: ({ color }) => (
               <TabBarIcon name="home" color={color} fontSize="5xl" />

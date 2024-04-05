@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./HomeScreen";
+import WorkoutsListScreen from "./WorkoutsListScreen";
 
 export type HomeStackParams = {
   Home: undefined;
@@ -16,6 +17,14 @@ const HomeScreenStack = () => {
         name="Home"
         component={HomeScreen}
         options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="WorkoutsList"
+        component={WorkoutsListScreen}
+        options={{
+          headerTitle: "",
+          animation: "slide_from_right",
+        }}
       />
     </HomeStack.Navigator>
   );
