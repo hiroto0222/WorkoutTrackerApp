@@ -1,7 +1,7 @@
 import { IWorkoutsResponse } from "api/types";
 import globalStyles from "components/styles";
-import { StyleSheet } from "react-native";
-import { Div, Text } from "react-native-magnus";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { Text } from "react-native-magnus";
 import UIConstants from "../../../constants";
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 
 const WorkoutDetailCard = ({ workout }: Props) => {
   return (
-    <Div style={styles.item}>
+    <TouchableOpacity style={styles.item}>
       <Text style={globalStyles.textRegular}>id: {workout.id}</Text>
       <Text style={globalStyles.textRegular}>
         start date: {new Date(workout.started_at).toString()}
@@ -18,7 +18,7 @@ const WorkoutDetailCard = ({ workout }: Props) => {
       <Text style={globalStyles.textRegular}>
         end date: {new Date(workout.ended_at).toString()}
       </Text>
-    </Div>
+    </TouchableOpacity>
   );
 };
 
