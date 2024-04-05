@@ -1,34 +1,38 @@
+import { Poppins_500Medium } from "@expo-google-fonts/poppins";
 import { useNavigation } from "@react-navigation/native";
-import { Canvas, Group } from "@shopify/react-native-skia";
+import { Canvas, Group, Text, useFont } from "@shopify/react-native-skia";
+import { IWorkoutsResponse } from "api/types";
 import * as d3 from "d3";
 import { useCallback, useEffect } from "react";
 import { GestureResponderEvent, useWindowDimensions } from "react-native";
 import { useSharedValue, withTiming } from "react-native-reanimated";
+import UIConstants from "../../../../constants";
 import BarPath from "./BarPath";
 import XAxisText from "./XAxisText";
 
-interface Data {
+export interface BarGraphData {
   label: string;
-  day: string;
-  value: number;
+  value: IWorkoutsResponse[];
 }
 
-const data: Data[] = [
-  { label: "2/18", day: "Monday", value: 3 },
-  { label: "2/25", day: "Tuesday", value: 4 },
-  { label: "3/3", day: "Wednesday", value: 2 },
-  { label: "3/10", day: "Thursday", value: 6 },
-  { label: "3/17", day: "Friday", value: 4 },
-  { label: "3/24", day: "Saturday", value: 0 },
-  { label: "3/31", day: "Sunday", value: 1 },
-];
+type Props = {
+  data: BarGraphData[];
+  setSelectedWorkoutData: React.Dispatch<
+    React.SetStateAction<BarGraphData | null>
+  >;
+  isEmptyData: boolean;
+};
 
-const BarGraph = () => {
+const BarGraph = ({ data, setSelectedWorkoutData, isEmptyData }: Props) => {
+  const font = useFont(Poppins_500Medium, 16);
+  const emptyDataText = "No workouts";
+  const textWidth = font?.getTextWidth(emptyDataText);
+
   const navigation = useNavigation();
+  const selectedBar = useSharedValue<string | null>(null);
 
   const { width } = useWindowDimensions();
   const progress = useSharedValue(0);
-  const selectedBar = useSharedValue<string | null>(null);
 
   const canvasWidth = width;
   const canvasHeight = 200;
@@ -44,7 +48,10 @@ const BarGraph = () => {
   const x = d3.scalePoint().domain(xDomain).range(xRange).padding(1);
 
   const yRange = [0, graphHeight];
-  const yDomain = [0, d3.max(data, (yDataPoint: Data) => yDataPoint.value)!];
+  const yDomain = [
+    0,
+    d3.max(data, (yDataPoint: BarGraphData) => yDataPoint.value.length)!,
+  ];
   const y = d3.scaleLinear().domain(yDomain).range(yRange);
 
   const playAnimation = useCallback(() => {
@@ -59,19 +66,22 @@ const BarGraph = () => {
     const index = Math.floor((touchX - barWidth / 2) / x.step());
 
     if (index >= 0 && index < data.length) {
-      const { label, value, day } = data[index];
+      const { label, value } = data[index];
 
       if (
         touchX > x(label)! - barWidth / 2 &&
         touchX < x(label)! + barWidth / 2 &&
-        touchY > graphHeight - y(value) &&
+        touchY > graphHeight - y(value.length) &&
         touchY < graphHeight
       ) {
         selectedBar.value = label;
-        console.log({ label, value, day });
+        setSelectedWorkoutData({
+          label,
+          value,
+        });
       } else {
         selectedBar.value = null;
-        console.log("outside");
+        setSelectedWorkoutData(null);
       }
     }
   };
@@ -94,11 +104,11 @@ const BarGraph = () => {
         height: canvasHeight,
       }}
     >
-      {data.map((dataPoint: Data, index) => (
+      {data.map((dataPoint: BarGraphData, index) => (
         <Group key={index}>
           <BarPath
             x={x(dataPoint.label)!}
-            y={y(dataPoint.value)}
+            y={!isEmptyData ? y(dataPoint.value.length) : 0}
             barWidth={barWidth}
             graphHeight={graphHeight}
             progress={progress}
@@ -113,6 +123,15 @@ const BarGraph = () => {
           />
         </Group>
       ))}
+      {isEmptyData && (
+        <Text
+          font={font}
+          color={UIConstants.COLORS.GRAY.REGULAR}
+          x={canvasWidth / 2 - textWidth! / 2}
+          y={canvasHeight / 2}
+          text={emptyDataText}
+        />
+      )}
     </Canvas>
   );
 };

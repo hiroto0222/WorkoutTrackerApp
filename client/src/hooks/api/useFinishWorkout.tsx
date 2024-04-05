@@ -59,11 +59,19 @@ const useFinishWorkout = () => {
       console.log("no user id");
       return;
     }
-    const endedAt = new Date().toJSON();
+
+    // temp test old data
+    const datesToSubtract = 47;
+    const startedAt = new Date(workoutState.startedAt);
+    startedAt.setDate(startedAt.getDate() - datesToSubtract);
+    const endedAt = new Date();
+    endedAt.setDate(endedAt.getDate() - datesToSubtract);
+    // temp test
+
     const data: ICreateWorkoutRequest = {
       user_id: authState.userId,
-      started_at: workoutState.startedAt,
-      ended_at: endedAt,
+      started_at: startedAt.toJSON(),
+      ended_at: endedAt.toJSON(),
       exercise_ids,
       logs,
     };

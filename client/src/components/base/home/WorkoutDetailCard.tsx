@@ -13,9 +13,11 @@ const WorkoutDetailCard = ({ workout }: Props) => {
     <Div style={styles.item}>
       <Text style={globalStyles.textRegular}>id: {workout.id}</Text>
       <Text style={globalStyles.textRegular}>
-        start date: {workout.started_at}
+        start date: {new Date(workout.started_at).toString()}
       </Text>
-      <Text style={globalStyles.textRegular}>end date: {workout.ended_at}</Text>
+      <Text style={globalStyles.textRegular}>
+        end date: {new Date(workout.ended_at).toString()}
+      </Text>
     </Div>
   );
 };

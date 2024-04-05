@@ -33,19 +33,6 @@ const HomeScreen = () => {
                 {userState.user?.name.split(" ")[0]}
               </Text>
             </Div>
-            <Div row>
-              <Text
-                color={UIConstants.COLORS.PRIMARY.REGULAR}
-                mr={5}
-                style={globalStyles.textExtraBold}
-                fontSize="lg"
-              >
-                31
-              </Text>
-              <Text style={globalStyles.textMedium} fontSize="lg">
-                Days since your last workout
-              </Text>
-            </Div>
           </Div>
           <Avatar shadow={1} source={{ uri: userState.user?.photo }} />
         </Div>
