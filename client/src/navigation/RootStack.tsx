@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import HomeScreen from "components/screens/Home/HomeScreen";
+import { HomeStackParams } from "components/screens/Home/HomeScreenStack";
 import UserSettingScreen from "components/screens/UserSettings/UserSettingScreen";
 import WorkoutScreenStack, {
   WorkoutStackParams,
@@ -10,7 +11,7 @@ import UIConstants from "../constants";
 
 export type RootStackParams = {
   Root: undefined;
-  Home: undefined;
+  HomeStack: HomeStackParams;
   WorkoutStack: WorkoutStackParams;
   UserSetting: undefined;
 };
@@ -29,7 +30,7 @@ const RootStack = () => {
   return (
     <NavigationContainer theme={MyTheme}>
       <BottomTabStack.Navigator
-        initialRouteName="Home"
+        initialRouteName="HomeStack"
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: false,
@@ -45,10 +46,9 @@ const RootStack = () => {
         }}
       >
         <BottomTabStack.Screen
-          name="Home"
+          name="HomeStack"
           component={HomeScreen}
           options={{
-            headerShown: false,
             tabBarIcon: ({ color }) => (
               <TabBarIcon name="home" color={color} fontSize="5xl" />
             ),
