@@ -47,7 +47,7 @@ const BarGraph = ({ data, setSelectedWorkoutData, isEmptyData }: Props) => {
   const xDomain = data.map((dataPoint) => dataPoint.label);
   const x = d3.scalePoint().domain(xDomain).range(xRange).padding(1);
 
-  const yRange = [0, graphHeight];
+  const yRange = [0, graphHeight - 10];
   const yDomain = [
     0,
     d3.max(data, (yDataPoint: BarGraphData) => yDataPoint.value.length)!,
