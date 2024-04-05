@@ -17,12 +17,13 @@ type Props = {
 
 const XAxisText = ({ x, y, text, selectedBar }: Props) => {
   const font = useFont(Poppins_500Medium, 16);
+  const textWidth = font?.getTextWidth(text);
 
   const color = useDerivedValue(() => {
     if (selectedBar.value === text) {
-      return withTiming(UIConstants.COLORS.GRAY.REGULAR);
+      return withTiming(UIConstants.COLORS.BLACK);
     } else if (selectedBar.value === null) {
-      return withTiming(UIConstants.COLORS.GRAY.REGULAR);
+      return withTiming(UIConstants.COLORS.BLACK);
     } else {
       return withTiming(UIConstants.COLORS.GRAY.LIGHT);
     }
@@ -32,7 +33,9 @@ const XAxisText = ({ x, y, text, selectedBar }: Props) => {
     return null;
   }
 
-  return <Text font={font} x={x - 30 / 2} y={y} text={text} color={color} />;
+  return (
+    <Text font={font} x={x - textWidth! / 2} y={y} text={text} color={color} />
+  );
 };
 
 export default XAxisText;
