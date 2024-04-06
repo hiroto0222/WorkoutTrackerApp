@@ -60,17 +60,18 @@ const useFinishWorkout = () => {
       return;
     }
 
-    // temp test old data
-    const datesToSubtract = 47;
-    const startedAt = new Date(workoutState.startedAt);
-    startedAt.setDate(startedAt.getDate() - datesToSubtract);
-    const endedAt = new Date();
-    endedAt.setDate(endedAt.getDate() - datesToSubtract);
-    // temp test
+    // // temp test old data
+    // const datesToSubtract = 47;
+    // const startedAt = new Date(workoutState.startedAt);
+    // startedAt.setDate(startedAt.getDate() - datesToSubtract);
+    // const endedAt = new Date();
+    // endedAt.setDate(endedAt.getDate() - datesToSubtract);
+    // // temp test
 
+    const endedAt = new Date();
     const data: ICreateWorkoutRequest = {
       user_id: authState.userId,
-      started_at: startedAt.toJSON(),
+      started_at: workoutState.startedAt,
       ended_at: endedAt.toJSON(),
       exercise_ids,
       logs,

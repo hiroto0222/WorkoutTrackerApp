@@ -1,8 +1,8 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IExerciseResponse, IUser } from "api/types";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
+import { setExercises } from "store/slices/exercises";
 import { setUser } from "store/slices/user";
 import axios, { API_ENDPOINTS, AxiosResponse } from "../../api";
 
@@ -25,10 +25,11 @@ const useGetUser = () => {
         const user = resUser.data.data;
         dispatch(setUser(user));
 
+        // get exercises
         const resExercises: AxiosResponse<IExerciseResponse[]> =
           await axios.get(API_ENDPOINTS.EXERCISES.GET);
         const exercises = resExercises.data.data;
-        await AsyncStorage.setItem("exercises", JSON.stringify(exercises));
+        dispatch(setExercises(exercises));
       } catch (err) {
         console.log(err);
         alert((err as Error).message);

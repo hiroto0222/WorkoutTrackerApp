@@ -1,19 +1,24 @@
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Loading from "components/base/Loading";
 import SummaryCard from "components/base/home/SummaryCard";
-import WorkoutDetailCard from "components/base/home/WorkoutDetailCard";
+import WorkoutsFlatList from "components/base/home/WorkoutsFlatList";
 import globalStyles from "components/styles";
 import useGetUser from "hooks/api/useGetUser";
 import useGetWorkoutsData from "hooks/api/useGetWorkoutsData";
 import React from "react";
-import { FlatList, Platform, StyleSheet, View } from "react-native";
-import { Avatar, Div, Text } from "react-native-magnus";
+import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Avatar, Div, Icon, Text } from "react-native-magnus";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
 import UIConstants from "../../../constants";
+import { HomeStackParams } from "./HomeScreenStack";
 
 const HomeScreen = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+
   const userState = useSelector((state: RootState) => state.user);
-  const workoutDataState = useSelector((state: RootState) => state.workoutData);
 
   const { loading: loadingGetUser } = useGetUser();
   const { loading: loadingGetWorkouts } = useGetWorkoutsData();
@@ -39,15 +44,47 @@ const HomeScreen = () => {
       </View>
       <SummaryCard />
       <View style={styles.contentContainer}>
-        <Text mt={10} fontSize="3xl" style={globalStyles.textMedium}>
-          History
-        </Text>
-        <FlatList
-          contentContainerStyle={styles.flatListContainer}
-          data={workoutDataState.workouts}
-          renderItem={({ item }) => <WorkoutDetailCard workout={item} />}
-          keyExtractor={(item) => item.id}
-        />
+        <Div
+          row
+          justifyContent="space-between"
+          alignItems="center"
+          style={{ marginVertical: 10 }}
+        >
+          <Text fontSize="3xl" style={globalStyles.textMedium}>
+            History
+          </Text>
+          <TouchableOpacity
+            style={{ flexDirection: "row", alignItems: "center" }}
+            onPress={() => navigation.navigate("WorkoutsList")}
+          >
+            <Text
+              color={UIConstants.COLORS.GRAY.REGULAR}
+              mr={10}
+              fontSize="lg"
+              style={globalStyles.textRegular}
+            >
+              See all
+            </Text>
+            <View
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: 35,
+                backgroundColor: UIConstants.COLORS.GRAY.LIGHT,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Icon
+                fontSize="2xl"
+                fontFamily="MaterialCommunityIcons"
+                name="chevron-right"
+                color="#000"
+              />
+            </View>
+          </TouchableOpacity>
+        </Div>
+        <WorkoutsFlatList />
       </View>
     </View>
   );
@@ -68,11 +105,7 @@ const styles = StyleSheet.create({
   topContainer: {
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 25,
-  },
-  flatListContainer: {
-    flexGrow: 1,
-    paddingBottom: 500,
+    marginBottom: 10,
   },
   cardsContainer: {
     justifyContent: "space-between",
