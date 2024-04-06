@@ -11,7 +11,7 @@ import {
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setAuth, setIsAuthenticating } from "store/slices/auth";
-import axios from "../../api";
+import axios, { API_ENDPOINTS } from "../../api";
 
 const useGoogleLogin = () => {
   const [_, response, promptAsync] = Google.useAuthRequest({
@@ -48,7 +48,7 @@ const useGoogleLogin = () => {
               weight: 67.0,
               height: 180.0,
             };
-            const res = await axios.post("user/create", data, {
+            const res = await axios.post(API_ENDPOINTS.USERS.CREATE, data, {
               headers: {
                 Authorization: "Bearer " + accessToken,
               },

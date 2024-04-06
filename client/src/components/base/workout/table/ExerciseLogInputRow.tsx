@@ -1,4 +1,4 @@
-import { IExercise, LogType } from "api/types";
+import { IExerciseResponse, LogType } from "api/types";
 import globalStyles from "components/styles";
 import { useState } from "react";
 import { Animated, I18nManager, StyleSheet, View } from "react-native";
@@ -21,7 +21,7 @@ import ExerciseLogInputConfirmButton from "./ExerciseLogInputConfirmButton";
 import { tableStyles } from "./TableStyles";
 
 type Props = {
-  exercise: IExercise;
+  exercise: IExerciseResponse;
   setNumber: number;
   isCompleted: boolean;
   isDeletable: boolean;

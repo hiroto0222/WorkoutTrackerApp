@@ -23,8 +23,9 @@ const UIConstants = {
     },
     GRAY: {
       LIGHT: "#e2e8f0",
-      REGULAR: "#718096",
+      REGULAR: "#4a5568",
     },
+    BLACK: "#000",
   },
 };
 

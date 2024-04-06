@@ -1,6 +1,20 @@
 import { SERVER_ENDPOINT } from "@env";
 import axios, { AxiosRequestConfig, AxiosResponseHeaders } from "axios";
 
+export const API_ENDPOINTS = {
+  USERS: {
+    GET: "users/me",
+    CREATE: "users/create",
+  },
+  EXERCISES: {
+    GET: "exercises",
+  },
+  WORKOUTS: {
+    GET: "workouts/",
+    CREATE: "workouts/create",
+  },
+};
+
 const instance = axios.create({
   baseURL: SERVER_ENDPOINT,
   headers: {

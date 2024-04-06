@@ -6,16 +6,15 @@ import UIConstants from "../../../constants";
 type Props = {
   title: string;
   width: string;
+  children: React.ReactNode;
 };
 
-const Card = ({ title, width }: Props) => (
+const Card = ({ title, width, children }: Props) => (
   <View style={[styles.container, { width }]}>
-    <Text mb={5} fontSize="lg" style={globalStyles.textLight}>
+    <Text mb={5} fontSize="xl" style={globalStyles.textLight}>
       {title}
     </Text>
-    <Text fontSize="lg" style={globalStyles.textMedium}>
-      {12.36}s
-    </Text>
+    {children}
   </View>
 );
 

@@ -1,23 +1,33 @@
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Loading from "components/base/Loading";
-import Card from "components/base/home/Card";
+import SummaryCard from "components/base/home/SummaryCard";
+import WorkoutsFlatList from "components/base/home/WorkoutsFlatList";
 import globalStyles from "components/styles";
 import useGetUser from "hooks/api/useGetUser";
+import useGetWorkoutsData from "hooks/api/useGetWorkoutsData";
 import React from "react";
-import { Platform, ScrollView, StyleSheet, View } from "react-native";
-import { Avatar, Div, Text } from "react-native-magnus";
+import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Avatar, Div, Icon, Text } from "react-native-magnus";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
 import UIConstants from "../../../constants";
+import { HomeStackParams } from "./HomeScreenStack";
 
 const HomeScreen = () => {
-  const { loading: loadingGetUser } = useGetUser();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+
   const userState = useSelector((state: RootState) => state.user);
 
-  return loadingGetUser ? (
+  const { loading: loadingGetUser } = useGetUser();
+  const { loading: loadingGetWorkouts } = useGetWorkoutsData();
+
+  return loadingGetUser || loadingGetWorkouts ? (
     <Loading />
   ) : (
     <View style={styles.container}>
-      <Div px={25}>
+      <View style={styles.contentContainer}>
         <Div row style={styles.topContainer}>
           <Div>
             <Div row>
@@ -28,43 +38,54 @@ const HomeScreen = () => {
                 {userState.user?.name.split(" ")[0]}
               </Text>
             </Div>
-            <Div row>
-              <Text
-                color={UIConstants.COLORS.PRIMARY.REGULAR}
-                mr={5}
-                style={globalStyles.textExtraBold}
-                fontSize="lg"
-              >
-                31
-              </Text>
-              <Text style={globalStyles.textMedium} fontSize="lg">
-                Days since your last workout
-              </Text>
-            </Div>
           </Div>
           <Avatar shadow={1} source={{ uri: userState.user?.photo }} />
         </Div>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.scrollViewContainer}
+      </View>
+      <SummaryCard />
+      <View style={styles.contentContainer}>
+        <Div
+          row
+          justifyContent="space-between"
+          alignItems="center"
+          style={{ marginVertical: 10 }}
         >
           <Text fontSize="3xl" style={globalStyles.textMedium}>
-            This week
-          </Text>
-          <Div row justifyContent="space-between">
-            <Card title="Workouts" width={"30%"} />
-            <Card title="Time" width={"30%"} />
-            <Card title="Workouts" width={"30%"} />
-          </Div>
-          <Div row justifyContent="center">
-            <Card title="Graph" width={"100%"} />
-          </Div>
-          <Text mt={10} fontSize="3xl" style={globalStyles.textMedium}>
             History
           </Text>
-        </ScrollView>
-      </Div>
+          <TouchableOpacity
+            style={{ flexDirection: "row", alignItems: "center" }}
+            onPress={() => navigation.navigate("WorkoutsList")}
+          >
+            <Text
+              color={UIConstants.COLORS.GRAY.REGULAR}
+              mr={10}
+              fontSize="lg"
+              style={globalStyles.textRegular}
+            >
+              See all
+            </Text>
+            <View
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: 35,
+                backgroundColor: UIConstants.COLORS.GRAY.LIGHT,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Icon
+                fontSize="2xl"
+                fontFamily="MaterialCommunityIcons"
+                name="chevron-right"
+                color="#000"
+              />
+            </View>
+          </TouchableOpacity>
+        </Div>
+        <WorkoutsFlatList />
+      </View>
     </View>
   );
 };
@@ -78,14 +99,13 @@ const styles = StyleSheet.create({
         ? UIConstants.SCREEN_MARGIN_TOP
         : UIConstants.SCREEN_MARGIN_TOP + 30,
   },
+  contentContainer: {
+    paddingHorizontal: 25,
+  },
   topContainer: {
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 50,
-  },
-  scrollViewContainer: {
-    flexGrow: 1,
-    paddingBottom: 350,
+    marginBottom: 10,
   },
   cardsContainer: {
     justifyContent: "space-between",

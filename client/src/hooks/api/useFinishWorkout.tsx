@@ -1,11 +1,16 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { ICreateWorkoutRequest, ILogRequests } from "api/types";
+import {
+  ICreateWorkoutRequest,
+  ICreateWorkoutResponse,
+  ILogs,
+} from "api/types";
 import { RootStackParams } from "navigation/RootStack";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { setFinishWorkout } from "store/slices/workout";
-import axios from "../../api";
+import { addFinishedWorkout } from "store/slices/workoutData";
+import axios, { API_ENDPOINTS, AxiosResponse } from "../../api";
 
 const useFinishWorkout = () => {
   const dispatch = useDispatch();
@@ -17,7 +22,7 @@ const useFinishWorkout = () => {
   const validateAndCreateWorkoutData = () => {
     var isValid = false;
     const exercise_ids: number[] = [];
-    const logs: ILogRequests = {};
+    const logs: ILogs = {};
 
     // validate data
     workoutState.currExercises.forEach((exercise) => {
@@ -53,20 +58,26 @@ const useFinishWorkout = () => {
     return { isValid, exercise_ids, logs };
   };
 
-  const sendWorkoutData = async (
-    exercise_ids: number[],
-    logs: ILogRequests
-  ) => {
+  const sendWorkoutData = async (exercise_ids: number[], logs: ILogs) => {
     // else send to server
     if (authState.userId === undefined) {
       console.log("no user id");
       return;
     }
-    const endedAt = new Date().toJSON();
+
+    // // temp test old data
+    // const datesToSubtract = 47;
+    // const startedAt = new Date(workoutState.startedAt);
+    // startedAt.setDate(startedAt.getDate() - datesToSubtract);
+    // const endedAt = new Date();
+    // endedAt.setDate(endedAt.getDate() - datesToSubtract);
+    // // temp test
+
+    const endedAt = new Date();
     const data: ICreateWorkoutRequest = {
       user_id: authState.userId,
       started_at: workoutState.startedAt,
-      ended_at: endedAt,
+      ended_at: endedAt.toJSON(),
       exercise_ids,
       logs,
     };
@@ -74,14 +85,21 @@ const useFinishWorkout = () => {
     console.log(data);
 
     try {
-      const res = await axios.post("workout/create", data, {
-        headers: {
-          Authorization: "Bearer " + authState.accessToken,
-        },
-      });
-      console.log(res);
+      const res: AxiosResponse<ICreateWorkoutResponse> = await axios.post(
+        API_ENDPOINTS.WORKOUTS.CREATE,
+        data,
+        {
+          headers: {
+            Authorization: "Bearer " + authState.accessToken,
+          },
+        }
+      );
+
+      const resData = res.data.data;
       // make sure isFinishWorkout is updated before navigation pop
       await dispatch(setFinishWorkout());
+      // add data to local
+      await dispatch(addFinishedWorkout(resData));
       navigation.popToTop();
     } catch (err) {
       console.log(err);

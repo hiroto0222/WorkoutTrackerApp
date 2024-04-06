@@ -3,7 +3,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import ExerciseLogInputTable from "components/base/workout/table/ExerciseLogInputTable";
 import globalStyles from "components/styles";
 import useFinishWorkout from "hooks/api/useFinishWorkout";
-import useGetExercises from "hooks/utils/useGetExercises";
 import useTimer from "hooks/utils/useTimer";
 import { useEffect } from "react";
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
@@ -20,7 +19,6 @@ const WorkoutScreen = () => {
   const workoutState = useSelector((state: RootState) => state.workout);
 
   const { seconds } = useTimer();
-  const { exercises } = useGetExercises();
   const { validateAndCreateWorkoutData, sendWorkoutData } = useFinishWorkout();
 
   // validate and send workout data
@@ -48,9 +46,7 @@ const WorkoutScreen = () => {
   };
 
   const handleOnAddExercises = () => {
-    if (exercises.length > 0) {
-      navigation.navigate("AddExercise", { exercises });
-    }
+    navigation.navigate("AddExercise");
   };
 
   // add finish workout button to header

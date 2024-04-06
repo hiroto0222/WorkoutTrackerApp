@@ -30,22 +30,22 @@ export interface ICreateUserRequest {
 export type LogType = "weight_reps" | "reps" | "timer" | "cardio";
 
 // Exercise data recieved
-export interface IExercise {
+export interface IExerciseResponse {
   id: number;
   name: string;
   log_type: LogType;
 }
 
-// Log data to send as POST request
-export interface ILogRequest {
+// Log data to send
+export interface ILog {
   weight?: number;
   reps?: number;
   time?: number;
 }
 
 // List of log data to send as POST request
-export interface ILogRequests {
-  [exercise_id: number]: ILogRequest[];
+export interface ILogs {
+  [exercise_id: number]: ILog[];
 }
 
 // Workout data to send as POST request
@@ -54,5 +54,37 @@ export interface ICreateWorkoutRequest {
   started_at: string;
   ended_at: string;
   exercise_ids: number[];
-  logs: ILogRequests;
+  logs: ILogs;
+}
+
+// WorkoutData.workouts sent from server
+export interface IWorkoutsResponse {
+  id: string;
+  started_at: string;
+  ended_at: string;
+}
+
+// Log data sent from server
+export interface ILogResponse {
+  exercise_id: number;
+  weight?: number;
+  reps?: number;
+  time?: number;
+}
+
+// WorkoutData.workoutLogs sent from server
+export interface IWorkoutLogsResponse {
+  [workout_id: string]: ILogResponse[];
+}
+
+// WorkoutData sent from server
+export interface IWorkoutDataResponse {
+  workouts: IWorkoutsResponse[];
+  workout_logs: IWorkoutLogsResponse;
+}
+
+// WorkoutData sent from server on workout creation success
+export interface ICreateWorkoutResponse {
+  workout: IWorkoutsResponse;
+  logs: ILogResponse[];
 }

@@ -1,26 +1,31 @@
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { IExercise } from "api/types";
+import { useNavigation } from "@react-navigation/native";
+import { IExerciseResponse } from "api/types";
 import ConfirmSelectionButton from "components/base/workout/ConfirmSelectionButton";
 import ExerciseCheckBox from "components/base/workout/ExerciseCheckBox";
 import globalStyles from "components/styles";
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { Checkbox, Div, Text } from "react-native-magnus";
+import { Div, Text } from "react-native-magnus";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { addCurrExercises } from "store/slices/workout";
 import UIConstants from "../../../constants";
-import { WorkoutStackParams } from "./WorkoutScreenStack";
 
 const AddExerciseScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const route = useRoute<RouteProp<WorkoutStackParams, "AddExercise">>();
+
   const workoutState = useSelector((state: RootState) => state.workout);
+  const exercisesState = useSelector((state: RootState) => state.exercises);
+  const exerciseIds = Object.keys(exercisesState.exercises).map(Number);
+  const [selectedExercises, setSelectedExercises] = useState<
+    IExerciseResponse[]
+  >([]);
 
-  const [selectedExercises, setSelectedExercises] = useState<IExercise[]>([]);
-
-  const handleOnCheckedExercise = (checked: boolean, exercise: IExercise) => {
+  const handleOnCheckedExercise = (
+    checked: boolean,
+    exercise: IExerciseResponse
+  ) => {
     if (checked) {
       setSelectedExercises((prev) => [...prev, exercise]);
     } else {
@@ -58,16 +63,14 @@ const AddExerciseScreen = () => {
           style={{ marginTop: 15 }}
         >
           <Div>
-            <Checkbox.Group>
-              {route.params.exercises.map((exercise) => (
-                <ExerciseCheckBox
-                  key={exercise.id}
-                  value={exercise}
-                  disabled={isDuplicateExercise(exercise.id)}
-                  handleOnChecked={handleOnCheckedExercise}
-                />
-              ))}
-            </Checkbox.Group>
+            {exerciseIds.map((exercise_id) => (
+              <ExerciseCheckBox
+                key={exercise_id}
+                value={exercisesState.exercises[exercise_id]}
+                disabled={isDuplicateExercise(exercise_id)}
+                handleOnChecked={handleOnCheckedExercise}
+              />
+            ))}
           </Div>
         </ScrollView>
         {selectedExercises.length > 0 && (

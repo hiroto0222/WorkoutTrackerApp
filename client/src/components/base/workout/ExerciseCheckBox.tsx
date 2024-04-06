@@ -1,12 +1,12 @@
-import { IExercise } from "api/types";
+import { IExerciseResponse } from "api/types";
 import globalStyles from "components/styles";
 import { Checkbox, Div, Text } from "react-native-magnus";
 import UIConstants from "../../../constants";
 
 type Props = {
-  value: IExercise;
+  value: IExerciseResponse;
   disabled: boolean;
-  handleOnChecked: (checked: boolean, exercise: IExercise) => void;
+  handleOnChecked: (checked: boolean, exercise: IExerciseResponse) => void;
 };
 
 const ExerciseCheckBox = ({ value, disabled, handleOnChecked }: Props) => (
