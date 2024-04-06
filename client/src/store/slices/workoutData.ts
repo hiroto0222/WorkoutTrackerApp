@@ -1,5 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { IWorkoutLogsResponse, IWorkoutsResponse } from "api/types";
+import {
+  ICreateWorkoutResponse,
+  IWorkoutLogsResponse,
+  IWorkoutsResponse,
+} from "api/types";
 
 export interface WorkoutDataState {
   workouts: IWorkoutsResponse[];
@@ -25,9 +29,16 @@ export const workoutDataSlice = createSlice({
       state.workouts = action.payload.workouts;
       state.workoutLogs = action.payload.workoutLogs;
     },
+    addFinishedWorkout: (
+      state,
+      action: PayloadAction<ICreateWorkoutResponse>
+    ) => {
+      state.workouts = [action.payload.workout, ...state.workouts];
+      state.workoutLogs[action.payload.workout.id] = action.payload.logs;
+    },
   },
 });
 
-export const { setWorkouts } = workoutDataSlice.actions;
+export const { setWorkouts, addFinishedWorkout } = workoutDataSlice.actions;
 
 export default workoutDataSlice.reducer;
