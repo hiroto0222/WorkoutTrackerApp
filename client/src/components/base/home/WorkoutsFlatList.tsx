@@ -11,7 +11,12 @@ const WorkoutsFlatList = () => {
     <FlatList
       contentContainerStyle={styles.flatListContainer}
       data={workoutDataState.workouts}
-      renderItem={({ item }) => <WorkoutDetailCard workout={item} />}
+      renderItem={({ item }) => (
+        <WorkoutDetailCard
+          workout={item}
+          logs={workoutDataState.workoutLogs[item.id]}
+        />
+      )}
       keyExtractor={(item) => item.id}
     />
   );

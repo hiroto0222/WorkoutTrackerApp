@@ -1,3 +1,5 @@
+import { IExerciseResponse, ILogResponse } from "api/types";
+
 const weekDays = [
   "Sunday",
   "Monday",
@@ -45,4 +47,11 @@ export const formatDateToString = (date: Date) => {
 
 export const getNameOfWeekday = (date: Date) => {
   return weekDays[date.getDay()];
+};
+
+export const createLogsSummary = (
+  exercises: { [exercise_id: number]: IExerciseResponse },
+  logs: ILogResponse[]
+) => {
+  
 };
