@@ -1,11 +1,16 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { ICreateWorkoutRequest, ILogs } from "api/types";
+import {
+  ICreateWorkoutRequest,
+  ICreateWorkoutResponse,
+  ILogs,
+} from "api/types";
 import { RootStackParams } from "navigation/RootStack";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { setFinishWorkout } from "store/slices/workout";
-import axios, { API_ENDPOINTS } from "../../api";
+import { addFinishedWorkout } from "store/slices/workoutData";
+import axios, { API_ENDPOINTS, AxiosResponse } from "../../api";
 
 const useFinishWorkout = () => {
   const dispatch = useDispatch();
@@ -80,14 +85,21 @@ const useFinishWorkout = () => {
     console.log(data);
 
     try {
-      const res = await axios.post(API_ENDPOINTS.WORKOUTS.CREATE, data, {
-        headers: {
-          Authorization: "Bearer " + authState.accessToken,
-        },
-      });
-      console.log(res);
+      const res: AxiosResponse<ICreateWorkoutResponse> = await axios.post(
+        API_ENDPOINTS.WORKOUTS.CREATE,
+        data,
+        {
+          headers: {
+            Authorization: "Bearer " + authState.accessToken,
+          },
+        }
+      );
+
+      const resData = res.data.data;
       // make sure isFinishWorkout is updated before navigation pop
       await dispatch(setFinishWorkout());
+      // add data to local
+      await dispatch(addFinishedWorkout(resData));
       navigation.popToTop();
     } catch (err) {
       console.log(err);

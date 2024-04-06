@@ -37,6 +37,11 @@ type CreateWorkoutRequest struct {
 	Logs        map[int][]LogRequest `json:"logs" binding:"required"`
 }
 
+type CreateWorkoutResponse struct {
+	Workout models.Workout `json:"workout" binding:"required"`
+	Logs    []logResponse  `json:"logs" binding:"required"`
+}
+
 // CreateWorkout adds a new workout record for the user
 func (s *WorkoutServiceImpl) CreateWorkout(ctx *gin.Context) {
 	rawJSON, _ := io.ReadAll(ctx.Request.Body)
@@ -60,6 +65,7 @@ func (s *WorkoutServiceImpl) CreateWorkout(ctx *gin.Context) {
 
 	// start database transaction
 	tx := s.db.Begin()
+	logsRes := []logResponse{}
 
 	// create workout
 	workout := models.Workout{
@@ -100,6 +106,12 @@ func (s *WorkoutServiceImpl) CreateWorkout(ctx *gin.Context) {
 					Time:              logReq.Time,
 				}
 				res := s.db.Create(&newLog)
+				logsRes = append(logsRes, logResponse{
+					ExerciseId: exerciseId,
+					Weight:     logReq.Weight,
+					Reps:       logReq.Reps,
+					Time:       logReq.Time,
+				})
 				if res.Error != nil {
 					log.Printf("failed to create exercise log: %v", res.Error)
 					ctx.JSON(http.StatusBadRequest, gin.H{"message": res.Error.Error()})
@@ -117,7 +129,12 @@ func (s *WorkoutServiceImpl) CreateWorkout(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "Successfully added workout entry"})
+	data := CreateWorkoutResponse{
+		Workout: workout,
+		Logs:    logsRes,
+	}
+
+	ctx.JSON(http.StatusCreated, gin.H{"message": "Successfully added workout entry", "data": data})
 }
 
 type workoutResponse struct {

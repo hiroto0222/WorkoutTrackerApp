@@ -82,3 +82,9 @@ export interface IWorkoutDataResponse {
   workouts: IWorkoutsResponse[];
   workout_logs: IWorkoutLogsResponse;
 }
+
+// WorkoutData sent from server on workout creation success
+export interface ICreateWorkoutResponse {
+  workout: IWorkoutsResponse;
+  logs: ILogResponse[];
+}
