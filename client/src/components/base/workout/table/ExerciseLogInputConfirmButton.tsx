@@ -13,12 +13,18 @@ const ExerciseLogInputConfirmButton = ({
   onComplete,
   onEdit,
 }: Props) => (
-  <TouchableOpacity onPress={isComplete ? onEdit : onComplete}>
+  <TouchableOpacity
+    onPress={isComplete ? onEdit : onComplete}
+    style={{
+      paddingVertical: 5,
+      paddingHorizontal: 15,
+    }}
+  >
     <View
       style={{
-        width: 50,
+        width: 40,
         height: 30,
-        borderRadius: 20,
+        borderRadius: UIConstants.STYLES.BORDER_RADIUS,
         backgroundColor: isComplete
           ? UIConstants.COLORS.GRAY.LIGHT
           : UIConstants.COLORS.PRIMARY.REGULAR,

@@ -27,6 +27,9 @@ const UIConstants = {
     },
     BLACK: "#000",
   },
+  STYLES: {
+    BORDER_RADIUS: 20,
+  },
 };
 
 export default UIConstants;

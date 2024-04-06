@@ -23,7 +23,7 @@ export default Card;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: UIConstants.COLORS.GRAY.LIGHT,
-    borderRadius: 20,
+    borderRadius: UIConstants.STYLES.BORDER_RADIUS,
     marginVertical: 10,
     paddingVertical: 20,
     paddingHorizontal: 15,

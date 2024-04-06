@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   item: {
     backgroundColor: UIConstants.COLORS.GRAY.LIGHT,
     padding: 20,
-    borderRadius: 20,
+    borderRadius: UIConstants.STYLES.BORDER_RADIUS,
     marginVertical: 5,
     paddingVertical: 15,
     paddingHorizontal: 15,

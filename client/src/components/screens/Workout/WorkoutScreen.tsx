@@ -1,12 +1,19 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import Button from "components/base/common/Button";
 import ExerciseLogInputTable from "components/base/workout/table/ExerciseLogInputTable";
 import globalStyles from "components/styles";
 import useFinishWorkout from "hooks/api/useFinishWorkout";
 import useTimer from "hooks/utils/useTimer";
 import { useEffect } from "react";
-import { Alert, ScrollView, StyleSheet, View } from "react-native";
-import { Button, Div, Text } from "react-native-magnus";
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Div, Text } from "react-native-magnus";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
 import { formatTime } from "utils";
@@ -53,22 +60,32 @@ const WorkoutScreen = () => {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <Button
-          bg="white"
-          color={UIConstants.COLORS.GRAY.REGULAR}
+        <TouchableOpacity
+          style={{ padding: 10 }}
           onPress={() => navigation.goBack()}
         >
-          CANCEL
-        </Button>
+          <Text
+            color={UIConstants.COLORS.GRAY.REGULAR}
+            style={globalStyles.textMedium}
+            fontSize="xl"
+          >
+            CANCEL
+          </Text>
+        </TouchableOpacity>
       ),
       headerRight: () => (
-        <Button
-          bg="white"
-          color={UIConstants.COLORS.PRIMARY.REGULAR}
+        <TouchableOpacity
+          style={{ padding: 10 }}
           onPress={() => handleFinishWorkout()}
         >
-          FINISH
-        </Button>
+          <Text
+            color={UIConstants.COLORS.PRIMARY.REGULAR}
+            style={globalStyles.textBold}
+            fontSize="xl"
+          >
+            FINISH
+          </Text>
+        </TouchableOpacity>
       ),
     });
   }, [workoutState]);
@@ -110,18 +127,15 @@ const WorkoutScreen = () => {
         <Text fontSize="3xl" style={globalStyles.textLight}>
           {formatTime(seconds)}
         </Text>
-        <Div mt="md" alignItems="center" justifyContent="center">
+        <Div mt="md" mb="lg" alignItems="center" justifyContent="center">
           <Button
-            mx="xl"
-            mb="xl"
-            py="lg"
+            buttonType="md"
             bg={UIConstants.COLORS.PRIMARY.REGULAR}
-            rounded="circle"
-            block
             onPress={handleOnAddExercises}
-          >
-            Add Exercises
-          </Button>
+            text="Add Exercises"
+            color="#fff"
+            fontSize="xl"
+          />
         </Div>
       </Div>
       <ScrollView
