@@ -17,10 +17,20 @@ const AddExerciseScreen = () => {
 
   const workoutState = useSelector((state: RootState) => state.workout);
   const exercisesState = useSelector((state: RootState) => state.exercises);
-  const exerciseIds = Object.keys(exercisesState.exercises).map(Number);
   const [selectedExercises, setSelectedExercises] = useState<
     IExerciseResponse[]
   >([]);
+
+  const exercises: { exerciseId: number; name: string }[] = Object.keys(
+    exercisesState.exercises
+  )
+    .map(Number)
+    .map((exerciseId) => ({
+      exerciseId,
+      name: exercisesState.exercises[exerciseId].name,
+    }));
+  // sort alphebetically
+  exercises.sort((a, b) => a.name.localeCompare(b.name));
 
   const handleOnCheckedExercise = (
     checked: boolean,
@@ -63,11 +73,11 @@ const AddExerciseScreen = () => {
           style={{ marginTop: 15 }}
         >
           <Div>
-            {exerciseIds.map((exercise_id) => (
+            {exercises.map((exercise) => (
               <ExerciseCheckBox
-                key={exercise_id}
-                value={exercisesState.exercises[exercise_id]}
-                disabled={isDuplicateExercise(exercise_id)}
+                key={exercise.exerciseId}
+                value={exercisesState.exercises[exercise.exerciseId]}
+                disabled={isDuplicateExercise(exercise.exerciseId)}
                 handleOnChecked={handleOnCheckedExercise}
               />
             ))}

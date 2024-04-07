@@ -44,7 +44,7 @@ const RootStack = () => {
           },
           tabBarStyle: {
             shadowColor: "#fff",
-            paddingHorizontal: 30,
+            paddingHorizontal: 25,
             height: Platform.OS === "ios" ? 80 : 60,
             position: "absolute",
             backgroundColor: "#fff",
