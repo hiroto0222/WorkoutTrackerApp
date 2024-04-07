@@ -1,14 +1,17 @@
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { IExerciseResponse, ILogResponse, IWorkoutsResponse } from "api/types";
+import { HomeStackParams } from "components/screens/Home/HomeScreenStack";
 import globalStyles from "components/styles";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Div, Text } from "react-native-magnus";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
-import { getNameOfWeekday } from "utils";
+import { formatTimeAMPM, getNameOfWeekday } from "utils";
 import UIConstants from "../../../constants";
 import ExerciseLogsDetail from "./ExerciseLogsDetail";
 
-type ExerciseLogs = {
+export type ExerciseLogs = {
   exercises: IExerciseResponse[];
   logs: { [exercise_id: number]: ILogResponse[] };
 };
@@ -19,6 +22,9 @@ type Props = {
 };
 
 const WorkoutDetailCard = ({ workout, logs }: Props) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+
   const exercises = useSelector((state: RootState) => state.exercises);
 
   const workoutDate = new Date(workout.started_at);
@@ -44,8 +50,12 @@ const WorkoutDetailCard = ({ workout, logs }: Props) => {
 
   const exerciseLogs = createExerciseLogs();
 
+  const handleOnPress = () => {
+    navigation.navigate("WorkoutDetail", { exerciseLogs, workout });
+  };
+
   return (
-    <TouchableOpacity style={styles.item}>
+    <TouchableOpacity onPress={handleOnPress} style={styles.item}>
       <Div
         row
         justifyContent="space-between"
@@ -55,8 +65,9 @@ const WorkoutDetailCard = ({ workout, logs }: Props) => {
           {workoutWeekdayName} Workout
         </Text>
         <Text fontSize="md" style={globalStyles.textRegular}>
-          {workoutDate.toDateString().substring(4)}{" "}
-          {workoutDate.toTimeString().substring(0, 5)}
+          {workoutDate.toDateString().substring(4)}
+          {", "}
+          {formatTimeAMPM(workoutDate)}
         </Text>
       </Div>
       <Div row justifyContent="space-between" style={{ width: "100%" }}>

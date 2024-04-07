@@ -84,7 +84,7 @@ const HomeScreen = () => {
             </View>
           </TouchableOpacity>
         </Div>
-        <WorkoutsFlatList />
+        <WorkoutsFlatList pb={1000} />
       </View>
     </View>
   );
