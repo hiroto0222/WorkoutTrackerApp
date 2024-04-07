@@ -85,7 +85,7 @@ export default AddExerciseScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: UIConstants.SCREEN_MARGIN_TOP - 5,
+    paddingTop: UIConstants.SCREEN_MARGIN_TOP - 15,
   },
   scrollViewContainer: {
     flexGrow: 1,

@@ -56,7 +56,7 @@ const BarGraph = ({ data, setSelectedWorkoutData, isEmptyData }: Props) => {
 
   const playAnimation = useCallback(() => {
     progress.value = 0;
-    progress.value = withTiming(1, { duration: 1000 });
+    progress.value = withTiming(1, { duration: 750 });
   }, []);
 
   const touchHandler = (e: GestureResponderEvent) => {

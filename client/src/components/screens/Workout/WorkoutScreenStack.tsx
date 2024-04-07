@@ -5,7 +5,7 @@ import WorkoutScreen from "./WorkoutScreen";
 
 export type WorkoutStackParams = {
   WorkoutHome: undefined;
-  Workout: undefined;
+  Workout: { isAddWorkout: boolean };
   AddExercise: undefined;
 };
 

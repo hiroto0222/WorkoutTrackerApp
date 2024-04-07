@@ -1,8 +1,9 @@
+import Button from "components/base/common/Button";
 import globalStyles from "components/styles";
 import { auth } from "config/firebase";
 import { signOut } from "firebase/auth";
 import { Platform, StyleSheet, View } from "react-native";
-import { Button, Div, Text } from "react-native-magnus";
+import { Div, Text } from "react-native-magnus";
 import { useDispatch } from "react-redux";
 import { setAuth } from "store/slices/auth";
 import UIConstants from "../../../constants";
@@ -22,18 +23,13 @@ const UserSettingScreen = () => {
           User Setting
         </Text>
         <Button
+          buttonType="lg"
           onPress={() => handleLogout()}
-          mx="xl"
-          mt="sm"
-          mb="xl"
-          py="lg"
-          bg="gray300"
-          rounded="circle"
-          block
-          color="black"
-        >
-          Sign Out
-        </Button>
+          bg={UIConstants.COLORS.GRAY.LIGHT}
+          color="#000"
+          text="Logout"
+          fontSize="xl"
+        />
       </Div>
     </View>
   );

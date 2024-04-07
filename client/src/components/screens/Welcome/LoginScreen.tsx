@@ -1,10 +1,17 @@
+import Button from "components/base/common/Button";
 import globalStyles from "components/styles";
 import * as WebBrowser from "expo-web-browser";
 import useGoogleLogin from "hooks/auth/useGoogleLogin";
 import useLogin from "hooks/auth/useLogin";
 import useSignUp from "hooks/auth/useSignUp";
 import React, { useState } from "react";
-import { Button, Div, Image, Input, Text } from "react-native-magnus";
+import {
+  Div,
+  Image,
+  Input,
+  Button as MagnusButton,
+  Text,
+} from "react-native-magnus";
 import UIConstants from "../../../constants";
 
 WebBrowser.maybeCompleteAuthSession();
@@ -18,21 +25,14 @@ const LoginScreen = () => {
 
   return (
     <>
-      <Div flex={1} mt="2xl">
-        <Text
-          mt="3xl"
-          mx="xl"
-          w="70%"
-          fontSize="5xl"
-          style={globalStyles.textMedium}
-        >
+      <Div flex={1} justifyContent="flex-start" mt="2xl" px={40}>
+        <Text mt="3xl" w="70%" fontSize="6xl" style={globalStyles.textBold}>
           Get Started
         </Text>
         <Input
           value={email}
           onChangeText={(text) => setEmail(text)}
           autoCapitalize="none"
-          mx="xl"
           mt="2xl"
           px="md"
           py="md"
@@ -43,7 +43,6 @@ const LoginScreen = () => {
         <Input
           value={password}
           onChangeText={(text) => setPassword(text)}
-          mx="xl"
           mt="md"
           px="md"
           py="md"
@@ -54,36 +53,22 @@ const LoginScreen = () => {
         />
         <Button
           onPress={() => login(email, password)}
-          mx="xl"
-          mt="xl"
-          mb="xl"
-          py="lg"
+          buttonType="md"
           bg={UIConstants.COLORS.PRIMARY.REGULAR}
-          rounded="circle"
-          block
-        >
-          Sign In
-        </Button>
+          text="Login"
+          color="#fff"
+          fontSize="lg"
+          marginVertical={15}
+        />
         <Button
           onPress={() => signUp(email, password)}
-          mx="xl"
-          mb="xl"
-          py="lg"
+          buttonType="md"
           bg={UIConstants.COLORS.GRAY.LIGHT}
-          rounded="circle"
-          block
-          color="black"
-        >
-          Sign Up
-        </Button>
-
-        <Div
-          mx="xl"
-          alignItems="center"
-          justifyContent="center"
-          flexDir="row"
-          mt="xl"
-        >
+          text="Sign Up"
+          color="#000"
+          fontSize="lg"
+        />
+        <Div alignItems="center" justifyContent="center" flexDir="row" mt="xl">
           <Div h={1} flex={1} bg="gray400" />
           <Text px="lg" fontSize="sm" color="gray500">
             Or continue with
@@ -91,14 +76,8 @@ const LoginScreen = () => {
           <Div h={1} flex={1} bg="gray400" />
         </Div>
 
-        <Div
-          mx="xl"
-          alignItems="center"
-          justifyContent="center"
-          flexDir="row"
-          mt="xl"
-        >
-          <Button
+        <Div alignItems="center" justifyContent="center" flexDir="row" mt="xl">
+          <MagnusButton
             onPress={() => promptAsync()}
             mr="md"
             flex={1}
@@ -118,7 +97,7 @@ const LoginScreen = () => {
             }
           >
             Google
-          </Button>
+          </MagnusButton>
         </Div>
       </Div>
     </>

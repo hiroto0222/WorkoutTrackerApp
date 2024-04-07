@@ -1,11 +1,14 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { IWorkoutsResponse } from "api/types";
+import { ExerciseLogs } from "components/base/home/WorkoutDetailCard";
 import HomeScreen from "./HomeScreen";
+import WorkoutDetailScreen from "./WorkoutDetailScreen";
 import WorkoutsListScreen from "./WorkoutsListScreen";
 
 export type HomeStackParams = {
   Home: undefined;
   WorkoutsList: undefined;
-  WorkoutDetail: undefined;
+  WorkoutDetail: { exerciseLogs: ExerciseLogs; workout: IWorkoutsResponse };
 };
 
 const HomeStack = createNativeStackNavigator<HomeStackParams>();
@@ -21,6 +24,14 @@ const HomeScreenStack = () => {
       <HomeStack.Screen
         name="WorkoutsList"
         component={WorkoutsListScreen}
+        options={{
+          headerTitle: "",
+          animation: "slide_from_right",
+        }}
+      />
+      <HomeStack.Screen
+        name="WorkoutDetail"
+        component={WorkoutDetailScreen}
         options={{
           headerTitle: "",
           animation: "slide_from_right",

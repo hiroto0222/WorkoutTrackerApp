@@ -1,7 +1,8 @@
 import { IExerciseResponse } from "api/types";
+import IconButton from "components/base/common/IconButton";
 import globalStyles from "components/styles";
 import { View } from "react-native";
-import { Button, Div, Icon, Text } from "react-native-magnus";
+import { Div, Text } from "react-native-magnus";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { addEmptyLog } from "store/slices/workout";
@@ -45,21 +46,14 @@ const ExerciseLogInputTable = ({ exercise }: Props) => {
         />
       ))}
       <Div mx="3xl" mt="md" alignItems="center" justifyContent="center">
-        <Button
-          mx="3xl"
-          mb="lg"
+        <IconButton
+          onPress={() => handleAddEmptySet()}
+          buttonType="md"
           bg={UIConstants.COLORS.GRAY.LIGHT}
-          rounded="circle"
-          onPress={handleAddEmptySet}
-          block
-        >
-          <Icon
-            fontSize="xl"
-            fontFamily="MaterialCommunityIcons"
-            name="plus"
-            color="black"
-          />
-        </Button>
+          color="#000"
+          name="plus"
+          fontSize="2xl"
+        />
       </Div>
     </View>
   );

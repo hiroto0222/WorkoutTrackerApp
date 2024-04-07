@@ -4,6 +4,7 @@ import {
   IWorkoutLogsResponse,
   IWorkoutsResponse,
 } from "api/types";
+import { binarySearch } from "utils";
 
 export interface WorkoutDataState {
   workouts: IWorkoutsResponse[];
@@ -33,7 +34,14 @@ export const workoutDataSlice = createSlice({
       state,
       action: PayloadAction<ICreateWorkoutResponse>
     ) => {
-      state.workouts = [action.payload.workout, ...state.workouts];
+      // add new workout to exisitng sorted workouts (descending) using binary search
+      const newWorkout = action.payload.workout;
+      const idx = binarySearch(state.workouts, newWorkout);
+      state.workouts = [
+        ...state.workouts.slice(0, idx),
+        newWorkout,
+        ...state.workouts.slice(idx),
+      ];
       state.workoutLogs[action.payload.workout.id] = action.payload.logs;
     },
   },

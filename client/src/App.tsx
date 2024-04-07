@@ -19,7 +19,7 @@ import {
   Poppins_900Black_Italic,
   useFonts,
 } from "@expo-google-fonts/poppins";
-import Loading from "components/base/Loading";
+import Loading from "components/base/common/Loading";
 import { registerRootComponent } from "expo";
 import * as SplashScreen from "expo-splash-screen";
 import RootNavigation from "navigation";

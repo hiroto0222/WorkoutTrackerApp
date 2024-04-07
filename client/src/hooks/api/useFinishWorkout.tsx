@@ -19,10 +19,25 @@ const useFinishWorkout = () => {
   const workoutState = useSelector((state: RootState) => state.workout);
   const authState = useSelector((state: RootState) => state.auth);
 
-  const validateAndCreateWorkoutData = () => {
+  const validateAndCreateWorkoutData = (isAddWorkout: boolean) => {
+    let message = "Please add some exercises and sets to finish your workout!";
     var isValid = false;
     const exercise_ids: number[] = [];
     const logs: ILogs = {};
+
+    // validate dates
+    if (
+      isAddWorkout &&
+      workoutState.userStartTime !== undefined &&
+      workoutState.userEndTime !== undefined
+    ) {
+      const userStartTime = new Date(workoutState.userStartTime);
+      const userEndTime = new Date(workoutState.userEndTime);
+      if (userStartTime >= userEndTime) {
+        message = "Please add a valid start and end time!";
+        return { isValid, exercise_ids, logs, message };
+      }
+    }
 
     // validate data
     workoutState.currExercises.forEach((exercise) => {
@@ -55,26 +70,22 @@ const useFinishWorkout = () => {
       isValid = true;
     }
 
-    return { isValid, exercise_ids, logs };
+    return { isValid, exercise_ids, logs, message };
   };
 
-  const sendWorkoutData = async (exercise_ids: number[], logs: ILogs) => {
-    // else send to server
+  const sendWorkoutData = async (
+    isAddWorkout: boolean,
+    exercise_ids: number[],
+    logs: ILogs
+  ) => {
+    // send to server
     if (authState.userId === undefined) {
       console.log("no user id");
       return;
     }
 
-    // // temp test old data
-    // const datesToSubtract = 47;
-    // const startedAt = new Date(workoutState.startedAt);
-    // startedAt.setDate(startedAt.getDate() - datesToSubtract);
-    // const endedAt = new Date();
-    // endedAt.setDate(endedAt.getDate() - datesToSubtract);
-    // // temp test
-
     const endedAt = new Date();
-    const data: ICreateWorkoutRequest = {
+    let data: ICreateWorkoutRequest = {
       user_id: authState.userId,
       started_at: workoutState.startedAt,
       ended_at: endedAt.toJSON(),
@@ -82,7 +93,27 @@ const useFinishWorkout = () => {
       logs,
     };
 
-    console.log(data);
+    // if dates have been selected by the user
+    if (
+      isAddWorkout &&
+      workoutState.userStartDate !== undefined &&
+      workoutState.userStartTime !== undefined &&
+      workoutState.userEndTime !== undefined
+    ) {
+      const userStartDate = new Date(workoutState.userStartDate);
+      const userStartTime = new Date(workoutState.userStartTime);
+      const userEndTime = new Date(workoutState.userEndTime);
+      userStartDate.setHours(
+        userStartTime.getHours(),
+        userStartTime.getMinutes(),
+        userStartTime.getSeconds()
+      );
+      userEndTime.setFullYear(userStartDate.getFullYear());
+      userEndTime.setMonth(userStartDate.getMonth());
+      userEndTime.setDate(userStartDate.getDate());
+      data.started_at = userStartDate.toJSON();
+      data.ended_at = userEndTime.toJSON();
+    }
 
     try {
       const res: AxiosResponse<ICreateWorkoutResponse> = await axios.post(
@@ -99,6 +130,7 @@ const useFinishWorkout = () => {
       // make sure isFinishWorkout is updated before navigation pop
       await dispatch(setFinishWorkout());
       // add data to local
+      console.log(resData);
       await dispatch(addFinishedWorkout(resData));
       navigation.popToTop();
     } catch (err) {

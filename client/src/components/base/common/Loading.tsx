@@ -1,5 +1,5 @@
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-import UIConstants from "../../constants";
+import UIConstants from "../../../constants";
 
 const Loading = () => {
   return (
