@@ -16,9 +16,9 @@ const WorkoutHomeScreen = () => {
     useNavigation<NativeStackNavigationProp<WorkoutStackParams>>();
   const dispatch = useDispatch();
 
-  const handleStartWorkout = () => {
+  const handleStartWorkout = (isAddWorkout: boolean) => {
     dispatch(setStartWorkingOut());
-    navigation.navigate("Workout");
+    navigation.navigate("Workout", { isAddWorkout });
   };
 
   return (
@@ -38,7 +38,7 @@ const WorkoutHomeScreen = () => {
       <Div my={10} alignItems="center" justifyContent="center">
         <Button
           buttonType="lg"
-          onPress={() => handleStartWorkout()}
+          onPress={() => handleStartWorkout(true)}
           bg={UIConstants.COLORS.GRAY.LIGHT}
           color="#000"
           text="Add Workout"
@@ -47,7 +47,7 @@ const WorkoutHomeScreen = () => {
         />
         <Button
           buttonType="lg"
-          onPress={() => handleStartWorkout()}
+          onPress={() => handleStartWorkout(false)}
           bg={UIConstants.COLORS.PRIMARY.REGULAR}
           color="#fff"
           text="Start Workout"

@@ -14,6 +14,9 @@ export interface WorkoutState {
   endedAt?: string;
   currExercises: IExerciseResponse[];
   currLogs: { [exercise_id: number]: Log[] };
+  userStartDate?: string;
+  userStartTime?: string;
+  userEndTime?: string;
 }
 
 const initialState: WorkoutState = {
@@ -29,11 +32,26 @@ export const workoutSlice = createSlice({
   initialState,
   reducers: {
     setStartWorkingOut: (state, action: PayloadAction<void>) => {
-      const date = new Date().toJSON();
-      state.startedAt = date;
+      const startDate = new Date();
+      const userStartTime = new Date();
+      const userEndTime = new Date();
+      userEndTime.setHours(userStartTime.getHours() + 1);
+      state.startedAt = startDate.toJSON();
       state.isFinished = false;
       state.currExercises = [];
       state.currLogs = {};
+      state.userStartDate = startDate.toJSON();
+      state.userStartTime = userStartTime.toJSON();
+      state.userEndTime = userEndTime.toJSON();
+    },
+    setUserStartDate: (state, action: PayloadAction<string>) => {
+      state.userStartDate = action.payload;
+    },
+    setUserStartTime: (state, action: PayloadAction<string>) => {
+      state.userStartTime = action.payload;
+    },
+    setUserEndTime: (state, action: PayloadAction<string>) => {
+      state.userEndTime = action.payload;
     },
     addCurrExercises: (state, action: PayloadAction<IExerciseResponse[]>) => {
       // add selected exercises
@@ -124,12 +142,18 @@ export const workoutSlice = createSlice({
     },
     setFinishWorkout: (state, action: PayloadAction) => {
       state.isFinished = true;
+      state.currExercises = [];
+      state.currLogs = {};
+      state.endedAt = undefined;
     },
   },
 });
 
 export const {
   setStartWorkingOut,
+  setUserStartDate,
+  setUserStartTime,
+  setUserEndTime,
   addCurrExercises,
   removeCurrExercises,
   addEmptyLog,

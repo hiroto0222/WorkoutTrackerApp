@@ -14,6 +14,7 @@ type Props = {
   fontSize: string;
   onPress: () => void;
   marginVertical?: number;
+  width?: string;
 };
 
 const Button = ({
@@ -23,17 +24,20 @@ const Button = ({
   text,
   fontSize,
   marginVertical,
+  width,
   onPress,
 }: Props) => {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={{
+        justifyContent: "center",
+        alignItems: "center",
         backgroundColor: bg,
         borderRadius: UIConstants.STYLES.BORDER_RADIUS,
         paddingVertical:
           buttonType === "lg" ? 15 : buttonType === "md" ? 10 : 5,
-        width: "100%",
+        width: width || "100%",
         marginVertical,
       }}
     >

@@ -7,7 +7,7 @@ import UserSettingScreen from "components/screens/UserSettings/UserSettingScreen
 import WorkoutScreenStack, {
   WorkoutStackParams,
 } from "components/screens/Workout/WorkoutScreenStack";
-import { TouchableOpacity } from "react-native";
+import { Platform, TouchableOpacity } from "react-native";
 import { Icon } from "react-native-magnus";
 import UIConstants from "../constants";
 
@@ -45,7 +45,7 @@ const RootStack = () => {
           tabBarStyle: {
             shadowColor: "#fff",
             paddingHorizontal: 30,
-            height: 60,
+            height: Platform.OS === "ios" ? 80 : 60,
             position: "absolute",
             backgroundColor: "#fff",
             paddingTop: 10,
