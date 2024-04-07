@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import Loading from "components/base/Loading";
+import Loading from "components/base/common/Loading";
 import SummaryCard from "components/base/home/SummaryCard";
 import WorkoutsFlatList from "components/base/home/WorkoutsFlatList";
 import globalStyles from "components/styles";

@@ -7,6 +7,7 @@ import UserSettingScreen from "components/screens/UserSettings/UserSettingScreen
 import WorkoutScreenStack, {
   WorkoutStackParams,
 } from "components/screens/Workout/WorkoutScreenStack";
+import { Platform, TouchableOpacity } from "react-native";
 import { Icon } from "react-native-magnus";
 import UIConstants from "../constants";
 
@@ -35,13 +36,19 @@ const RootStack = () => {
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarActiveTintColor: UIConstants.COLORS.PRIMARY.REGULAR,
+          tabBarActiveTintColor: UIConstants.COLORS.GRAY.REGULAR,
+          tabBarActiveBackgroundColor: UIConstants.COLORS.GRAY.LIGHT,
+          tabBarButton: (props) => <TouchableOpacity {...props} />,
+          tabBarItemStyle: {
+            borderRadius: UIConstants.STYLES.BORDER_RADIUS,
+          },
           tabBarStyle: {
             shadowColor: "#fff",
-            height: 60,
+            paddingHorizontal: 30,
+            height: Platform.OS === "ios" ? 80 : 60,
             position: "absolute",
-            paddingHorizontal: 20,
             backgroundColor: "#fff",
+            paddingTop: 10,
           },
           tabBarHideOnKeyboard: true,
         }}
@@ -87,13 +94,7 @@ const TabBarIcon = (props: {
   color: string;
   fontSize: string;
 }) => {
-  return (
-    <Icon
-      fontFamily="MaterialCommunityIcons"
-      style={{ marginBottom: -5 }}
-      {...props}
-    />
-  );
+  return <Icon fontFamily="MaterialCommunityIcons" {...props} />;
 };
 
 export default RootStack;

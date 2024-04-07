@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import BackgroundTimer from "react-native-background-timer";
 
-const useTimer = () => {
+const useTimer = (isAddWorkout: boolean) => {
   const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(true);
 
@@ -11,6 +11,10 @@ const useTimer = () => {
   };
 
   useEffect(() => {
+    if (isAddWorkout) {
+      return;
+    }
+
     let intervalId: number | undefined;
     if (isRunning) {
       intervalId = BackgroundTimer.setInterval(() => {

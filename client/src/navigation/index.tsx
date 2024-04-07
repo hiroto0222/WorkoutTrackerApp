@@ -1,4 +1,4 @@
-import Loading from "components/base/Loading";
+import Loading from "components/base/common/Loading";
 import usePersistenceAuth from "hooks/auth/usePersistenceAuth";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
