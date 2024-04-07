@@ -45,7 +45,7 @@ const TimerInputHeader = () => (
       <Text style={globalStyles.textRegular}>Set</Text>
     </View>
     <View style={tableStyles.columnTwo}>
-      <Text style={globalStyles.textRegular}>Time</Text>
+      <Text style={globalStyles.textRegular}>Time (s)</Text>
     </View>
     <View style={tableStyles.columnOne} />
   </View>

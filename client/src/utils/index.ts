@@ -1,4 +1,4 @@
-import { IExerciseResponse, ILogResponse, IWorkoutsResponse } from "api/types";
+import { IWorkoutsResponse } from "api/types";
 
 const weekDays = [
   "Sunday",
@@ -72,7 +72,27 @@ export const getNameOfWeekday = (date: Date) => {
   return weekDays[date.getDay()];
 };
 
-export const createLogsSummary = (
-  exercises: { [exercise_id: number]: IExerciseResponse },
-  logs: ILogResponse[]
-) => {};
+export const formatTimeAMPM = (date: Date) => {
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+  const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+  return `${formattedHours}:${formattedMinutes} ${ampm}`;
+};
+
+export const calculateTimeDifference = (startDate: Date, endDate: Date) => {
+  const differenceInMillis = Math.abs(endDate.getTime() - startDate.getTime());
+  const hours = Math.floor(differenceInMillis / (1000 * 60 * 60));
+  const minutes = Math.floor(
+    (differenceInMillis % (1000 * 60 * 60)) / (1000 * 60)
+  );
+
+  return { hours, minutes };
+};
+
+export const formatTimeDifference = (hours: number, minutes: number) => {
+  const formattedHours = hours.toString().padStart(2, "0");
+  const formattedMinutes = minutes.toString().padStart(2, "0");
+  return `${formattedHours}h ${formattedMinutes}m`;
+};
