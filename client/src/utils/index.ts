@@ -1,4 +1,4 @@
-import { IExerciseResponse, ILogResponse } from "api/types";
+import { IExerciseResponse, ILogResponse, IWorkoutsResponse } from "api/types";
 
 const weekDays = [
   "Sunday",
@@ -9,6 +9,29 @@ const weekDays = [
   "Friday",
   "Saturday",
 ];
+
+export const binarySearch = (
+  arr: IWorkoutsResponse[],
+  target: IWorkoutsResponse
+) => {
+  let left = 0;
+  let right = arr.length - 1;
+
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    const midDate = new Date(arr[mid].started_at);
+    const targetDate = new Date(target.started_at);
+    if (targetDate < midDate) {
+      left = mid + 1;
+    } else if (targetDate > midDate) {
+      right = mid - 1;
+    } else {
+      return mid;
+    }
+  }
+
+  return left;
+};
 
 export const formatTime = (seconds: number) => {
   const mins = Math.floor(seconds / 60);
@@ -52,6 +75,4 @@ export const getNameOfWeekday = (date: Date) => {
 export const createLogsSummary = (
   exercises: { [exercise_id: number]: IExerciseResponse },
   logs: ILogResponse[]
-) => {
-  
-};
+) => {};
