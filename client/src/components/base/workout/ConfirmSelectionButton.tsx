@@ -29,7 +29,7 @@ const ConfirmSelectionButton = ({ onPress }: Props) => (
         fontSize="6xl"
         fontFamily="MaterialCommunityIcons"
         name="check"
-        color="#fff"
+        color={UIConstants.COLORS.PRIMARY.CONTRAST}
       />
     </View>
   </TouchableOpacity>

@@ -2,7 +2,7 @@ import React from "react";
 import { FlatList } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
-import WorkoutDetailCard from "./WorkoutDetailCard";
+import WorkoutDetailCard from "./WorkoutDetailCard/WorkoutDetailCard";
 
 type Props = {
   pb: number;

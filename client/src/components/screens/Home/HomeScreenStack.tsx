@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { IWorkoutsResponse } from "api/types";
-import { ExerciseLogs } from "components/base/home/WorkoutDetailCard";
+import { ExerciseLogs } from "components/base/home/WorkoutDetailCard/WorkoutDetailCard";
 import HomeScreen from "./HomeScreen";
 import WorkoutDetailScreen from "./WorkoutDetailScreen";
 import WorkoutsListScreen from "./WorkoutsListScreen";

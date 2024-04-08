@@ -19,7 +19,6 @@ export const tableStyles = StyleSheet.create({
   tableRowInComplete: {
     paddingTop: 2,
     flexDirection: "row",
-    backgroundColor: "#fff",
   },
   tableRowComplete: {
     paddingTop: 2,

@@ -51,7 +51,7 @@ const ExerciseLogInputTable = ({ exercise }: Props) => {
           onPress={() => handleAddEmptySet()}
           buttonType="md"
           bg={UIConstants.COLORS.GRAY.LIGHT}
-          color="#000"
+          color={UIConstants.COLORS.GRAY.LIGHT_CONTRAST}
           name="plus"
           fontSize="2xl"
         />
