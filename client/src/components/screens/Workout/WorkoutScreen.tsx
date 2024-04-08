@@ -17,6 +17,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { showMessage } from "react-native-flash-message";
 import { Div, Text } from "react-native-magnus";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
@@ -46,9 +47,11 @@ const WorkoutScreen = () => {
       validateAndCreateWorkoutData(isAddWorkout);
 
     if (!isValid) {
-      Alert.alert(message, undefined, [
-        { text: "Ok", style: "default", onPress: () => {} },
-      ]);
+      showMessage({
+        message,
+        type: "info",
+        titleStyle: globalStyles.textMedium,
+      });
       return;
     }
 
@@ -115,7 +118,12 @@ const WorkoutScreen = () => {
         "Discard workout?",
         "All changes will be unsaved, do you want to discard your current workout?",
         [
-          { text: "Don't leave", style: "cancel", onPress: () => {} },
+          {
+            text: "Don't leave",
+            style: "cancel",
+            onPress: () => {},
+            isPreferred: true,
+          },
           {
             text: "Discard",
             style: "destructive",

@@ -1,7 +1,9 @@
 import { ICreateUserRequest } from "api/types";
 import { HttpStatusCode } from "axios";
+import globalStyles from "components/styles";
 import { auth } from "config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { showMessage } from "react-native-flash-message";
 import { useDispatch } from "react-redux";
 import { setAuth } from "store/slices/auth";
 import axios, { API_ENDPOINTS } from "../../api";
@@ -50,7 +52,11 @@ const useSignUp = () => {
         })
       );
     } catch (err) {
-      alert((err as Error).message);
+      showMessage({
+        message: (err as Error).message,
+        type: "danger",
+        titleStyle: globalStyles.textMedium,
+      });
     }
   };
 

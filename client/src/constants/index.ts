@@ -11,7 +11,7 @@ const UIConstants = {
   COLORS: {
     PRIMARY: {
       LIGHT: "#fed7d7",
-      REGULAR: "#e53e3e",
+      REGULAR: "#d9534f",
     },
     SECONDARY: {
       LIGHT: "#e9d8fd",
@@ -19,7 +19,7 @@ const UIConstants = {
     },
     SUCCESS: {
       LIGHT: "#b3e0b9",
-      REGULAR: "#48bb78",
+      REGULAR: "#5cb85c",
     },
     GRAY: {
       LIGHT: "#e2e8f0",

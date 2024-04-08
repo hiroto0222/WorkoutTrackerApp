@@ -1,5 +1,7 @@
+import globalStyles from "components/styles";
 import { auth } from "config/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { showMessage } from "react-native-flash-message";
 import { useDispatch } from "react-redux";
 import { setAuth, setIsAuthenticating } from "store/slices/auth";
 
@@ -21,7 +23,11 @@ const useLogin = () => {
         })
       );
     } catch (err) {
-      alert((err as Error).message);
+      showMessage({
+        message: (err as Error).message,
+        type: "danger",
+        titleStyle: globalStyles.textMedium,
+      });
       dispatch(setIsAuthenticating(false));
     }
   };
