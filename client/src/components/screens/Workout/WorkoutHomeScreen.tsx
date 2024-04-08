@@ -3,21 +3,32 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Button from "components/base/common/Button";
 import globalStyles from "components/styles";
+import { useEffect } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { Div, Text } from "react-native-magnus";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "store";
 import { setStartWorkingOut } from "store/slices/workout";
 import UIConstants from "../../../constants";
 import { WorkoutStackParams } from "./WorkoutScreenStack";
 
 const WorkoutHomeScreen = () => {
+  const workoutState = useSelector((state: RootState) => state.workout);
   const tabBarHeight = useBottomTabBarHeight();
   const navigation =
     useNavigation<NativeStackNavigationProp<WorkoutStackParams>>();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (workoutState.isActive) {
+      navigation.navigate("Workout", {
+        isAddWorkout: workoutState.isAddWorkout,
+      });
+    }
+  }, []);
+
   const handleStartWorkout = (isAddWorkout: boolean) => {
-    dispatch(setStartWorkingOut());
+    dispatch(setStartWorkingOut(isAddWorkout));
     navigation.navigate("Workout", { isAddWorkout });
   };
 

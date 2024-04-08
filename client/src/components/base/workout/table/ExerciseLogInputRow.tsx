@@ -5,7 +5,7 @@ import { View } from "react-native";
 import { Div, Text } from "react-native-magnus";
 import Animated, {
   Easing,
-  FadeInLeft,
+  FadeIn,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -25,6 +25,7 @@ import SwipeDelete from "./SwipeDelete";
 import { tableStyles } from "./TableStyles";
 
 type Props = {
+  log: Log;
   exercise: IExerciseResponse;
   setNumber: number;
   isCompleted: boolean;
@@ -32,6 +33,7 @@ type Props = {
 };
 
 const ExerciseLogInputRow = ({
+  log,
   exercise,
   setNumber,
   isCompleted,
@@ -39,9 +41,15 @@ const ExerciseLogInputRow = ({
 }: Props) => {
   const dispatch = useDispatch();
 
-  const [weight, setWeight] = useState("");
-  const [reps, setReps] = useState("");
-  const [time, setTime] = useState("");
+  const [weight, setWeight] = useState(
+    log.weight !== undefined ? log.weight.toString() : ""
+  );
+  const [reps, setReps] = useState(
+    log.reps !== undefined ? log.reps.toString() : ""
+  );
+  const [time, setTime] = useState(
+    log.time !== undefined ? log.time.toString() : ""
+  );
 
   const handleChangeWeight = (value: string) => {
     setWeight(value);
@@ -99,7 +107,7 @@ const ExerciseLogInputRow = ({
     const translationAmount = 1.1;
     const timingConfig = {
       duration: 80,
-      easing: Easing.bezier(0.35, 0.7, 0.5, 0.7),
+      easing: Easing.bezier(0.1, 0.3, 0.8, 0.3),
     };
     scaleTranslate.value = withSequence(
       withTiming(translationAmount, timingConfig),
@@ -120,7 +128,7 @@ const ExerciseLogInputRow = ({
   }, []);
 
   return (
-    <Animated.View entering={FadeInLeft}>
+    <Animated.View entering={FadeIn} style={{ marginBottom: 1 }}>
       <SwipeDelete isDeletable={isDeletable} onDelete={handleOnDelete}>
         <Animated.View
           style={[

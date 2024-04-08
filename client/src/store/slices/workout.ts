@@ -10,7 +10,9 @@ export type Log = {
 
 export interface WorkoutState {
   isFinished: boolean;
-  startedAt: string;
+  isActive: boolean;
+  isAddWorkout: boolean;
+  startedAt?: string;
   endedAt?: string;
   currExercises: IExerciseResponse[];
   currLogs: { [exercise_id: number]: Log[] };
@@ -21,8 +23,8 @@ export interface WorkoutState {
 
 const initialState: WorkoutState = {
   isFinished: false,
-  startedAt: "not yet",
-  endedAt: undefined,
+  isActive: false,
+  isAddWorkout: false,
   currExercises: [],
   currLogs: {},
 };
@@ -31,12 +33,15 @@ export const workoutSlice = createSlice({
   name: "workout",
   initialState,
   reducers: {
-    setStartWorkingOut: (state, action: PayloadAction<void>) => {
+    setStartWorkingOut: (state, action: PayloadAction<boolean>) => {
+      // set if isAddWorkout
+      state.isAddWorkout = action.payload;
       const startDate = new Date();
       const userStartTime = new Date();
       const userEndTime = new Date();
       userEndTime.setHours(userStartTime.getHours() + 1);
       state.startedAt = startDate.toJSON();
+      state.isActive = true;
       state.isFinished = false;
       state.currExercises = [];
       state.currLogs = {};
@@ -141,10 +146,15 @@ export const workoutSlice = createSlice({
       }
     },
     setFinishWorkout: (state, action: PayloadAction) => {
+      state.isActive = false;
       state.isFinished = true;
       state.currExercises = [];
       state.currLogs = {};
+      state.startedAt = undefined;
       state.endedAt = undefined;
+      state.userStartDate = undefined;
+      state.userStartTime = undefined;
+      state.userEndTime = undefined;
     },
   },
 });

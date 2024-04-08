@@ -81,8 +81,10 @@ const useFinishWorkout = () => {
     logs: ILogs
   ) => {
     // send to server
-    if (authState.userId === undefined) {
-      console.log("no user id");
+    if (
+      authState.userId === undefined ||
+      workoutState.startedAt === undefined
+    ) {
       return;
     }
 
