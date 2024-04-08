@@ -1,9 +1,17 @@
 import { IExerciseResponse, LogType } from "api/types";
 import globalStyles from "components/styles";
-import { memo, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { View } from "react-native";
 import { Div, Text } from "react-native-magnus";
-import Animated from "react-native-reanimated";
+import Animated, {
+  Easing,
+  FadeInLeft,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
 import { useDispatch } from "react-redux";
 import {
   Log,
@@ -55,10 +63,11 @@ const ExerciseLogInputRow = ({
       isCompleted: true,
     };
     if (!validateOnComplete(exercise.log_type, newLog)) {
-      alert("invalid set!");
+      shake();
       return;
     }
     dispatch(addCompletedLog({ exercise, setNumber, newLog }));
+    bounce();
   };
 
   const handleOnEdit = () => {
@@ -69,69 +78,114 @@ const ExerciseLogInputRow = ({
     dispatch(deleteLog({ exercise, setNumber }));
   };
 
+  // Animations
+  const shakeTranslateX = useSharedValue(0);
+  const scaleTranslate = useSharedValue(1);
+
+  const shake = useCallback(() => {
+    const translationAmount = 7;
+    const timingConfig = {
+      duration: 50,
+      easing: Easing.bezier(0.35, 0.7, 0.5, 0.7),
+    };
+    shakeTranslateX.value = withSequence(
+      withTiming(translationAmount, timingConfig),
+      withRepeat(withTiming(-translationAmount, timingConfig), 3, true),
+      withTiming(0, timingConfig)
+    );
+  }, []);
+
+  const bounce = useCallback(() => {
+    const translationAmount = 1.1;
+    const timingConfig = {
+      duration: 80,
+      easing: Easing.bezier(0.35, 0.7, 0.5, 0.7),
+    };
+    scaleTranslate.value = withSequence(
+      withTiming(translationAmount, timingConfig),
+      withTiming(1, timingConfig)
+    );
+  }, []);
+
+  const rShakeStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: shakeTranslateX.value }],
+    };
+  }, []);
+
+  const rBounceStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scaleTranslate.value }],
+    };
+  }, []);
+
   return (
-    <SwipeDelete isDeletable={isDeletable} onDelete={handleOnDelete}>
-      <Animated.View
-        style={
-          isCompleted
-            ? tableStyles.tableRowComplete
-            : tableStyles.tableRowInComplete
-        }
-      >
-        <View style={tableStyles.columnOne}>
-          <Text
-            fontSize="xl"
-            style={globalStyles.textMedium}
-            color={isCompleted ? "#fff" : "#000"}
-          >
-            {setNumber + 1}
-          </Text>
-        </View>
-        {exercise.log_type === "weight_reps" && (
-          <View style={tableStyles.columnOneInput}>
-            <ExerciseLogInput
-              isCompleted={isCompleted}
-              value={weight}
-              handleOnChangeText={handleChangeWeight}
-            />
+    <Animated.View entering={FadeInLeft}>
+      <SwipeDelete isDeletable={isDeletable} onDelete={handleOnDelete}>
+        <Animated.View
+          style={[
+            isCompleted
+              ? tableStyles.tableRowComplete
+              : tableStyles.tableRowInComplete,
+            rShakeStyle,
+            rBounceStyle,
+          ]}
+        >
+          <View style={tableStyles.columnOne}>
+            <Text
+              fontSize="xl"
+              style={globalStyles.textMedium}
+              color={isCompleted ? "#fff" : "#000"}
+            >
+              {setNumber + 1}
+            </Text>
           </View>
-        )}
-        {(exercise.log_type === "weight_reps" ||
-          exercise.log_type === "reps") && (
-          <View
-            style={
-              exercise.log_type === "weight_reps"
-                ? tableStyles.columnOneInput
-                : tableStyles.columnTwoInput
-            }
-          >
-            <ExerciseLogInput
-              isCompleted={isCompleted}
-              value={reps}
-              handleOnChangeText={handleChangeReps}
-            />
+          {exercise.log_type === "weight_reps" && (
+            <View style={tableStyles.columnOneInput}>
+              <ExerciseLogInput
+                isCompleted={isCompleted}
+                value={weight}
+                handleOnChangeText={handleChangeWeight}
+              />
+            </View>
+          )}
+          {(exercise.log_type === "weight_reps" ||
+            exercise.log_type === "reps") && (
+            <View
+              style={
+                exercise.log_type === "weight_reps"
+                  ? tableStyles.columnOneInput
+                  : tableStyles.columnTwoInput
+              }
+            >
+              <ExerciseLogInput
+                isCompleted={isCompleted}
+                value={reps}
+                handleOnChangeText={handleChangeReps}
+              />
+            </View>
+          )}
+          {exercise.log_type === "timer" && (
+            <View style={tableStyles.columnTwoInput}>
+              <ExerciseLogInput
+                isCompleted={isCompleted}
+                value={time}
+                handleOnChangeText={handleChangeTime}
+              />
+            </View>
+          )}
+          <View style={tableStyles.columnOne}>
+            <Div>
+              <ExerciseLogInputConfirmButton
+                isComplete={isCompleted}
+                onComplete={handleOnCompleted}
+                onEdit={handleOnEdit}
+              />
+            </Div>
           </View>
-        )}
-        {exercise.log_type === "timer" && (
-          <View style={tableStyles.columnTwoInput}>
-            <ExerciseLogInput
-              isCompleted={isCompleted}
-              value={time}
-              handleOnChangeText={handleChangeTime}
-            />
-          </View>
-        )}
-        <View style={tableStyles.columnOne}>
-          <Div>
-            <ExerciseLogInputConfirmButton
-              isComplete={isCompleted}
-              onComplete={handleOnCompleted}
-              onEdit={handleOnEdit}
-            />
-          </Div>
-        </View>
-      </Animated.View>
-    </SwipeDelete>
+        </Animated.View>
+      </SwipeDelete>
+    </Animated.View>
   );
 };
 

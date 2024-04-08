@@ -46,7 +46,7 @@ const SwipeDelete = ({ isDeletable, onDelete, children }: Props) => {
       <Swipeable
         enabled={isDeletable}
         renderRightActions={renderRightActions}
-        rightThreshold={30}
+        rightThreshold={40}
       >
         {children}
       </Swipeable>
