@@ -25,6 +25,7 @@ import SwipeDelete from "./SwipeDelete";
 import { tableStyles } from "./TableStyles";
 
 type Props = {
+  log: Log;
   exercise: IExerciseResponse;
   setNumber: number;
   isCompleted: boolean;
@@ -32,6 +33,7 @@ type Props = {
 };
 
 const ExerciseLogInputRow = ({
+  log,
   exercise,
   setNumber,
   isCompleted,
@@ -39,9 +41,15 @@ const ExerciseLogInputRow = ({
 }: Props) => {
   const dispatch = useDispatch();
 
-  const [weight, setWeight] = useState("");
-  const [reps, setReps] = useState("");
-  const [time, setTime] = useState("");
+  const [weight, setWeight] = useState(
+    log.weight !== undefined ? log.weight.toString() : ""
+  );
+  const [reps, setReps] = useState(
+    log.reps !== undefined ? log.reps.toString() : ""
+  );
+  const [time, setTime] = useState(
+    log.time !== undefined ? log.time.toString() : ""
+  );
 
   const handleChangeWeight = (value: string) => {
     setWeight(value);

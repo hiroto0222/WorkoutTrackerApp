@@ -37,6 +37,7 @@ const ExerciseLogInputTable = ({ exercise }: Props) => {
       {workoutState.currLogs[exercise.id].map((log, setNumber) => (
         <ExerciseLogInputRow
           key={setNumber}
+          log={log}
           exercise={exercise}
           setNumber={setNumber}
           isCompleted={log.isCompleted}

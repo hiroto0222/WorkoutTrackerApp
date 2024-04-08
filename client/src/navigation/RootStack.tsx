@@ -34,7 +34,7 @@ const RootStack = () => {
   const workoutState = useSelector((state: RootState) => state.workout);
 
   const workoutBadge = {
-    tabBarBadge: "1",
+    tabBarBadge: "+",
     tabBarBadgeStyle: {
       backgroundColor: UIConstants.COLORS.PRIMARY.REGULAR,
       fontSize: 15,
@@ -52,7 +52,7 @@ const RootStack = () => {
   return (
     <NavigationContainer theme={MyTheme}>
       <BottomTabStack.Navigator
-        initialRouteName="HomeStack"
+        initialRouteName={workoutState.isActive ? "WorkoutStack" : "HomeStack"}
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: false,

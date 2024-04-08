@@ -33,7 +33,10 @@ const WorkoutScreen = () => {
     useNavigation<NativeStackNavigationProp<WorkoutStackParams>>();
   const workoutState = useSelector((state: RootState) => state.workout);
 
-  const { seconds } = useTimer(route.params?.isAddWorkout!);
+  const { seconds } = useTimer(
+    route.params?.isAddWorkout!,
+    workoutState.startedAt
+  );
   const { validateAndCreateWorkoutData, sendWorkoutData } = useFinishWorkout();
 
   // show date time picker only if isAddWorkout
