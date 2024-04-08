@@ -13,5 +13,6 @@ type Workout struct {
 	EndedAt   time.Time `json:"ended_at" gorm:"null"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"not null"`
 
-	User User `json:"-" gorm:"foreignKey:UserID"`
+	User             User              `json:"-" gorm:"foreignKey:UserID"`
+	WorkoutExercises []WorkoutExercise `json:"-" gorm:"constraint:OnDelete:CASCADE;"`
 }

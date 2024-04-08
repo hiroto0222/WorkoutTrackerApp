@@ -7,6 +7,7 @@ type WorkoutExercise struct {
 	WorkoutID  uuid.UUID `gorm:"type:uuid;not null"`
 	ExerciseID int       `gorm:"type:int;not null"`
 
-	Workout  Workout  `gorm:"foreignKey:WorkoutID"`
-	Exercise Exercise `gorm:"foreignKey:ExerciseID"`
+	Workout  Workout  `json:"-" gorm:"foreignKey:WorkoutID"`
+	Exercise Exercise `json:"-" gorm:"foreignKey:ExerciseID"`
+	Logs     []Log    `json:"-" gorm:"constraint:OnDelete:CASCADE;"`
 }
