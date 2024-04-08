@@ -1,9 +1,17 @@
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import ExerciseDetail from "components/base/home/ExerciseDetail";
 import globalStyles from "components/styles";
 import useDeleteWorkout from "hooks/api/useDeleteWorkout";
 import React, { useEffect } from "react";
-import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Div, Icon, Text } from "react-native-magnus";
 import {
   calculateTimeDifference,
@@ -19,6 +27,7 @@ const WorkoutDetailScreen = () => {
     useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const route = useRoute<RouteProp<HomeStackParams>>();
 
+  const tabHeight = useBottomTabBarHeight();
   const { deleteWorkout } = useDeleteWorkout();
 
   const workout = route.params?.workout!;
@@ -68,7 +77,7 @@ const WorkoutDetailScreen = () => {
             fontSize="5xl"
             fontFamily="MaterialCommunityIcons"
             name="trash-can"
-            color={UIConstants.COLORS.PRIMARY.REGULAR}
+            color={UIConstants.COLORS.DANGER.REGULAR}
           />
         </TouchableOpacity>
       ),
@@ -98,6 +107,19 @@ const WorkoutDetailScreen = () => {
             {formatTimeDifference(hours, minutes)}
           </Text>
         </Div>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          style={{ marginTop: 15, paddingBottom: tabHeight + 15 }}
+        >
+          {exercises.map((exercise) => (
+            <ExerciseDetail
+              key={exercise.id}
+              exercise={exercise}
+              logs={logs[exercise.id]}
+            />
+          ))}
+        </ScrollView>
       </Div>
     </View>
   );

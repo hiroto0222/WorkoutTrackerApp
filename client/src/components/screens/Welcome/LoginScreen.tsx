@@ -56,7 +56,7 @@ const LoginScreen = () => {
           buttonType="md"
           bg={UIConstants.COLORS.PRIMARY.REGULAR}
           text="Login"
-          color="#fff"
+          color={UIConstants.COLORS.PRIMARY.CONTRAST}
           fontSize="lg"
           marginVertical={15}
         />
@@ -65,7 +65,7 @@ const LoginScreen = () => {
           buttonType="md"
           bg={UIConstants.COLORS.GRAY.LIGHT}
           text="Sign Up"
-          color="#000"
+          color={UIConstants.COLORS.GRAY.LIGHT_CONTRAST}
           fontSize="lg"
         />
         <Div alignItems="center" justifyContent="center" flexDir="row" mt="xl">

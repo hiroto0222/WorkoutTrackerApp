@@ -26,7 +26,7 @@ const UserSettingScreen = () => {
           buttonType="lg"
           onPress={() => handleLogout()}
           bg={UIConstants.COLORS.GRAY.LIGHT}
-          color="#000"
+          color={UIConstants.COLORS.GRAY.LIGHT_CONTRAST}
           text="Logout"
           fontSize="xl"
         />

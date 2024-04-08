@@ -80,7 +80,7 @@ const HomeScreen = () => {
                 fontSize="2xl"
                 fontFamily="MaterialCommunityIcons"
                 name="chevron-right"
-                color="#000"
+                color={UIConstants.COLORS.GRAY.LIGHT_CONTRAST}
               />
             </View>
           </TouchableOpacity>

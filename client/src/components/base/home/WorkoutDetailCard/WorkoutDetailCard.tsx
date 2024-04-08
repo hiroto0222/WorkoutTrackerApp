@@ -8,7 +8,7 @@ import { Div, Text } from "react-native-magnus";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
 import { formatTimeAMPM, getNameOfWeekday } from "utils";
-import UIConstants from "../../../constants";
+import UIConstants from "../../../../constants";
 import ExerciseLogsDetail from "./ExerciseLogsDetail";
 
 export type ExerciseLogs = {

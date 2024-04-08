@@ -167,7 +167,7 @@ const WorkoutScreen = () => {
             bg={UIConstants.COLORS.PRIMARY.REGULAR}
             onPress={handleOnAddExercises}
             text="Add Exercises"
-            color="#fff"
+            color={UIConstants.COLORS.PRIMARY.CONTRAST}
             fontSize="xl"
           />
           {route.params?.isAddWorkout && (
@@ -180,7 +180,7 @@ const WorkoutScreen = () => {
               {Platform.OS === "android" && (
                 <Button
                   buttonType="md"
-                  bg="#fff"
+                  bg={UIConstants.COLORS.GRAY.REGULAR_CONTRAST}
                   onPress={startDatePicker.showDatePicker}
                   text={startDatePicker.date.toDateString().substring(0, 10)}
                   color={UIConstants.COLORS.GRAY.REGULAR}
@@ -202,7 +202,7 @@ const WorkoutScreen = () => {
               {Platform.OS === "android" && (
                 <Button
                   buttonType="md"
-                  bg="#fff"
+                  bg={UIConstants.COLORS.GRAY.REGULAR_CONTRAST}
                   onPress={startTimePicker.showTimePicker}
                   text={startTimePicker.date.toTimeString().substring(0, 5)}
                   color={UIConstants.COLORS.GRAY.REGULAR}
@@ -226,7 +226,7 @@ const WorkoutScreen = () => {
               {Platform.OS === "android" && (
                 <Button
                   buttonType="md"
-                  bg="#fff"
+                  bg={UIConstants.COLORS.GRAY.REGULAR_CONTRAST}
                   onPress={endTimePicker.showTimePicker}
                   text={endTimePicker.date.toTimeString().substring(0, 5)}
                   color={UIConstants.COLORS.GRAY.REGULAR}
