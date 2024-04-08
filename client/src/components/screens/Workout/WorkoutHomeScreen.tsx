@@ -51,7 +51,7 @@ const WorkoutHomeScreen = () => {
           buttonType="lg"
           onPress={() => handleStartWorkout(true)}
           bg={UIConstants.COLORS.GRAY.LIGHT}
-          color="#000"
+          color={UIConstants.COLORS.GRAY.LIGHT_CONTRAST}
           text="Add Workout"
           fontSize="xl"
           marginVertical={10}
@@ -60,7 +60,7 @@ const WorkoutHomeScreen = () => {
           buttonType="lg"
           onPress={() => handleStartWorkout(false)}
           bg={UIConstants.COLORS.PRIMARY.REGULAR}
-          color="#fff"
+          color={UIConstants.COLORS.PRIMARY.CONTRAST}
           text="Start Workout"
           fontSize="xl"
           marginVertical={10}

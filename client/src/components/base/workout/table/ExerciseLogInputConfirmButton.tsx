@@ -37,14 +37,14 @@ const ExerciseLogInputConfirmButton = ({
           fontSize="3xl"
           fontFamily="MaterialCommunityIcons"
           name="pencil"
-          color="#000"
+          color={UIConstants.COLORS.GRAY.LIGHT_CONTRAST}
         />
       ) : (
         <Icon
           fontSize="3xl"
           fontFamily="MaterialCommunityIcons"
           name="check"
-          color="#fff"
+          color={UIConstants.COLORS.PRIMARY.CONTRAST}
         />
       )}
     </View>

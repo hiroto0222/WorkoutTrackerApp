@@ -34,7 +34,7 @@ const SwipeDelete = ({ isDeletable, onDelete, children }: Props) => {
             fontSize="4xl"
             fontFamily="MaterialCommunityIcons"
             name="delete"
-            color="#fff"
+            color={UIConstants.COLORS.DANGER.CONTRAST}
           />
         </Animated.View>
       </RectButton>
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   rightAction: {
     alignItems: "center",
     flexDirection: I18nManager.isRTL ? "row-reverse" : "row",
-    backgroundColor: UIConstants.COLORS.PRIMARY.REGULAR,
+    backgroundColor: UIConstants.COLORS.DANGER.REGULAR,
     flex: 1,
     justifyContent: "flex-end",
   },

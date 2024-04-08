@@ -24,7 +24,7 @@ export const MyTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: "#fff",
+    background: UIConstants.COLORS.PAGE,
   },
 };
 
@@ -63,11 +63,10 @@ const RootStack = () => {
             borderRadius: UIConstants.STYLES.BORDER_RADIUS,
           },
           tabBarStyle: {
-            shadowColor: "#fff",
             paddingHorizontal: 25,
             height: Platform.OS === "ios" ? 80 : 60,
             position: "absolute",
-            backgroundColor: "#fff",
+            backgroundColor: UIConstants.COLORS.PAGE,
             paddingTop: 10,
           },
           tabBarHideOnKeyboard: true,

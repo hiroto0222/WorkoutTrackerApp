@@ -19,6 +19,7 @@ import {
   deleteLog,
   setInCompleteLog,
 } from "store/slices/workout";
+import UIConstants from "../../../../constants";
 import ExerciseLogInput from "./ExerciseLogInput";
 import ExerciseLogInputConfirmButton from "./ExerciseLogInputConfirmButton";
 import SwipeDelete from "./SwipeDelete";
@@ -143,7 +144,11 @@ const ExerciseLogInputRow = ({
             <Text
               fontSize="xl"
               style={globalStyles.textMedium}
-              color={isCompleted ? "#fff" : "#000"}
+              color={
+                isCompleted
+                  ? UIConstants.COLORS.SUCCESS.CONTRAST
+                  : UIConstants.COLORS.GRAY.LIGHT_CONTRAST
+              }
             >
               {setNumber + 1}
             </Text>

@@ -12,20 +12,29 @@ const UIConstants = {
     PRIMARY: {
       LIGHT: "#fed7d7",
       REGULAR: "#d9534f",
+      CONTRAST: "#fff",
     },
     SECONDARY: {
-      LIGHT: "#e9d8fd",
-      REGULAR: "#805ad5",
+      LIGHT: "#e0f290",
+      REGULAR: "#cfe27a",
+      CONTRAST: "#000",
     },
     SUCCESS: {
       LIGHT: "#b3e0b9",
       REGULAR: "#5cb85c",
+      CONTRAST: "#fff",
+    },
+    DANGER: {
+      REGULAR: "#d9534f",
+      CONTRAST: "#fff",
     },
     GRAY: {
       LIGHT: "#e2e8f0",
+      LIGHT_CONTRAST: "#000",
       REGULAR: "#4a5568",
+      REGULAR_CONTRAST: "#fff",
     },
-    BLACK: "#000",
+    PAGE: "#fff",
   },
   STYLES: {
     BORDER_RADIUS: 20,

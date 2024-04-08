@@ -19,7 +19,7 @@ export const tableStyles = StyleSheet.create({
   tableRowInComplete: {
     paddingTop: 2,
     flexDirection: "row",
-    backgroundColor: "#fff",
+    backgroundColor: UIConstants.COLORS.PAGE,
   },
   tableRowComplete: {
     paddingTop: 2,
