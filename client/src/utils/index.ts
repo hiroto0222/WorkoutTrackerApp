@@ -34,11 +34,19 @@ export const binarySearch = (
 };
 
 export const formatTime = (seconds: number) => {
-  const mins = Math.floor(seconds / 60);
+  const hours = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
   const sec = seconds % 60;
-  return `${mins.toString().padStart(2, "0")}:${sec
-    .toString()
-    .padStart(2, "0")}`;
+
+  if (hours > 0) {
+    return `${hours.toString().padStart(2, "0")}:${mins
+      .toString()
+      .padStart(2, "0")}:${sec.toString().padStart(2, "0")}`;
+  } else {
+    return `${mins.toString().padStart(2, "0")}:${sec
+      .toString()
+      .padStart(2, "0")}`;
+  }
 };
 
 export const getStartingDatesForPastWeeks = (numOfWeeks: number) => {
