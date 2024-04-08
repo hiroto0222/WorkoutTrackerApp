@@ -45,7 +45,7 @@ const ExerciseLogInputTable = ({ exercise }: Props) => {
           }
         />
       ))}
-      <Div mx="3xl" mt="md" alignItems="center" justifyContent="center">
+      <Div mx="3xl" m="md" alignItems="center" justifyContent="center">
         <IconButton
           onPress={() => handleAddEmptySet()}
           buttonType="md"

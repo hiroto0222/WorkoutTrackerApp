@@ -17,12 +17,12 @@ export const tableStyles = StyleSheet.create({
     width: "50%",
   },
   tableRowInComplete: {
-    paddingVertical: 5,
+    paddingTop: 2,
     flexDirection: "row",
     backgroundColor: "#fff",
   },
   tableRowComplete: {
-    paddingVertical: 5,
+    paddingTop: 2,
     flexDirection: "row",
     backgroundColor: UIConstants.COLORS.SUCCESS.REGULAR,
   },
@@ -30,13 +30,13 @@ export const tableStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "25%",
-    padding: 5,
+    paddingHorizontal: 5,
   },
   columnTwoInput: {
     justifyContent: "center",
     alignItems: "center",
     width: "50%",
-    padding: 5,
+    paddingHorizontal: 5,
   },
   input: {
     borderRadius: 10,

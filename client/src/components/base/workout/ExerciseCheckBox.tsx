@@ -1,6 +1,8 @@
 import { IExerciseResponse } from "api/types";
 import globalStyles from "components/styles";
-import { Checkbox, Div, Text } from "react-native-magnus";
+import { useState } from "react";
+import { TouchableOpacity } from "react-native";
+import { Div, Text } from "react-native-magnus";
 import UIConstants from "../../../constants";
 
 type Props = {
@@ -9,45 +11,49 @@ type Props = {
   handleOnChecked: (checked: boolean, exercise: IExerciseResponse) => void;
 };
 
-const ExerciseCheckBox = ({ value, disabled, handleOnChecked }: Props) => (
-  <Checkbox
-    value={value}
-    disabled={disabled}
-    onChecked={(checked) => handleOnChecked(checked, value)}
-  >
-    {({ checked }) => (
-      <Div
-        flex={1}
-        bg={
-          checked
-            ? UIConstants.COLORS.PRIMARY.REGULAR
-            : UIConstants.COLORS.GRAY.LIGHT
-        }
-        px="xl"
-        py="lg"
-        mr="md"
-        mb="sm"
-        rounded="circle"
-      >
-        <Div>
-          <Text
-            fontSize="2xl"
-            color={checked ? "white" : "black"}
-            style={globalStyles.textRegular}
-          >
-            {value.name}
-          </Text>
-          <Text
-            fontSize="sm"
-            color={checked ? "white" : "black"}
-            style={globalStyles.textLight}
-          >
-            {value.log_type}
-          </Text>
-        </Div>
+const ExerciseCheckBox = ({ value, disabled, handleOnChecked }: Props) => {
+  const [checked, setChecked] = useState(false);
+
+  const handleOnPress = () => {
+    handleOnChecked(!checked, value);
+    setChecked((prevChecked) => !prevChecked);
+  };
+
+  return (
+    <TouchableOpacity
+      disabled={disabled}
+      style={{
+        backgroundColor: disabled
+          ? UIConstants.COLORS.GRAY.REGULAR
+          : checked
+          ? UIConstants.COLORS.PRIMARY.REGULAR
+          : UIConstants.COLORS.GRAY.LIGHT,
+        width: "100%",
+        borderRadius: UIConstants.STYLES.BORDER_RADIUS,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        marginBottom: 10,
+      }}
+      onPress={handleOnPress}
+    >
+      <Div>
+        <Text
+          fontSize="2xl"
+          color={disabled || checked ? "white" : "black"}
+          style={globalStyles.textRegular}
+        >
+          {value.name}
+        </Text>
+        <Text
+          fontSize="sm"
+          color={disabled || checked ? "white" : "black"}
+          style={globalStyles.textLight}
+        >
+          Category
+        </Text>
       </Div>
-    )}
-  </Checkbox>
-);
+    </TouchableOpacity>
+  );
+};
 
 export default ExerciseCheckBox;

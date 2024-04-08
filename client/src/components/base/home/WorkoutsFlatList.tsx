@@ -22,6 +22,8 @@ const WorkoutsFlatList = ({ pb }: Props) => {
         />
       )}
       keyExtractor={(item) => item.id}
+      initialNumToRender={7}
+      showsVerticalScrollIndicator={false}
     />
   );
 };
