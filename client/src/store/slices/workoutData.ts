@@ -20,6 +20,9 @@ export const workoutDataSlice = createSlice({
   name: "workoutData",
   initialState,
   reducers: {
+    /**
+     * setWorkouts rewrites all workout data stored in client
+     */
     setWorkouts: (
       state,
       action: PayloadAction<{
@@ -30,6 +33,9 @@ export const workoutDataSlice = createSlice({
       state.workouts = action.payload.workouts;
       state.workoutLogs = action.payload.workoutLogs;
     },
+    /**
+     * addFinishedWorkout inserts a created workout into presorted workouts array
+     */
     addFinishedWorkout: (
       state,
       action: PayloadAction<ICreateWorkoutResponse>
@@ -44,9 +50,20 @@ export const workoutDataSlice = createSlice({
       ];
       state.workoutLogs[action.payload.workout.id] = action.payload.logs;
     },
+    /**
+     * removeWorkout deletes a workout from client
+     */
+    removeWorkout: (state, action: PayloadAction<string>) => {
+      const workoutId = action.payload;
+      state.workouts = state.workouts.filter(
+        (workout) => workout.id !== workoutId
+      );
+      delete state.workoutLogs[workoutId];
+    },
   },
 });
 
-export const { setWorkouts, addFinishedWorkout } = workoutDataSlice.actions;
+export const { setWorkouts, addFinishedWorkout, removeWorkout } =
+  workoutDataSlice.actions;
 
 export default workoutDataSlice.reducer;
