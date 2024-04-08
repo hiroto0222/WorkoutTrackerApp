@@ -100,7 +100,7 @@ func (server *Server) setupRouter() {
 		workoutRoutes.Use(middlewares.AuthMiddleware(server.FireAuth))
 		workoutRoutes.POST("/create", workoutController.CreateWorkout)
 		workoutRoutes.GET("/:user_id", workoutController.GetWorkouts)
-		// workoutRoutes.POST("/delete", workoutController.DeleteWorkout) TODO:
+		workoutRoutes.DELETE("/delete/:workout_id", workoutController.DeleteWorkout)
 	}
 
 	// exercise routes
