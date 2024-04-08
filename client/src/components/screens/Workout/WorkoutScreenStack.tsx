@@ -14,7 +14,7 @@ const WorkoutStack = createNativeStackNavigator<WorkoutStackParams>();
 const WorkoutScreenStack = () => {
   return (
     <WorkoutStack.Navigator
-      initialRouteName="WorkoutHome"
+      initialRouteName={"WorkoutHome"}
       screenOptions={{
         gestureEnabled: false,
       }}

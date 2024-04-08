@@ -17,6 +17,7 @@ import (
 type WorkoutService interface {
 	CreateWorkout(ctx *gin.Context)
 	GetWorkouts(ctx *gin.Context)
+	DeleteWorkout(ctx *gin.Context)
 }
 
 type WorkoutServiceImpl struct {
@@ -98,7 +99,6 @@ func (s *WorkoutServiceImpl) CreateWorkout(ctx *gin.Context) {
 		if logSlice, ok := req.Logs[exerciseId]; ok {
 			for setNumber, logReq := range logSlice {
 				newLog := models.Log{
-					WorkoutID:         workout.ID,
 					WorkoutExerciseID: workoutExercise.ID,
 					SetNumber:         setNumber + 1,
 					Weight:            logReq.Weight,
@@ -255,6 +255,45 @@ func (s *WorkoutServiceImpl) GetWorkouts(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "success", "data": data})
+}
+
+// DeleteWorkout deletes a workout records specified by the user
+func (s *WorkoutServiceImpl) DeleteWorkout(ctx *gin.Context) {
+	// get req parameters
+	reqWorkoutId, ok := ctx.Params.Get("workout_id")
+	if !ok {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Parameters not provided"})
+		return
+	}
+
+	// get id of user from middleware
+	userID, ok := ctx.MustGet(middlewares.USER_ID).(string)
+	if !ok {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user id from request"})
+		return
+	}
+
+	var workout models.Workout
+	res := s.db.First(&workout, "id = ?", reqWorkoutId)
+	if res.Error != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user from database"})
+		return
+	}
+
+	// check if requested user is the owner of the workout
+	if userID != workout.UserID {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "You do not have permission"})
+		return
+	}
+
+	// delete workout
+	res = s.db.Delete(&models.Workout{}, workout.ID)
+	if res.Error != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to delete workout from database"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "delete success"})
 }
 
 func NewWorkoutService(db *gorm.DB) *WorkoutServiceImpl {

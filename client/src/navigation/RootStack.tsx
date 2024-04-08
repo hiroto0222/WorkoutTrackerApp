@@ -9,6 +9,8 @@ import WorkoutScreenStack, {
 } from "components/screens/Workout/WorkoutScreenStack";
 import { Platform, TouchableOpacity } from "react-native";
 import { Icon } from "react-native-magnus";
+import { useSelector } from "react-redux";
+import { RootState } from "store";
 import UIConstants from "../constants";
 
 export type RootStackParams = {
@@ -29,10 +31,28 @@ export const MyTheme = {
 const BottomTabStack = createBottomTabNavigator<RootStackParams>();
 
 const RootStack = () => {
+  const workoutState = useSelector((state: RootState) => state.workout);
+
+  const workoutBadge = {
+    tabBarBadge: "+",
+    tabBarBadgeStyle: {
+      backgroundColor: UIConstants.COLORS.PRIMARY.REGULAR,
+      fontSize: 15,
+    },
+  };
+
+  const workoutOptions = {
+    headerShown: false,
+    tabBarLabel: "Workout",
+    tabBarIcon: ({ color }: { color: string }) => (
+      <TabBarIcon name="dumbbell" color={color} fontSize="5xl" />
+    ),
+  };
+
   return (
     <NavigationContainer theme={MyTheme}>
       <BottomTabStack.Navigator
-        initialRouteName="HomeStack"
+        initialRouteName={workoutState.isActive ? "WorkoutStack" : "HomeStack"}
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: false,
@@ -44,7 +64,7 @@ const RootStack = () => {
           },
           tabBarStyle: {
             shadowColor: "#fff",
-            paddingHorizontal: 30,
+            paddingHorizontal: 25,
             height: Platform.OS === "ios" ? 80 : 60,
             position: "absolute",
             backgroundColor: "#fff",
@@ -65,13 +85,11 @@ const RootStack = () => {
         <BottomTabStack.Screen
           name="WorkoutStack"
           component={WorkoutScreenStack}
-          options={{
-            headerShown: false,
-            tabBarLabel: "Workout",
-            tabBarIcon: ({ color }) => (
-              <TabBarIcon name="dumbbell" color={color} fontSize="5xl" />
-            ),
-          }}
+          options={
+            workoutState.isActive
+              ? { ...workoutBadge, ...workoutOptions }
+              : { ...workoutOptions }
+          }
         />
         <BottomTabStack.Screen
           name="UserSetting"

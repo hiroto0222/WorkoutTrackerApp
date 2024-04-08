@@ -22,7 +22,7 @@ const composeEnhancers =
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["workoutData", "exercises"], // only persist workoutData and exercises
+  whitelist: ["workoutData", "exercises", "workout"], // only persist workoutData and exercises
 };
 
 const rootReducer = combineReducers({

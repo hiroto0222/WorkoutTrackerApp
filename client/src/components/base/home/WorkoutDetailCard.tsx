@@ -25,7 +25,7 @@ const WorkoutDetailCard = ({ workout, logs }: Props) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
-  const exercises = useSelector((state: RootState) => state.exercises);
+  const exercisesState = useSelector((state: RootState) => state.exercises);
 
   const workoutDate = new Date(workout.started_at);
   const workoutWeekdayName = getNameOfWeekday(workoutDate);
@@ -39,8 +39,7 @@ const WorkoutDetailCard = ({ workout, logs }: Props) => {
       if (log.exercise_id in exerciseLogs.logs) {
         exerciseLogs.logs[log.exercise_id].push(log);
       } else {
-        const exercise = exercises;
-        exerciseLogs.exercises.push(exercise.exercises[log.exercise_id]);
+        exerciseLogs.exercises.push(exercisesState.exercises[log.exercise_id]);
         exerciseLogs.logs[log.exercise_id] = [log];
       }
     });

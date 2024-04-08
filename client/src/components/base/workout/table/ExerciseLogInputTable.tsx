@@ -37,6 +37,7 @@ const ExerciseLogInputTable = ({ exercise }: Props) => {
       {workoutState.currLogs[exercise.id].map((log, setNumber) => (
         <ExerciseLogInputRow
           key={setNumber}
+          log={log}
           exercise={exercise}
           setNumber={setNumber}
           isCompleted={log.isCompleted}
@@ -45,7 +46,7 @@ const ExerciseLogInputTable = ({ exercise }: Props) => {
           }
         />
       ))}
-      <Div mx="3xl" mt="md" alignItems="center" justifyContent="center">
+      <Div mx="3xl" m="md" alignItems="center" justifyContent="center">
         <IconButton
           onPress={() => handleAddEmptySet()}
           buttonType="md"

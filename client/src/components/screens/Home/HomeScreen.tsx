@@ -19,6 +19,7 @@ const HomeScreen = () => {
     useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
   const userState = useSelector((state: RootState) => state.user);
+  const workoutState = useSelector((state: RootState) => state.workout);
 
   const { loading: loadingGetUser } = useGetUser();
   const { loading: loadingGetWorkouts } = useGetWorkoutsData();
