@@ -5,7 +5,9 @@ import {
   ICreateWorkoutResponse,
   ILogs,
 } from "api/types";
+import globalStyles from "components/styles";
 import { RootStackParams } from "navigation/RootStack";
+import { showMessage } from "react-native-flash-message";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { setFinishWorkout } from "store/slices/workout";
@@ -20,7 +22,7 @@ const useFinishWorkout = () => {
   const authState = useSelector((state: RootState) => state.auth);
 
   const validateAndCreateWorkoutData = (isAddWorkout: boolean) => {
-    let message = "Please add some exercises and sets to finish your workout!";
+    let message = "Your workout is empty!";
     var isValid = false;
     const exercise_ids: number[] = [];
     const logs: ILogs = {};
@@ -34,7 +36,7 @@ const useFinishWorkout = () => {
       const userStartTime = new Date(workoutState.userStartTime);
       const userEndTime = new Date(workoutState.userEndTime);
       if (userStartTime >= userEndTime) {
-        message = "Please add a valid start and end time!";
+        message = "Set a valid start and end time!";
         return { isValid, exercise_ids, logs, message };
       }
     }
@@ -84,6 +86,8 @@ const useFinishWorkout = () => {
       return;
     }
 
+    let message = "Workout completed! Good work 💪";
+
     const endedAt = new Date();
     let data: ICreateWorkoutRequest = {
       user_id: authState.userId,
@@ -113,6 +117,7 @@ const useFinishWorkout = () => {
       userEndTime.setDate(userStartDate.getDate());
       data.started_at = userStartDate.toJSON();
       data.ended_at = userEndTime.toJSON();
+      message = "Workout added!";
     }
 
     try {
@@ -132,10 +137,18 @@ const useFinishWorkout = () => {
       // add data to local
       console.log(resData);
       await dispatch(addFinishedWorkout(resData));
+      showMessage({
+        message,
+        type: "success",
+        titleStyle: globalStyles.textMedium,
+      });
       navigation.popToTop();
     } catch (err) {
-      console.log(err);
-      alert((err as Error).message);
+      showMessage({
+        message: (err as Error).message,
+        type: "danger",
+        titleStyle: globalStyles.textMedium,
+      });
     }
   };
 

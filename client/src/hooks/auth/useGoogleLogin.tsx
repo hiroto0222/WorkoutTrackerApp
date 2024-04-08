@@ -1,6 +1,7 @@
 import { ANDROID_CLIENT_ID, IOS_CLIENT_ID } from "@env";
 import { ICreateUserRequest } from "api/types";
 import { HttpStatusCode } from "axios";
+import globalStyles from "components/styles";
 import { auth } from "config/firebase";
 import * as Google from "expo-auth-session/providers/google";
 import {
@@ -9,6 +10,7 @@ import {
   signInWithCredential,
 } from "firebase/auth";
 import { useEffect } from "react";
+import { showMessage } from "react-native-flash-message";
 import { useDispatch } from "react-redux";
 import { setAuth, setIsAuthenticating } from "store/slices/auth";
 import axios, { API_ENDPOINTS } from "../../api";
@@ -65,7 +67,11 @@ const useGoogleLogin = () => {
             })
           );
         } catch (err) {
-          alert((err as Error).message);
+          showMessage({
+            message: (err as Error).message,
+            type: "danger",
+            titleStyle: globalStyles.textMedium,
+          });
           dispatch(setIsAuthenticating(false));
         }
       }

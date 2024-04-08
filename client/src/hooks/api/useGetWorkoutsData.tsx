@@ -1,5 +1,7 @@
 import { IWorkoutDataResponse } from "api/types";
+import globalStyles from "components/styles";
 import { useEffect, useState } from "react";
+import { showMessage } from "react-native-flash-message";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { setWorkouts } from "store/slices/workoutData";
@@ -29,8 +31,11 @@ const useGetWorkoutsData = () => {
         setLoading(false);
       } catch (err) {
         setLoading(false);
-        console.log(err);
-        alert((err as Error).message);
+        showMessage({
+          message: (err as Error).message,
+          type: "danger",
+          titleStyle: globalStyles.textMedium,
+        });
       }
     };
 

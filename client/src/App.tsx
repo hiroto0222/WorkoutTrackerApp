@@ -25,11 +25,13 @@ import * as SplashScreen from "expo-splash-screen";
 import RootNavigation from "navigation";
 import { useCallback, useEffect } from "react";
 import { Platform, StatusBar, View } from "react-native";
+import FlashMessage from "react-native-flash-message";
 import { ThemeProvider } from "react-native-magnus";
 import changeNavigationBarColor from "react-native-navigation-bar-color";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import UIConstants from "./constants";
 import { persistor, store } from "./store";
 
 SplashScreen.preventAutoHideAsync();
@@ -84,6 +86,12 @@ export default function App() {
                 translucent
                 backgroundColor="white"
                 barStyle="dark-content"
+              />
+              <FlashMessage
+                position="top"
+                statusBarHeight={UIConstants.SCREEN_MARGIN_TOP + 10}
+                duration={3000}
+                floating
               />
             </ThemeProvider>
           </PersistGate>
