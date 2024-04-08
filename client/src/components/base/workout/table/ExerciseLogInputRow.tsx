@@ -1,6 +1,6 @@
 import { IExerciseResponse, LogType } from "api/types";
 import globalStyles from "components/styles";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Animated, I18nManager, StyleSheet, View } from "react-native";
 import {
   GestureHandlerRootView,
@@ -61,7 +61,8 @@ const ExerciseLogInputRow = ({
   );
 };
 
-export default ExerciseLogInputRow;
+// Avoid rerendering of rows not altered to increase performance
+export default memo(ExerciseLogInputRow);
 
 const WeightRepsInputRow = ({
   exercise,
