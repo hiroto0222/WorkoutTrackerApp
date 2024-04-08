@@ -19,13 +19,15 @@ import {
 } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { Div, Text } from "react-native-magnus";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
+import { setFinishWorkout } from "store/slices/workout";
 import { formatTime } from "utils";
 import UIConstants from "../../../constants";
 import { WorkoutStackParams } from "./WorkoutScreenStack";
 
 const WorkoutScreen = () => {
+  const dispatch = useDispatch();
   const route = useRoute<RouteProp<WorkoutStackParams>>();
   const navigation =
     useNavigation<NativeStackNavigationProp<WorkoutStackParams>>();
@@ -67,6 +69,10 @@ const WorkoutScreen = () => {
     ]);
   };
 
+  const handleCancelWorkout = () => {
+    navigation.goBack();
+  };
+
   const handleOnAddExercises = () => {
     navigation.navigate("AddExercise");
   };
@@ -77,7 +83,7 @@ const WorkoutScreen = () => {
       headerLeft: () => (
         <TouchableOpacity
           style={{ padding: 10 }}
-          onPress={() => navigation.goBack()}
+          onPress={() => handleCancelWorkout()}
         >
           <Text
             color={UIConstants.COLORS.GRAY.REGULAR}
@@ -127,7 +133,10 @@ const WorkoutScreen = () => {
           {
             text: "Discard",
             style: "destructive",
-            onPress: () => navigation.dispatch(e.data.action),
+            onPress: () => {
+              dispatch(setFinishWorkout());
+              navigation.dispatch(e.data.action);
+            },
           },
         ]
       );
@@ -145,7 +154,7 @@ const WorkoutScreen = () => {
           Workout
         </Text>
         {!route.params?.isAddWorkout && (
-          <Text fontSize="3xl" style={globalStyles.textLight}>
+          <Text fontSize="3xl" style={globalStyles.textBold}>
             {formatTime(seconds)}
           </Text>
         )}

@@ -5,7 +5,7 @@ import { View } from "react-native";
 import { Div, Text } from "react-native-magnus";
 import Animated, {
   Easing,
-  FadeInLeft,
+  FadeIn,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -99,7 +99,7 @@ const ExerciseLogInputRow = ({
     const translationAmount = 1.1;
     const timingConfig = {
       duration: 80,
-      easing: Easing.bezier(0.35, 0.7, 0.5, 0.7),
+      easing: Easing.bezier(0.1, 0.3, 0.8, 0.3),
     };
     scaleTranslate.value = withSequence(
       withTiming(translationAmount, timingConfig),
@@ -120,7 +120,7 @@ const ExerciseLogInputRow = ({
   }, []);
 
   return (
-    <Animated.View entering={FadeInLeft}>
+    <Animated.View entering={FadeIn} style={{ marginBottom: 1 }}>
       <SwipeDelete isDeletable={isDeletable} onDelete={handleOnDelete}>
         <Animated.View
           style={[

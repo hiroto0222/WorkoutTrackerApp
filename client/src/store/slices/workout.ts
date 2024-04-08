@@ -10,6 +10,7 @@ export type Log = {
 
 export interface WorkoutState {
   isFinished: boolean;
+  isActive: boolean;
   startedAt: string;
   endedAt?: string;
   currExercises: IExerciseResponse[];
@@ -21,6 +22,7 @@ export interface WorkoutState {
 
 const initialState: WorkoutState = {
   isFinished: false,
+  isActive: false,
   startedAt: "not yet",
   endedAt: undefined,
   currExercises: [],
@@ -37,6 +39,7 @@ export const workoutSlice = createSlice({
       const userEndTime = new Date();
       userEndTime.setHours(userStartTime.getHours() + 1);
       state.startedAt = startDate.toJSON();
+      state.isActive = true;
       state.isFinished = false;
       state.currExercises = [];
       state.currLogs = {};
@@ -141,6 +144,7 @@ export const workoutSlice = createSlice({
       }
     },
     setFinishWorkout: (state, action: PayloadAction) => {
+      state.isActive = false;
       state.isFinished = true;
       state.currExercises = [];
       state.currLogs = {};
