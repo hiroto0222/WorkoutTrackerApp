@@ -12,6 +12,7 @@ export const API_ENDPOINTS = {
   WORKOUTS: {
     GET: "workouts/",
     CREATE: "workouts/create",
+    DELETE: "workouts/delete/",
   },
 };
 
