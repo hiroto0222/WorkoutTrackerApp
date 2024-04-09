@@ -146,7 +146,7 @@ const ExerciseLogInputRow = ({
               style={globalStyles.textMedium}
               color={
                 isCompleted
-                  ? UIConstants.COLORS.SUCCESS.CONTRAST
+                  ? UIConstants.COLORS.PRIMARY.CONTRAST
                   : UIConstants.COLORS.GRAY.LIGHT_CONTRAST
               }
             >

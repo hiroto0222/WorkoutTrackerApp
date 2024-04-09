@@ -16,7 +16,7 @@ const ExerciseLogInput = ({
   <Input
     color={
       isCompleted
-        ? UIConstants.COLORS.SUCCESS.CONTRAST
+        ? UIConstants.COLORS.PRIMARY.CONTRAST
         : UIConstants.COLORS.GRAY.LIGHT_CONTRAST
     }
     editable={!isCompleted}
@@ -30,7 +30,7 @@ const ExerciseLogInput = ({
     maxLength={6}
     bg={
       isCompleted
-        ? UIConstants.COLORS.SUCCESS.REGULAR
+        ? UIConstants.COLORS.PRIMARY.LIGHT
         : UIConstants.COLORS.GRAY.LIGHT
     }
   />

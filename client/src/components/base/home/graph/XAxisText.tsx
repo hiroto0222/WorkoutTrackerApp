@@ -21,9 +21,9 @@ const XAxisText = ({ x, y, text, selectedBar }: Props) => {
 
   const color = useDerivedValue(() => {
     if (selectedBar.value === text) {
-      return withTiming(UIConstants.COLORS.BLACK);
+      return withTiming(UIConstants.COLORS.GRAY.LIGHT_CONTRAST);
     } else if (selectedBar.value === null) {
-      return withTiming(UIConstants.COLORS.BLACK);
+      return withTiming(UIConstants.COLORS.GRAY.LIGHT_CONTRAST);
     } else {
       return withTiming(UIConstants.COLORS.GRAY.LIGHT);
     }

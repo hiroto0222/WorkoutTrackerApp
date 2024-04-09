@@ -39,14 +39,22 @@ const ExerciseCheckBox = ({ value, disabled, handleOnChecked }: Props) => {
       <Div>
         <Text
           fontSize="2xl"
-          color={disabled || checked ? "white" : "black"}
+          color={
+            disabled
+              ? UIConstants.COLORS.GRAY.REGULAR_CONTRAST
+              : UIConstants.COLORS.PRIMARY.CONTRAST
+          }
           style={globalStyles.textRegular}
         >
           {value.name}
         </Text>
         <Text
           fontSize="sm"
-          color={disabled || checked ? "white" : "black"}
+          color={
+            disabled
+              ? UIConstants.COLORS.GRAY.REGULAR_CONTRAST
+              : UIConstants.COLORS.PRIMARY.CONTRAST
+          }
           style={globalStyles.textLight}
         >
           Category

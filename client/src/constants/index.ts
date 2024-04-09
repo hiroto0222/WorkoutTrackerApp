@@ -10,14 +10,14 @@ const UIConstants = {
   },
   COLORS: {
     PRIMARY: {
-      LIGHT: "#fed7d7",
-      REGULAR: "#d9534f",
-      CONTRAST: "#fff",
-    },
-    SECONDARY: {
       LIGHT: "#e0f290",
       REGULAR: "#cfe27a",
       CONTRAST: "#000",
+    },
+    SECONDARY: {
+      LIGHT: "#fed7d7",
+      REGULAR: "#d9534f",
+      CONTRAST: "#fff",
     },
     SUCCESS: {
       LIGHT: "#b3e0b9",

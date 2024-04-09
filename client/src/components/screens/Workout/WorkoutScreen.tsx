@@ -103,7 +103,7 @@ const WorkoutScreen = () => {
           onPress={() => handleFinishWorkout()}
         >
           <Text
-            color={UIConstants.COLORS.PRIMARY.REGULAR}
+            color={UIConstants.COLORS.PRIMARY.CONTRAST}
             style={globalStyles.textBold}
             fontSize="xl"
           >

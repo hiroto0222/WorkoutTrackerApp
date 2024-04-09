@@ -27,9 +27,9 @@ const ExerciseLogInputTable = ({ exercise }: Props) => {
       <Text
         px={25}
         mb={10}
-        style={globalStyles.textMedium}
+        style={globalStyles.textSemiBold}
         fontSize="2xl"
-        color={UIConstants.COLORS.PRIMARY.REGULAR}
+        color="black"
       >
         {exercise.name}
       </Text>

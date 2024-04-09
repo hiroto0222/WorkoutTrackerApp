@@ -36,7 +36,7 @@ const RootStack = () => {
   const workoutBadge = {
     tabBarBadge: "+",
     tabBarBadgeStyle: {
-      backgroundColor: UIConstants.COLORS.PRIMARY.REGULAR,
+      backgroundColor: UIConstants.COLORS.DANGER.REGULAR,
       fontSize: 15,
     },
   };
@@ -56,8 +56,8 @@ const RootStack = () => {
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarActiveTintColor: UIConstants.COLORS.GRAY.REGULAR,
-          tabBarActiveBackgroundColor: UIConstants.COLORS.GRAY.LIGHT,
+          tabBarActiveTintColor: UIConstants.COLORS.PRIMARY.CONTRAST,
+          tabBarActiveBackgroundColor: UIConstants.COLORS.PRIMARY.REGULAR,
           tabBarButton: (props) => <TouchableOpacity {...props} />,
           tabBarItemStyle: {
             borderRadius: UIConstants.STYLES.BORDER_RADIUS,
