@@ -1,5 +1,6 @@
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { Icon } from "react-native-magnus";
+import Animated, { BounceInDown, BounceOutDown } from "react-native-reanimated";
 import UIConstants from "../../../constants";
 
 type Props = {
@@ -15,7 +16,9 @@ const ConfirmSelectionButton = ({ onPress }: Props) => (
     }}
     onPress={onPress}
   >
-    <View
+    <Animated.View
+      entering={BounceInDown}
+      exiting={BounceOutDown}
       style={{
         width: 70,
         height: 70,
@@ -31,7 +34,7 @@ const ConfirmSelectionButton = ({ onPress }: Props) => (
         name="check"
         color={UIConstants.COLORS.PRIMARY.CONTRAST}
       />
-    </View>
+    </Animated.View>
   </TouchableOpacity>
 );
 

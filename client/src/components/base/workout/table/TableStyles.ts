@@ -24,7 +24,7 @@ export const tableStyles = StyleSheet.create({
   tableRowComplete: {
     paddingTop: 2,
     flexDirection: "row",
-    backgroundColor: UIConstants.COLORS.SUCCESS.REGULAR,
+    backgroundColor: UIConstants.COLORS.PRIMARY.LIGHT,
   },
   columnOneInput: {
     justifyContent: "center",

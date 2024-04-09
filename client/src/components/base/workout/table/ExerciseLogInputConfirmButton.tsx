@@ -26,7 +26,7 @@ const ExerciseLogInputConfirmButton = ({
         height: 30,
         borderRadius: UIConstants.STYLES.BORDER_RADIUS,
         backgroundColor: isComplete
-          ? UIConstants.COLORS.GRAY.LIGHT
+          ? UIConstants.COLORS.PAGE
           : UIConstants.COLORS.PRIMARY.REGULAR,
         alignItems: "center",
         justifyContent: "center",
