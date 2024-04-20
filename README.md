@@ -17,7 +17,7 @@
 
 ## Demo
 <p align="center">
-  <img src="./images/demo.gif" alt="demo" width="25%">
+  <img src="./images/demo.gif" alt="demo" width="30%">
 </p>
 
 ## Features
