@@ -5,7 +5,7 @@ export const API_ENDPOINTS = {
   USERS: {
     GET: "users/me",
     CREATE: "users/create",
-    PATCH: "users/me",
+    PUT: "users/me",
   },
   EXERCISES: {
     GET: "exercises",

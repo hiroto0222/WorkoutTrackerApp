@@ -18,7 +18,7 @@ const useUpdateUser = () => {
         height: parseInt(height),
       };
 
-      const res = await axios.patch(API_ENDPOINTS.USERS.PATCH, data, {
+      await axios.put(API_ENDPOINTS.USERS.PUT, data, {
         headers: {
           Authorization: "Bearer " + authState.accessToken,
         },
