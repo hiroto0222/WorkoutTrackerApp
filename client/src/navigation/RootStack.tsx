@@ -3,7 +3,9 @@ import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import HomeScreenStack, {
   HomeStackParams,
 } from "components/screens/Home/HomeScreenStack";
-import UserSettingScreen from "components/screens/UserSettings/UserSettingScreen";
+import UserSettingsScreenStack, {
+  UserSettingsStackParams,
+} from "components/screens/UserSettings/UserSettingsScreenStack";
 import WorkoutScreenStack, {
   WorkoutStackParams,
 } from "components/screens/Workout/WorkoutScreenStack";
@@ -17,7 +19,7 @@ export type RootStackParams = {
   Root: undefined;
   HomeStack: HomeStackParams;
   WorkoutStack: WorkoutStackParams;
-  UserSetting: undefined;
+  UserSettingsStack: UserSettingsStackParams;
 };
 
 export const MyTheme = {
@@ -91,11 +93,9 @@ const RootStack = () => {
           }
         />
         <BottomTabStack.Screen
-          name="UserSetting"
-          component={UserSettingScreen}
+          name="UserSettingsStack"
+          component={UserSettingsScreenStack}
           options={{
-            headerShown: false,
-            tabBarLabel: "Settings",
             tabBarIcon: ({ color }) => (
               <TabBarIcon name="cog" color={color} fontSize="5xl" />
             ),

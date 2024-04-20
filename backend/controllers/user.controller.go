@@ -8,6 +8,7 @@ import (
 type UserController interface {
 	CreateUser(ctx *gin.Context)
 	GetUser(ctx *gin.Context)
+	UpdateUser(ctx *gin.Context)
 }
 
 type UserControllerImpl struct {
@@ -20,6 +21,10 @@ func (u *UserControllerImpl) CreateUser(ctx *gin.Context) {
 
 func (u *UserControllerImpl) GetUser(ctx *gin.Context) {
 	u.svc.GetUser(ctx)
+}
+
+func (u *UserControllerImpl) UpdateUser(ctx *gin.Context) {
+	u.svc.UpdateUser(ctx)
 }
 
 func NewUserController(userService *services.UserServiceImpl) *UserControllerImpl {
