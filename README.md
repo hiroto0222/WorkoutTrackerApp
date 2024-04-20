@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./images/preview.png" alt="app-preview" width="90%">
+  <img src="./images/preview.png" alt="app-preview" width="100%">
   <div align="center">A Mobile app companion for your workouts. Built with React Native, Expo</div>
 </p>
 
@@ -38,11 +38,13 @@ Deployment:
 - Web App, Database -> Fly.io
 
 <p align="center">
-  <img src="./images/deloyment.png" alt="deployment" width="50%">
+  <img src="./images/deloyment.png" alt="deployment" width="60%">
 </p>
 
 ## ER Diagram
-![WorkoutTrackerApp](https://github.com/hiroto0222/WorkoutTrackerApp/assets/45121253/fa2be41d-4073-45b9-9018-bc80715c0d2e)
+<p align="center">
+  <img src="./images/db_diagram.png" alt="db_diagram" width="90%">
+</p>
 
 ## Local
 Backend:

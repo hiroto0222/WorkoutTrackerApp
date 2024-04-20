@@ -15,6 +15,7 @@ import (
 type UserService interface {
 	CreateUser(ctx *gin.Context)
 	GetUser(ctx *gin.Context)
+	UpdateUser(ctx *gin.Context)
 }
 
 type UserServiceImpl struct {
@@ -87,7 +88,7 @@ func (s *UserServiceImpl) CreateUser(ctx *gin.Context) {
 
 // GetUser gets the user record for the requested user
 func (s *UserServiceImpl) GetUser(ctx *gin.Context) {
-	// check if authenticated user is the owner of the request
+	// get userID from middleware
 	userID, ok := ctx.MustGet(middlewares.USER_ID).(string)
 	if !ok {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user id for request"})
@@ -102,6 +103,46 @@ func (s *UserServiceImpl) GetUser(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "success", "data": user})
+}
+
+type UpdateUserRequest struct {
+	Name   string  `json:"name" binding:"required"`
+	Weight float64 `json:"weight" binding:"required"`
+	Height float64 `json:"height" binding:"required"`
+}
+
+// UpdateUser puts the provided data in the user record
+func (s *UserServiceImpl) UpdateUser(ctx *gin.Context) {
+	var req UpdateUserRequest
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		log.Println("binding json req failed")
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	// get userID from middleware
+	userID, ok := ctx.MustGet(middlewares.USER_ID).(string)
+	if !ok {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user id for request"})
+		return
+	}
+
+	// get user
+	var user models.User
+	res := s.db.First(&user, "id = ?", userID)
+	if res.Error != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user from database"})
+		return
+	}
+
+	// update user
+	user.Name = req.Name
+	user.Weight = req.Weight
+	user.Height = req.Height
+	s.db.Save(&user)
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "success"})
 }
 
 func NewUserService(db *gorm.DB) *UserServiceImpl {
