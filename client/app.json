@@ -8,8 +8,7 @@
     "userInterfaceStyle": "light",
     "splash": {
       "resizeMode": "contain",
-      "image": "./src/assets/splash.png",
-      "backgroundColor": "#ffffff"
+      "image": "./src/assets/splash.png"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -17,10 +16,6 @@
       "bundleIdentifier": "com.hiroto0222.workouttracker"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./src/assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
       "package": "com.hiroto0222.workouttracker"
     },
     "web": {
