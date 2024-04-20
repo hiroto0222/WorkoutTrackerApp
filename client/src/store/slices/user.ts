@@ -16,9 +16,18 @@ export const userSlice = createSlice({
     setUser: (state, action: PayloadAction<IUser>) => {
       state.user = action.payload;
     },
+    setUserInfo: (
+      state,
+      action: PayloadAction<{ name: string; weight: number; height: number }>
+    ) => {
+      if (state.user === undefined) return;
+      state.user.name = action.payload.name;
+      state.user.weight = action.payload.weight;
+      state.user.height = action.payload.height;
+    },
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, setUserInfo } = userSlice.actions;
 
 export default userSlice.reducer;

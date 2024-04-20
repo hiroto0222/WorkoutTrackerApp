@@ -3,6 +3,7 @@ import SettingsItem from "components/base/usersettings/SettingsItem";
 import globalStyles from "components/styles";
 import { auth } from "config/firebase";
 import { signOut } from "firebase/auth";
+import useUpdateUser from "hooks/api/useUpdateUser";
 import { useState } from "react";
 import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Div, Input, Text } from "react-native-magnus";
@@ -14,6 +15,8 @@ import UIConstants from "../../../constants";
 const UserSettingScreen = () => {
   const dispatch = useDispatch();
   const userState = useSelector((state: RootState) => state.user);
+
+  const { validateUserSettings, updateUser } = useUpdateUser();
 
   const [name, setName] = useState(userState.user?.name || "");
   const [weight, setWeight] = useState(
@@ -29,7 +32,9 @@ const UserSettingScreen = () => {
   };
 
   const handleSaveSettings = () => {
-    console.log("save settings");
+    if (validateUserSettings(name, weight, height)) {
+      updateUser(name, weight, height);
+    }
   };
 
   return (
