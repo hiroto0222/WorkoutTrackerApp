@@ -86,12 +86,13 @@ func (server *Server) setupRouter() {
 		})
 	})
 
-	// authentication routes
+	// user routes
 	{
 		userRoutes := apiRoutes.Group("/users")
 		userRoutes.Use(middlewares.AuthMiddleware(server.FireAuth))
 		userRoutes.GET("/me", userController.GetUser)
 		userRoutes.POST("/create", userController.CreateUser)
+		userRoutes.PUT("/me", userController.UpdateUser)
 	}
 
 	// workout routes
