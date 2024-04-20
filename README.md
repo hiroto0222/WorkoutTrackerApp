@@ -42,7 +42,9 @@ Deployment:
 </p>
 
 ## ER Diagram
-![WorkoutTrackerApp](https://github.com/hiroto0222/WorkoutTrackerApp/assets/45121253/fa2be41d-4073-45b9-9018-bc80715c0d2e)
+<p align="center">
+  <img src="./images/db_diagram.png" alt="db_diagram" width="90%">
+</p>
 
 ## Local
 Backend:
