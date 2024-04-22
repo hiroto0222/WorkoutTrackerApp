@@ -16,6 +16,9 @@
 - **Supported Android versions**: 5.0+
 
 ## Demo
+<p align="center">
+  <img src="./images/demo.gif" alt="demo" width="30%">
+</p>
 
 ## Features
 - Keep records of exercises, number of sets, weights, reps, etc. in each workout performed.
