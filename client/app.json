@@ -4,7 +4,6 @@
     "slug": "workout-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "resizeMode": "contain",
@@ -13,7 +12,8 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.hiroto0222.workouttracker"
+      "bundleIdentifier": "com.hiroto0222.workouttracker",
+      "icon": "./src/assets/icon.png"
     },
     "android": {
       "package": "com.hiroto0222.workouttracker"
