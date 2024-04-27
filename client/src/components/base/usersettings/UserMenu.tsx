@@ -2,7 +2,7 @@ import globalStyles from "components/styles";
 import { auth } from "config/firebase";
 import { signOut } from "firebase/auth";
 import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity } from "react-native";
 import { Icon, Text } from "react-native-magnus";
 import {
   Menu,
@@ -29,8 +29,35 @@ const UserMenu = () => {
   };
 
   const handleLogout = () => {
-    signOut(auth);
-    dispatch(setAuth({}));
+    Alert.alert("Logout", "Are you sure you want to logout?", [
+      { text: "Cancel", style: "cancel", onPress: () => {} },
+      {
+        text: "Confirm",
+        style: "destructive",
+        onPress: () => {
+          signOut(auth);
+          dispatch(setAuth({}));
+        },
+      },
+    ]);
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete your account? All data associated with this account will be deleted and cannot be reversed",
+      [
+        { text: "Cancel", style: "cancel", onPress: () => {} },
+        {
+          text: "Confirm",
+          style: "destructive",
+          onPress: () => {
+            signOut(auth);
+            dispatch(setAuth({}));
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -83,7 +110,7 @@ const UserMenu = () => {
         <MenuOption>
           <TouchableOpacity
             style={styles.optionContainer}
-            onPress={() => alert("delete account")}
+            onPress={() => handleDeleteAccount()}
           >
             <Icon
               fontSize="2xl"
