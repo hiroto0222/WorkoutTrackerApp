@@ -9,6 +9,7 @@ type UserController interface {
 	CreateUser(ctx *gin.Context)
 	GetUser(ctx *gin.Context)
 	UpdateUser(ctx *gin.Context)
+	DeleteUser(ctx *gin.Context)
 }
 
 type UserControllerImpl struct {
@@ -25,6 +26,10 @@ func (u *UserControllerImpl) GetUser(ctx *gin.Context) {
 
 func (u *UserControllerImpl) UpdateUser(ctx *gin.Context) {
 	u.svc.UpdateUser(ctx)
+}
+
+func (u *UserControllerImpl) DeleteUser(ctx *gin.Context) {
+	u.svc.DeleteUser(ctx)
 }
 
 func NewUserController(userService *services.UserServiceImpl) *UserControllerImpl {

@@ -4,5 +4,8 @@ connect-local-db:
 connect-prod-db:
 	fly postgres connect -a workouttrackerapp-db --database workout_tracker_app
 
+forward-prod-db-port:
+	fly proxy 6543:5432 -a workouttrackerapp-db
+
 encode-service-account-key-to-base64:
 	base64 -i ./backend/config/service-account-key.json

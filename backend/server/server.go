@@ -46,7 +46,7 @@ func NewServer(conf config.Config, db *gorm.DB) *Server {
 	server.FireAuth = authClient
 
 	// init services
-	userService = *services.NewUserService(server.DB)
+	userService = *services.NewUserService(server.DB, server.FireAuth)
 	workoutService = *services.NewWorkoutService(server.DB)
 	exerciseService = *services.NewExerciseService(server.DB)
 
@@ -93,6 +93,7 @@ func (server *Server) setupRouter() {
 		userRoutes.GET("/me", userController.GetUser)
 		userRoutes.POST("/create", userController.CreateUser)
 		userRoutes.PUT("/me", userController.UpdateUser)
+		userRoutes.DELETE("/me", userController.DeleteUser)
 	}
 
 	// workout routes
