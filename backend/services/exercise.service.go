@@ -1,34 +1,31 @@
 package services
 
 import (
-	"net/http"
-
-	"github.com/gin-gonic/gin"
 	"github.com/hiroto0222/workout-tracker-app/models"
 	"gorm.io/gorm"
 )
 
 type ExerciseService interface {
-	GetExercises(ctx *gin.Context)
+	GetExercises() ([]models.Exercise, error)
 }
 
 type ExerciseServiceImpl struct {
 	db *gorm.DB
 }
 
-// GetExercises retrieves all exercises
-func (s *ExerciseServiceImpl) GetExercises(ctx *gin.Context) {
-	var exercises []models.Exercise
-	res := s.db.Find(&exercises)
-	if res.Error != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to retrieve exercises"})
-	}
-
-	ctx.JSON(http.StatusOK, gin.H{"message": "success", "data": exercises})
-}
-
 func NewExerciseService(db *gorm.DB) *ExerciseServiceImpl {
 	return &ExerciseServiceImpl{
 		db: db,
 	}
+}
+
+// GetExercises retrieves all exercises from DB
+func (s *ExerciseServiceImpl) GetExercises() ([]models.Exercise, error) {
+	var exercises []models.Exercise
+	res := s.db.Find(&exercises)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	return exercises, nil
 }
