@@ -1,6 +1,7 @@
 import globalStyles from "components/styles";
 import { auth } from "config/firebase";
 import { signOut } from "firebase/auth";
+import useDeleteUser from "hooks/api/useDeleteUser";
 import React, { useState } from "react";
 import { Alert, StyleSheet, TouchableOpacity } from "react-native";
 import { Icon, Text } from "react-native-magnus";
@@ -17,6 +18,8 @@ import UIConstants from "../../../constants";
 
 const UserMenu = () => {
   const dispatch = useDispatch();
+
+  const { deleteUser } = useDeleteUser();
 
   const [opened, setOpened] = useState(false);
 
@@ -52,8 +55,7 @@ const UserMenu = () => {
           text: "Confirm",
           style: "destructive",
           onPress: () => {
-            signOut(auth);
-            dispatch(setAuth({}));
+            deleteUser();
           },
         },
       ]

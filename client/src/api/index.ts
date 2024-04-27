@@ -6,6 +6,7 @@ export const API_ENDPOINTS = {
     GET: "users/me",
     CREATE: "users/create",
     PUT: "users/me",
+    DELETE: "users/me",
   },
   EXERCISES: {
     GET: "exercises",

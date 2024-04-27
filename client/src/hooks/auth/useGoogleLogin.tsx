@@ -67,6 +67,7 @@ const useGoogleLogin = () => {
             })
           );
         } catch (err) {
+          console.log((err as Error).message);
           showMessage({
             message: (err as Error).message,
             type: "danger",
