@@ -23,6 +23,8 @@ const firebaseConfig = {
   appId: APP_ID,
 };
 
+console.log("firebase project-id: ", firebaseConfig.projectId);
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = initializeAuth(app, {

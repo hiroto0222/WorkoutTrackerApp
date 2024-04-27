@@ -16,4 +16,6 @@ type User struct {
 	Height    float64   `json:"height" gorm:"type:numeric(5,2);default:170.00"` // TODO: add on registeration (also make optional)
 	CreatedAt time.Time `json:"created_at" gorm:"not null"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"not null"`
+
+	Workouts []Workout `json:"-" gorm:"constraint:OnDelete:CASCADE;"`
 }

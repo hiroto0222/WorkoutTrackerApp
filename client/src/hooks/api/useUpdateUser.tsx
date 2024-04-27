@@ -45,7 +45,7 @@ const useUpdateUser = () => {
     weight: string,
     height: string
   ) => {
-    const nameRegex = /^[a-zA-Z\s]+$/; // Only allows alphabets and spaces
+    const nameRegex = /^[\p{L}\s]+$/u; // Only allows unicode japanese characters, alphabets and spaces
     const numRegex = /^[0-9]+$/; // Only allows numbers
 
     if (!nameRegex.test(name)) {

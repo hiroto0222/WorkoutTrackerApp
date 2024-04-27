@@ -33,7 +33,6 @@ func populateExercises(db *gorm.DB) error {
 	}
 
 	for _, exercise := range exerciseData.Exercises {
-		log.Println("Inserting exercise: ", exercise.Name)
 		var existingExercise models.Exercise
 
 		// Check if exercise already exists
@@ -53,9 +52,6 @@ func populateExercises(db *gorm.DB) error {
 				if err := db.Model(&existingExercise).Updates(&exercise).Error; err != nil {
 					return err
 				}
-				log.Println("Exercise updated successfully")
-			} else {
-				log.Println("Exercise already exists and values are the same, skipping...")
 			}
 		}
 	}
