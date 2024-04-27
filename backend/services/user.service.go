@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"firebase.google.com/go/auth"
 	"github.com/gin-gonic/gin"
 	"github.com/hiroto0222/workout-tracker-app/middlewares"
 	"github.com/hiroto0222/workout-tracker-app/models"
@@ -16,10 +17,12 @@ type UserService interface {
 	CreateUser(ctx *gin.Context)
 	GetUser(ctx *gin.Context)
 	UpdateUser(ctx *gin.Context)
+	DeleteUser(ctx *gin.Context)
 }
 
 type UserServiceImpl struct {
-	db *gorm.DB
+	db       *gorm.DB
+	fireAuth *auth.Client
 }
 
 type CreateUserRequest struct {
@@ -145,8 +148,43 @@ func (s *UserServiceImpl) UpdateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "success"})
 }
 
-func NewUserService(db *gorm.DB) *UserServiceImpl {
+// DeleteUser deletes firebase auth account and all user associated data from db
+func (s *UserServiceImpl) DeleteUser(ctx *gin.Context) {
+	// get id of user from middlewares
+	userID, ok := ctx.MustGet(middlewares.USER_ID).(string)
+	if !ok {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user id from request"})
+		return
+	}
+
+	// delete account from firebase
+	err := s.fireAuth.DeleteUser(ctx, userID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to delete user from firebase auth"})
+		return
+	}
+
+	// get user from database
+	var user models.User
+	res := s.db.First(&user, "id = ?", userID)
+	if res.Error != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user from database"})
+		return
+	}
+
+	// delete user from database
+	res = s.db.Delete(&user)
+	if res.Error != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to delete user from database"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Successfully deleted user data"})
+}
+
+func NewUserService(db *gorm.DB, fireAuth *auth.Client) *UserServiceImpl {
 	return &UserServiceImpl{
-		db: db,
+		db:       db,
+		fireAuth: fireAuth,
 	}
 }
