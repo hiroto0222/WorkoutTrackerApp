@@ -1,23 +1,19 @@
 package services
 
 import (
-	"log"
-	"net/http"
-	"strings"
 	"time"
 
 	"firebase.google.com/go/auth"
 	"github.com/gin-gonic/gin"
-	"github.com/hiroto0222/workout-tracker-app/middlewares"
 	"github.com/hiroto0222/workout-tracker-app/models"
 	"gorm.io/gorm"
 )
 
 type UserService interface {
-	CreateUser(ctx *gin.Context)
-	GetUser(ctx *gin.Context)
-	UpdateUser(ctx *gin.Context)
-	DeleteUser(ctx *gin.Context)
+	CreateUser(createUserParams *CreateUserParams) (*models.User, error)
+	GetUser(userID string) (*models.User, error)
+	UpdateUser(userID, name string, weight, height float64) error
+	DeleteUser(ctx *gin.Context, userID string) error
 }
 
 type UserServiceImpl struct {
@@ -25,166 +21,99 @@ type UserServiceImpl struct {
 	fireAuth *auth.Client
 }
 
-type CreateUserRequest struct {
-	ID       string  `json:"id" binding:"required"`
-	Name     string  `json:"name" binding:"required"`
-	Email    string  `json:"email" binding:"required"`
-	Role     string  `json:"role"`
-	Photo    string  `json:"photo"`
-	Verified bool    `json:"verified"`
-	Provider string  `json:"provider" binding:"required"`
-	Weight   float64 `json:"weight"`
-	Height   float64 `json:"height"`
+func NewUserService(db *gorm.DB, fireAuth *auth.Client) *UserServiceImpl {
+	return &UserServiceImpl{
+		db:       db,
+		fireAuth: fireAuth,
+	}
 }
 
-// CreateUser adds a new User record
-func (s *UserServiceImpl) CreateUser(ctx *gin.Context) {
-	var req CreateUserRequest
-
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		log.Println("binding json req failed")
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-		return
-	}
-
-	// check if authenticated user is the owner of the request
-	userID, ok := ctx.MustGet(middlewares.USER_ID).(string)
-	if !ok {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user id for request"})
-		return
-	}
-	if userID != req.ID {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "You do not have permission"})
-		return
-	}
-
-	// create user
+// CreateUser adds a new User record to DB
+func (s *UserServiceImpl) CreateUser(createUserParams *CreateUserParams) (*models.User, error) {
 	now := time.Now()
 	user := models.User{
-		ID:        req.ID,
-		Name:      req.Name,
-		Email:     req.Email,
-		Role:      req.Role,
-		Photo:     req.Photo,
-		Verified:  req.Verified,
-		Provider:  req.Provider,
-		Weight:    req.Weight,
-		Height:    req.Height,
+		ID:        createUserParams.ID,
+		Name:      createUserParams.Name,
+		Email:     createUserParams.Email,
+		Role:      createUserParams.Role,
+		Photo:     createUserParams.Photo,
+		Verified:  createUserParams.Verified,
+		Provider:  createUserParams.Provider,
+		Weight:    createUserParams.Weight,
+		Height:    createUserParams.Height,
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
 	res := s.db.Create(&user)
 
 	if res.Error != nil {
-		// check if the user with the email already exists
-		if strings.Contains(res.Error.Error(), "UNIQUE constraint failed: users.email") {
-			ctx.JSON(http.StatusBadRequest, gin.H{"message": "User with that email already exists"})
-			return
-		}
-		log.Printf("failed to create user: %v", res.Error)
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": res.Error.Error()})
-		return
+		return nil, res.Error
 	}
 
-	ctx.JSON(http.StatusCreated, user)
+	return &user, nil
 }
 
-// GetUser gets the user record for the requested user
-func (s *UserServiceImpl) GetUser(ctx *gin.Context) {
-	// get userID from middleware
-	userID, ok := ctx.MustGet(middlewares.USER_ID).(string)
-	if !ok {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user id for request"})
-		return
-	}
-
+// GetUser gets the user from DB
+func (s *UserServiceImpl) GetUser(userID string) (*models.User, error) {
 	var user models.User
 	res := s.db.First(&user, "id = ?", userID)
 	if res.Error != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user from database"})
-		return
+		return nil, res.Error
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "success", "data": user})
+	return &user, nil
 }
 
-type UpdateUserRequest struct {
-	Name   string  `json:"name" binding:"required"`
-	Weight float64 `json:"weight" binding:"required"`
-	Height float64 `json:"height" binding:"required"`
-}
-
-// UpdateUser puts the provided data in the user record
-func (s *UserServiceImpl) UpdateUser(ctx *gin.Context) {
-	var req UpdateUserRequest
-
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		log.Println("binding json req failed")
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-		return
-	}
-
-	// get userID from middleware
-	userID, ok := ctx.MustGet(middlewares.USER_ID).(string)
-	if !ok {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user id for request"})
-		return
-	}
-
+// UpdateUser updates the provided user in DB
+func (s *UserServiceImpl) UpdateUser(userID, name string, weight, height float64) error {
 	// get user
 	var user models.User
 	res := s.db.First(&user, "id = ?", userID)
 	if res.Error != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user from database"})
-		return
+		return res.Error
 	}
 
 	// update user
-	user.Name = req.Name
-	user.Weight = req.Weight
-	user.Height = req.Height
+	user.Name = name
+	user.Weight = weight
+	user.Height = height
 	s.db.Save(&user)
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "success"})
+	return nil
 }
 
 // DeleteUser deletes firebase auth account and all user associated data from db
-func (s *UserServiceImpl) DeleteUser(ctx *gin.Context) {
-	// get id of user from middlewares
-	userID, ok := ctx.MustGet(middlewares.USER_ID).(string)
-	if !ok {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user id from request"})
-		return
+func (s *UserServiceImpl) DeleteUser(ctx *gin.Context, userID string) error {
+	// get user from database
+	var user models.User
+	res := s.db.First(&user, "id = ?", userID)
+	if res.Error != nil {
+		return res.Error
 	}
 
 	// delete account from firebase
 	err := s.fireAuth.DeleteUser(ctx, userID)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to delete user from firebase auth"})
-		return
-	}
-
-	// get user from database
-	var user models.User
-	res := s.db.First(&user, "id = ?", userID)
-	if res.Error != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Failed to retrieve user from database"})
-		return
+		return err
 	}
 
 	// delete user from database
 	res = s.db.Delete(&user)
 	if res.Error != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to delete user from database"})
-		return
+		return res.Error
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "Successfully deleted user data"})
+	return nil
 }
 
-func NewUserService(db *gorm.DB, fireAuth *auth.Client) *UserServiceImpl {
-	return &UserServiceImpl{
-		db:       db,
-		fireAuth: fireAuth,
-	}
+type CreateUserParams struct {
+	ID       string
+	Name     string
+	Email    string
+	Role     string
+	Photo    string
+	Verified bool
+	Provider string
+	Weight   float64
+	Height   float64
 }
