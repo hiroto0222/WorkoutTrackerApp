@@ -37,6 +37,11 @@ const UserSettingScreen = () => {
     }
   };
 
+  const isEdited =
+    name !== userState.user?.name ||
+    weight !== userState.user?.weight?.toString() ||
+    height !== userState.user?.height?.toString();
+
   return (
     <View style={styles.container}>
       <Div px={25}>
@@ -44,18 +49,20 @@ const UserSettingScreen = () => {
           <Text fontSize="6xl" style={globalStyles.textMedium}>
             Settings
           </Text>
-          <TouchableOpacity
-            style={{ padding: 10 }}
-            onPress={() => handleSaveSettings()}
-          >
-            <Text
-              color={UIConstants.COLORS.PRIMARY.CONTRAST}
-              style={globalStyles.textBold}
-              fontSize="xl"
+          {isEdited && (
+            <TouchableOpacity
+              style={{ padding: 10 }}
+              onPress={() => handleSaveSettings()}
             >
-              SAVE
-            </Text>
-          </TouchableOpacity>
+              <Text
+                color={UIConstants.COLORS.PRIMARY.CONTRAST}
+                style={globalStyles.textBold}
+                fontSize="xl"
+              >
+                SAVE
+              </Text>
+            </TouchableOpacity>
+          )}
         </Div>
         <SettingsItem
           title="Name"
