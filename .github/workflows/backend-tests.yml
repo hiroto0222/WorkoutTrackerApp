@@ -3,7 +3,7 @@ name: Run backend tests
 on:
   pull_request:
     branches: [main, develop]
-    paths: ["backend/**"]
+    paths: ["backend/**", ".github/workflows/backend-tests.yml"]
 
 jobs:
   test_go:
@@ -20,11 +20,13 @@ jobs:
       - name: Set up Go 1.20
         uses: actions/setup-go@v4
         with:
-          go-version: ^1.20
-        id: go
+          go-version: 1.20
 
       - name: Run Test
         run: go test -v -coverpkg ./... ./... -coverprofile=cover.out
+
+      - name: check dir
+        run: ls -la
 
       # 実行結果を出力
       - name: Run Octocov
