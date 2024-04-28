@@ -1,9 +1,9 @@
 package services
 
 import (
+	"context"
 	"time"
 
-	"firebase.google.com/go/auth"
 	"github.com/gin-gonic/gin"
 	"github.com/hiroto0222/workout-tracker-app/models"
 	"gorm.io/gorm"
@@ -16,12 +16,17 @@ type UserService interface {
 	DeleteUser(ctx *gin.Context, userID string) error
 }
 
-type UserServiceImpl struct {
-	db       *gorm.DB
-	fireAuth *auth.Client
+// declare AuthClient interface to abstract firebase SDK
+type AuthClient interface {
+	DeleteUser(context.Context, string) error
 }
 
-func NewUserService(db *gorm.DB, fireAuth *auth.Client) *UserServiceImpl {
+type UserServiceImpl struct {
+	db       *gorm.DB
+	fireAuth AuthClient
+}
+
+func NewUserService(db *gorm.DB, fireAuth AuthClient) *UserServiceImpl {
 	return &UserServiceImpl{
 		db:       db,
 		fireAuth: fireAuth,
