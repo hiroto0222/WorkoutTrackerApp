@@ -104,6 +104,7 @@ func (s *WorkoutServiceImpl) CreateWorkout(createWorkoutParams *CreateWorkoutPar
 	}
 
 	// Commit the transaction if all operations succeed
+	// TODO: test for transaction commit
 	if err := tx.Commit().Error; err != nil {
 		// Handle transaction commit error
 		tx.Rollback() // Rollback changes to ensure data integrity
