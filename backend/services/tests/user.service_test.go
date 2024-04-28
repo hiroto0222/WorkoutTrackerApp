@@ -1,17 +1,18 @@
 package service_tests
 
 import (
+	"net/http/httptest"
 	"testing"
-	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/gin-gonic/gin"
 	"github.com/hiroto0222/workout-tracker-app/mock"
-	"github.com/hiroto0222/workout-tracker-app/models"
 	"github.com/hiroto0222/workout-tracker-app/services"
-	"github.com/hiroto0222/workout-tracker-app/utils"
+	"github.com/hiroto0222/workout-tracker-app/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
+// TestCreateUser tests for successful insert of new user
 func TestCreateUser(t *testing.T) {
 	// initialize mock db
 	mockAuthClient := &mock.MockAuthClient{}
@@ -20,32 +21,7 @@ func TestCreateUser(t *testing.T) {
 
 	defer sqlDB.Close()
 
-	now := time.Now()
-	createUserParams := &services.CreateUserParams{
-		ID:       "123",
-		Name:     "Test Name",
-		Email:    "test@example.com",
-		Role:     "user",
-		Photo:    "photo.jpg",
-		Verified: true,
-		Provider: "email",
-		Weight:   70.5,
-		Height:   175.0,
-	}
-
-	user := models.User{
-		ID:        createUserParams.ID,
-		Name:      createUserParams.Name,
-		Email:     createUserParams.Email,
-		Role:      createUserParams.Role,
-		Photo:     createUserParams.Photo,
-		Verified:  createUserParams.Verified,
-		Provider:  createUserParams.Provider,
-		Weight:    createUserParams.Weight,
-		Height:    createUserParams.Height,
-		CreatedAt: now,
-		UpdatedAt: now,
-	}
+	user, createUserParams := testutils.CreateTestUser()
 
 	// populate users
 	users := mock.NewRows([]string{"id", "name", "email", "role", "photo", "verified", "provider", "weight", "height", "created_at", "updated_at"})
@@ -54,15 +30,109 @@ func TestCreateUser(t *testing.T) {
 	// expectations
 	mock.ExpectBegin()
 	mock.ExpectExec("INSERT INTO \"users\" (.+) VALUES (.+)").
-		WithArgs(createUserParams.ID, createUserParams.Name, createUserParams.Email,
-			createUserParams.Role, createUserParams.Photo, createUserParams.Verified,
-								createUserParams.Provider, createUserParams.Weight, createUserParams.Height, utils.AnyTime{}, utils.AnyTime{}).
+		WithArgs(user.ID, user.Name, user.Email, user.Role, user.Photo, user.Verified,
+								user.Provider, user.Weight, user.Height, testutils.AnyTime{}, testutils.AnyTime{}).
 		WillReturnResult(sqlmock.NewResult(1, 1)) // Simulate successful insertion of one row
 	mock.ExpectCommit()
 
 	// execute CreateUser
 	_, err := svc.CreateUser(createUserParams)
 
+	// assertion
+	assert.Nil(t, err)
+	assert.Nil(t, mock.ExpectationsWereMet())
+}
+
+// TestGetUser tests for successful query of getting a user
+func TestGetUser(t *testing.T) {
+	// initialize mock db
+	mockAuthClient := &mock.MockAuthClient{}
+	sqlDB, db, mock := mock.NewMockDB(t)
+	svc := services.NewUserService(db, mockAuthClient)
+
+	defer sqlDB.Close()
+
+	user, _ := testutils.CreateTestUser()
+
+	// populate users
+	users := mock.NewRows([]string{"id", "name", "email", "role", "photo", "verified", "provider", "weight", "height", "created_at", "updated_at"})
+	users.AddRow(user.ID, user.Name, user.Email, user.Role, user.Photo, user.Verified, user.Provider, user.Weight, user.Height, user.CreatedAt, user.UpdatedAt)
+
+	// expectations
+	expectedSQL := "SELECT (.+) FROM \"users\" WHERE id = (.+)"
+	mock.ExpectQuery(expectedSQL).WillReturnRows(users)
+
+	// execute GetUser
+	_, err := svc.GetUser(user.ID)
+
+	// assertion
+	assert.Nil(t, err)
+	assert.Nil(t, mock.ExpectationsWereMet())
+}
+
+// TestUpdateUser tests for successful query of updating a user
+func TestUpdateUser(t *testing.T) {
+	// initialize mock db
+	mockAuthClient := &mock.MockAuthClient{}
+	sqlDB, db, mock := mock.NewMockDB(t)
+	svc := services.NewUserService(db, mockAuthClient)
+
+	defer sqlDB.Close()
+
+	user, _ := testutils.CreateTestUser()
+
+	// populate users
+	users := mock.NewRows([]string{"id", "name", "email", "role", "photo", "verified", "provider", "weight", "height", "created_at", "updated_at"})
+	users.AddRow(user.ID, user.Name, user.Email, user.Role, user.Photo, user.Verified, user.Provider, user.Weight, user.Height, user.CreatedAt, user.UpdatedAt)
+
+	// expectations
+	selectSQL := "SELECT (.+) FROM \"users\" WHERE id = (.+)"
+	mock.ExpectQuery(selectSQL).WillReturnRows(users)
+
+	updateSQL := "UPDATE \"users\" SET .+"
+	mock.ExpectBegin()
+	mock.ExpectExec(updateSQL).WillReturnResult(sqlmock.NewResult(1, 1)) // Simulate one row affected by the update
+	mock.ExpectCommit()
+
+	// execute GetUser
+	err := svc.UpdateUser(user.ID, "Updated Name", 45, 160)
+
+	// assertion
+	assert.Nil(t, err)
+	assert.Nil(t, mock.ExpectationsWereMet())
+}
+
+// TestDeleteUser tests for successful query of deleting a user
+func TestDeleteUser(t *testing.T) {
+	// initialize mock db
+	mockAuthClient := &mock.MockAuthClient{}
+	sqlDB, db, mock := mock.NewMockDB(t)
+	svc := services.NewUserService(db, mockAuthClient)
+
+	// create mock context
+	mockCtx, _ := gin.CreateTestContext(httptest.NewRecorder())
+
+	defer sqlDB.Close()
+
+	user, _ := testutils.CreateTestUser()
+
+	// populate users
+	users := mock.NewRows([]string{"id", "name", "email", "role", "photo", "verified", "provider", "weight", "height", "created_at", "updated_at"})
+	users.AddRow(user.ID, user.Name, user.Email, user.Role, user.Photo, user.Verified, user.Provider, user.Weight, user.Height, user.CreatedAt, user.UpdatedAt)
+
+	// expectations
+	selectSQL := "SELECT (.+) FROM \"users\" WHERE id = (.+)"
+	mock.ExpectQuery(selectSQL).WillReturnRows(users)
+
+	deleteSQL := "DELETE FROM \"users\" WHERE \"users\".\"id\" = (.+)"
+	mock.ExpectBegin()
+	mock.ExpectExec(deleteSQL).WillReturnResult(sqlmock.NewResult(1, 1)) // Simulate one row affected by the update
+	mock.ExpectCommit()
+
+	// execute GetUser
+	err := svc.DeleteUser(mockCtx, user.ID)
+
+	// assertion
 	assert.Nil(t, err)
 	assert.Nil(t, mock.ExpectationsWereMet())
 }

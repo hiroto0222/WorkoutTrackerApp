@@ -17,6 +17,7 @@ type exerciseData struct {
 	Exercises []models.Exercise `json:"exercises"`
 }
 
+// TestGetExerices tests for successful query of getting all exerices
 func TestGetExercises(t *testing.T) {
 	// initialize mock db
 	sqlDB, db, mock := mock.NewMockDB(t)
