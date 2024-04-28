@@ -1,0 +1,31 @@
+name: Run backend tests
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths: ["backend/**"]
+
+jobs:
+  test_go:
+    name: Test backend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v4
+
+      - name: Set up Go 1.20
+        uses: actions/setup-go@v4
+        with:
+          go-version: ^1.20
+        id: go
+
+      - name: Run Test
+        run: go test -v -coverpkg ./... ./... -coverprofile=cover.out
+
+      # 実行結果を出力
+      - name: Run Octocov
+        uses: k1LoW/octocov-action@v0
