@@ -11,7 +11,7 @@ encode-service-account-key-to-base64:
 	base64 -i ./backend/config/service-account-key.json
 
 tests:
-	cd backend && go test -v -coverpkg ./... ./... -coverprofile=cover.out
+	docker-compose exec backend go test -v -coverpkg ./... ./... -coverprofile=cover.out
 
 see-coverage:
 	cd backend && go tool cover -html=cover.out -o cover.html && open cover.html
