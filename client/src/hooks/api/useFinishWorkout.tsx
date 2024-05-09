@@ -123,12 +123,14 @@ const useFinishWorkout = () => {
     }
 
     try {
+      const accessToken = await authState.userCreds?.getIdToken();
+
       const res: AxiosResponse<ICreateWorkoutResponse> = await axios.post(
         API_ENDPOINTS.WORKOUTS.CREATE,
         data,
         {
           headers: {
-            Authorization: "Bearer " + authState.accessToken,
+            Authorization: "Bearer " + accessToken,
           },
         }
       );
