@@ -1,14 +1,15 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { User } from "firebase/auth";
 
 export interface AuthState {
   isAuthenticating?: boolean;
-  accessToken?: string;
   userId?: string;
+  userCreds?: User;
 }
 
 const initialState: AuthState = {
   isAuthenticating: false,
-  accessToken: undefined,
+  userCreds: undefined,
   userId: undefined,
 };
 
@@ -18,7 +19,7 @@ export const authSlice = createSlice({
   reducers: {
     setAuth: (state, action: PayloadAction<AuthState>) => {
       state.isAuthenticating = false;
-      state.accessToken = action.payload.accessToken;
+      state.userCreds = action.payload.userCreds;
       state.userId = action.payload.userId;
     },
     setIsAuthenticating: (state, action: PayloadAction<boolean>) => {

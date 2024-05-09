@@ -18,9 +18,11 @@ const useUpdateUser = () => {
         height: parseInt(height),
       };
 
+      const accessToken = await authState.userCreds?.getIdToken();
+
       await axios.put(API_ENDPOINTS.USERS.PUT, data, {
         headers: {
-          Authorization: "Bearer " + authState.accessToken,
+          Authorization: "Bearer " + accessToken,
         },
       });
 

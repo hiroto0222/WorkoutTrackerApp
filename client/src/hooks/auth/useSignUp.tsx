@@ -48,7 +48,7 @@ const useSignUp = () => {
       dispatch(
         setAuth({
           userId: user.uid,
-          accessToken,
+          userCreds: user,
         })
       );
     } catch (err) {

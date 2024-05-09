@@ -16,11 +16,13 @@ const useGetUser = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
+        const accessToken = await authState.userCreds?.getIdToken();
+
         const resUser: AxiosResponse<IUser> = await axios.get(
           API_ENDPOINTS.USERS.GET,
           {
             headers: {
-              Authorization: "Bearer " + authState.accessToken,
+              Authorization: "Bearer " + accessToken,
             },
           }
         );

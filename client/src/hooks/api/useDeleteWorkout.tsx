@@ -17,11 +17,13 @@ const useDeleteWorkout = () => {
 
   const deleteWorkout = async (workoutId: string) => {
     try {
+      const accessToken = await authState.userCreds?.getIdToken();
+
       const res: AxiosResponse = await axios.delete(
         API_ENDPOINTS.WORKOUTS.DELETE + workoutId,
         {
           headers: {
-            Authorization: "Bearer " + authState.accessToken,
+            Authorization: "Bearer " + accessToken,
           },
         }
       );

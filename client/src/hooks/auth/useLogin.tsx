@@ -15,11 +15,10 @@ const useLogin = () => {
 
       const userCreds = await signInWithEmailAndPassword(auth, email, password);
       const user = userCreds.user;
-      const accessToken = await user.getIdToken();
       dispatch(
         setAuth({
           userId: user.uid,
-          accessToken,
+          userCreds: user,
         })
       );
     } catch (err) {
