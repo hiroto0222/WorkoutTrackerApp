@@ -12,11 +12,13 @@ const useDeleteUser = () => {
 
   const deleteUser = async () => {
     try {
+      const accessToken = await authState.userCreds?.getIdToken();
+
       const res: AxiosResponse = await axios.delete(
         API_ENDPOINTS.USERS.DELETE,
         {
           headers: {
-            Authorization: "Bearer " + authState.accessToken,
+            Authorization: "Bearer " + accessToken,
           },
         }
       );

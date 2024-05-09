@@ -14,7 +14,7 @@ const useAuth = () => {
         const accessToken = await user.getIdToken();
         dispath(
           setAuth({
-            accessToken,
+            userCreds: user,
             userId: user.uid,
           })
         );

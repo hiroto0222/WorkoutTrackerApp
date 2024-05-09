@@ -16,12 +16,14 @@ const useGetWorkoutsData = () => {
   useEffect(() => {
     const getWorkouts = async () => {
       try {
+        const accessToken = await authState.userCreds?.getIdToken();
+
         const resWorkouts: AxiosResponse<IWorkoutDataResponse> =
           await axios.get(
             API_ENDPOINTS.WORKOUTS.GET + authState.userId + `?offset=${0}`,
             {
               headers: {
-                Authorization: "Bearer " + authState.accessToken,
+                Authorization: "Bearer " + accessToken,
               },
             }
           );
