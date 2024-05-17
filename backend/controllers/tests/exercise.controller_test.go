@@ -7,8 +7,6 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"os"
-	"path/filepath"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -19,28 +17,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-type exerciseData struct {
-	Exercises []models.Exercise `json:"exercises"`
-}
-
 func TestGetExercises(t *testing.T) {
-	// get exercise fixtures
-	path, err := os.Getwd()
-	if err != nil {
-		t.Fatal(err)
-	}
-	dir := filepath.Join(path, "..", "..", "/fixtures/exercises.json")
-
-	data, err := os.ReadFile(dir)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var exerciseData exerciseData
-	err = json.Unmarshal([]byte(data), &exerciseData)
-	if err != nil {
-		t.Fatal(err)
-	}
+	exerciseData := testutils.CreateTestExercises(t)
 
 	testCases := []struct {
 		name            string
@@ -52,7 +30,7 @@ func TestGetExercises(t *testing.T) {
 			setupMocks: func(sqlMock sqlmock.Sqlmock) {
 				// mock rows
 				exercises := sqlmock.NewRows([]string{"id", "name", "log_type"})
-				for _, exercise := range exerciseData.Exercises {
+				for _, exercise := range exerciseData {
 					exercises.AddRow(exercise.ID, exercise.Name, exercise.LogType)
 				}
 				// expectations
@@ -61,7 +39,7 @@ func TestGetExercises(t *testing.T) {
 			},
 			checkAssertions: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
-				requireBodyMatchExercises(t, recorder.Body, exerciseData.Exercises)
+				requireBodyMatchExercises(t, recorder.Body, exerciseData)
 			},
 		},
 		{
