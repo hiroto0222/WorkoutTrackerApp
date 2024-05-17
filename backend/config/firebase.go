@@ -12,11 +12,34 @@ import (
 	"google.golang.org/api/option"
 )
 
+// interface for Firebase Authclient
+type FirebaseAuthClient struct {
+	authClient *auth.Client
+}
+
+// DeleteUser deletes the user by the given UID.
+func (c *FirebaseAuthClient) DeleteUser(ctx context.Context, uid string) error {
+	return c.authClient.DeleteUser(ctx, uid)
+}
+
+// VerifyIDToken verifies the signature and payload of the provided ID token.
+func (c *FirebaseAuthClient) VerifyIDToken(ctx context.Context, idToken string) (*auth.Token, error) {
+	return c.authClient.VerifyIDToken(ctx, idToken)
+}
+
+// Abstract interface for Firebase Authclient for server
+type AuthClient interface {
+	// DeleteUser deletes the user by the given UID.
+	DeleteUser(ctx context.Context, uid string) error
+	// VerifyIDToken verifies the signature and payload of the provided ID token.
+	VerifyIDToken(ctx context.Context, idToken string) (*auth.Token, error)
+}
+
 type serviceAccountKey struct {
 	ProjectID string `json:"project_id"`
 }
 
-func InitAuth(config Config) (*auth.Client, error) {
+func InitAuth(config Config) (*FirebaseAuthClient, error) {
 	// decode base64 json
 	bytes, err := b64.StdEncoding.DecodeString(config.FirebaseServiceAcccountKey)
 	if err != nil {
@@ -45,5 +68,5 @@ func InitAuth(config Config) (*auth.Client, error) {
 
 	log.Println("Successfully initialized firebase auth client:", serviceAccountKey.ProjectID)
 
-	return authClient, nil
+	return &FirebaseAuthClient{authClient: authClient}, nil
 }

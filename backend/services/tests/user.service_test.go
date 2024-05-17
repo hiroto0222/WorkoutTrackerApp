@@ -7,7 +7,7 @@ import (
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/gin-gonic/gin"
-	"github.com/hiroto0222/workout-tracker-app/mock"
+	my_mocks "github.com/hiroto0222/workout-tracker-app/mock"
 	"github.com/hiroto0222/workout-tracker-app/models"
 	"github.com/hiroto0222/workout-tracker-app/services"
 	"github.com/hiroto0222/workout-tracker-app/testutils"
@@ -69,8 +69,8 @@ func TestCreateUser(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// initialize mock db
-			mockAuthClient := &mock.MockAuthClient{}
-			sqlDB, db, sqlMock := mock.NewMockDB(t)
+			mockAuthClient := &my_mocks.MockAuthClient{}
+			sqlDB, db, sqlMock := my_mocks.NewMockDB(t)
 			svc := services.NewUserService(db, mockAuthClient)
 
 			defer sqlDB.Close()
@@ -137,8 +137,8 @@ func TestGetUser(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// initialize mock db
-			mockAuthClient := &mock.MockAuthClient{}
-			sqlDB, db, sqlMock := mock.NewMockDB(t)
+			mockAuthClient := &my_mocks.MockAuthClient{}
+			sqlDB, db, sqlMock := my_mocks.NewMockDB(t)
 			svc := services.NewUserService(db, mockAuthClient)
 
 			defer sqlDB.Close()
@@ -222,8 +222,8 @@ func TestUpdateUser(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// initialize mock db
-			mockAuthClient := &mock.MockAuthClient{}
-			sqlDB, db, sqlMock := mock.NewMockDB(t)
+			mockAuthClient := &my_mocks.MockAuthClient{}
+			sqlDB, db, sqlMock := my_mocks.NewMockDB(t)
 			svc := services.NewUserService(db, mockAuthClient)
 
 			defer sqlDB.Close()
@@ -327,15 +327,16 @@ func TestDeleteUser(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			// initialize mock db
-			mockAuthClient := &mock.MockAuthClient{
-				DeleteUserError: tc.authClientDeleteUserError,
-			}
-			sqlDB, db, sqlMock := mock.NewMockDB(t)
-			svc := services.NewUserService(db, mockAuthClient)
-
 			// create mock context
 			mockCtx, _ := gin.CreateTestContext(httptest.NewRecorder())
+
+			// initialize mock auth client
+			mockAuthClient := &my_mocks.MockAuthClient{}
+			mockAuthClient.On("DeleteUser", mockCtx, user.ID).Return(tc.authClientDeleteUserError)
+
+			// initialize mock db
+			sqlDB, db, sqlMock := my_mocks.NewMockDB(t)
+			svc := services.NewUserService(db, mockAuthClient)
 
 			defer sqlDB.Close()
 

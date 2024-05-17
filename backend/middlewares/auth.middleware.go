@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strings"
 
-	"firebase.google.com/go/auth"
 	"github.com/gin-gonic/gin"
+	"github.com/hiroto0222/workout-tracker-app/config"
 )
 
 const (
@@ -13,7 +13,7 @@ const (
 	authorizationHeader = "Authorization"
 )
 
-func AuthMiddleware(client *auth.Client) gin.HandlerFunc {
+func AuthMiddleware(client config.AuthClient) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var token string
 		cookie, err := ctx.Cookie("token")
