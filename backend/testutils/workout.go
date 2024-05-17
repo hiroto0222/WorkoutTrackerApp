@@ -1,11 +1,32 @@
 package testutils
 
 import (
+	"time"
+
 	"github.com/hiroto0222/workout-tracker-app/models"
 	"github.com/hiroto0222/workout-tracker-app/services"
 )
 
-func CreateTestWorkout(createWorkoutParams *services.CreateWorkoutParams) (models.Workout, []models.WorkoutExercise, []models.Log) {
+func CreateTestWorkout(userID string) (models.Workout, []models.WorkoutExercise, []models.Log, *services.CreateWorkoutParams) {
+	// init CreateWorkoutParams
+	now := time.Now()
+	createWorkoutParams := &services.CreateWorkoutParams{
+		UserID:      userID,
+		StartedAt:   now,
+		EndedAt:     now.Add(time.Hour), // Assuming workout duration is one hour
+		ExerciseIds: []int{1, 2},        // Assuming two exercises
+		Logs: map[int][]services.Log{
+			1: {
+				{Weight: 50.5, Reps: 10, Time: 30}, // Sample log for exercise ID 1
+				{Weight: 60, Reps: 12, Time: 35},   // Another sample log for exercise ID 1
+			},
+			2: {
+				{Weight: 40.5, Reps: 8, Time: 25}, // Sample log for exercise ID 2
+				{Weight: 45, Reps: 10, Time: 30},  // Another sample log for exercise ID 2
+			},
+		},
+	}
+
 	workout := models.Workout{
 		UserID:    createWorkoutParams.UserID,
 		StartedAt: createWorkoutParams.StartedAt,
@@ -39,5 +60,5 @@ func CreateTestWorkout(createWorkoutParams *services.CreateWorkoutParams) (model
 		}
 	}
 
-	return workout, workoutExercises, logs
+	return workout, workoutExercises, logs, createWorkoutParams
 }

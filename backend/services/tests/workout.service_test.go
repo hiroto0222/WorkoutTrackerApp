@@ -2,7 +2,6 @@ package service_tests
 
 import (
 	"testing"
-	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/hiroto0222/workout-tracker-app/mock"
@@ -18,27 +17,9 @@ func TestCreateWorkout(t *testing.T) {
 
 	defer sqlDB.Close()
 
-	// Define test data
-	now := time.Now()
-	createWorkoutParams := &services.CreateWorkoutParams{
-		UserID:      "123",
-		StartedAt:   now,
-		EndedAt:     now.Add(time.Hour), // Assuming workout duration is one hour
-		ExerciseIds: []int{1, 2},        // Assuming two exercises
-		Logs: map[int][]services.Log{
-			1: {
-				{Weight: 50.5, Reps: 10, Time: 30}, // Sample log for exercise ID 1
-				{Weight: 60, Reps: 12, Time: 35},   // Another sample log for exercise ID 1
-			},
-			2: {
-				{Weight: 40.5, Reps: 8, Time: 25}, // Sample log for exercise ID 2
-				{Weight: 45, Reps: 10, Time: 30},  // Another sample log for exercise ID 2
-			},
-		},
-	}
-
 	// create test workout
-	workout, workoutExercises, logs := testutils.CreateTestWorkout(createWorkoutParams)
+	userID := "123"
+	workout, workoutExercises, logs, createWorkoutParams := testutils.CreateTestWorkout(userID)
 
 	// define rows
 	workoutRows := mock.NewRows([]string{"id", "user_id", "started_at", "ended_at", "updated_at"})
@@ -97,27 +78,9 @@ func TestGetWorkouts(t *testing.T) {
 
 	defer sqlDB.Close()
 
-	// Define test data
-	now := time.Now()
-	createWorkoutParams := &services.CreateWorkoutParams{
-		UserID:      "123",
-		StartedAt:   now,
-		EndedAt:     now.Add(time.Hour), // Assuming workout duration is one hour
-		ExerciseIds: []int{1, 2},        // Assuming two exercises
-		Logs: map[int][]services.Log{
-			1: {
-				{Weight: 50.5, Reps: 10, Time: 30}, // Sample log for exercise ID 1
-				{Weight: 60, Reps: 12, Time: 35},   // Another sample log for exercise ID 1
-			},
-			2: {
-				{Weight: 40.5, Reps: 8, Time: 25}, // Sample log for exercise ID 2
-				{Weight: 45, Reps: 10, Time: 30},  // Another sample log for exercise ID 2
-			},
-		},
-	}
-
 	// create test workout
-	workout, workoutExercises, logs := testutils.CreateTestWorkout(createWorkoutParams)
+	userID := "123"
+	workout, workoutExercises, logs, createWorkoutParams := testutils.CreateTestWorkout(userID)
 
 	// define rows
 	workoutRows := mock.NewRows([]string{"id", "user_id", "started_at", "ended_at", "updated_at"})
@@ -155,27 +118,9 @@ func TestDeleteWorkout(t *testing.T) {
 
 	defer sqlDB.Close()
 
-	// Define test data
-	now := time.Now()
-	createWorkoutParams := &services.CreateWorkoutParams{
-		UserID:      "123",
-		StartedAt:   now,
-		EndedAt:     now.Add(time.Hour), // Assuming workout duration is one hour
-		ExerciseIds: []int{1, 2},        // Assuming two exercises
-		Logs: map[int][]services.Log{
-			1: {
-				{Weight: 50.5, Reps: 10, Time: 30}, // Sample log for exercise ID 1
-				{Weight: 60, Reps: 12, Time: 35},   // Another sample log for exercise ID 1
-			},
-			2: {
-				{Weight: 40.5, Reps: 8, Time: 25}, // Sample log for exercise ID 2
-				{Weight: 45, Reps: 10, Time: 30},  // Another sample log for exercise ID 2
-			},
-		},
-	}
-
 	// create test workout
-	workout, workoutExercises, logs := testutils.CreateTestWorkout(createWorkoutParams)
+	userID := "123"
+	workout, workoutExercises, logs, _ := testutils.CreateTestWorkout(userID)
 
 	// define rows
 	workoutRows := mock.NewRows([]string{"id", "user_id", "started_at", "ended_at", "updated_at"})
