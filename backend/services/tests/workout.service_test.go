@@ -147,3 +147,63 @@ func TestGetWorkouts(t *testing.T) {
 	assert.NotEmpty(t, resp.Workouts)
 	assert.NotEmpty(t, resp.WorkoutLogs)
 }
+
+func TestDeleteWorkout(t *testing.T) {
+	// Initialize mock db
+	sqlDB, db, mock := mock.NewMockDB(t)
+	svc := services.NewWorkoutService(db)
+
+	defer sqlDB.Close()
+
+	// Define test data
+	now := time.Now()
+	createWorkoutParams := &services.CreateWorkoutParams{
+		UserID:      "123",
+		StartedAt:   now,
+		EndedAt:     now.Add(time.Hour), // Assuming workout duration is one hour
+		ExerciseIds: []int{1, 2},        // Assuming two exercises
+		Logs: map[int][]services.Log{
+			1: {
+				{Weight: 50, Reps: 10, Time: 30}, // Sample log for exercise ID 1
+				{Weight: 60, Reps: 12, Time: 35}, // Another sample log for exercise ID 1
+			},
+			2: {
+				{Weight: 40, Reps: 8, Time: 25},  // Sample log for exercise ID 2
+				{Weight: 45, Reps: 10, Time: 30}, // Another sample log for exercise ID 2
+			},
+		},
+	}
+
+	// create test workout
+	workout, workoutExercises, logs := testutils.CreateTestWorkout(createWorkoutParams)
+
+	// define rows
+	workoutRows := mock.NewRows([]string{"id", "user_id", "started_at", "ended_at", "updated_at"})
+	workoutExerciseRows := mock.NewRows([]string{"id", "workout_id", "exercise_id"})
+	logRows := mock.NewRows([]string{"id", "workout_exercise_id", "set_number", "weight", "reps", "time"})
+
+	// add rows
+	workoutRows.AddRow(workout.ID, workout.UserID, workout.StartedAt, workout.EndedAt, workout.StartedAt)
+	for _, workoutExercise := range workoutExercises {
+		workoutExerciseRows.AddRow(workoutExercise.ID, workoutExercise.WorkoutID, workoutExercise.ExerciseID)
+	}
+	for _, log := range logs {
+		logRows.AddRow(log.ID, log.WorkoutExerciseID, log.SetNumber, log.Weight, log.Reps, log.Time)
+	}
+
+	// expectations
+	selectSQL := "SELECT (.+) FROM \"workouts\" WHERE id = (.+)"
+	mock.ExpectQuery(selectSQL).WillReturnRows(workoutRows)
+
+	deleteSQL := "DELETE FROM \"workouts\" WHERE \"workouts\".\"id\" = (.+)"
+	mock.ExpectBegin()
+	mock.ExpectExec(deleteSQL).WillReturnResult(sqlmock.NewResult(1, 1)) // Simulate one row affected by delete
+	mock.ExpectCommit()
+
+	// execute DeleteWorkout
+	err := svc.DeleteWorkout(workout.ID.String(), workout.UserID)
+
+	// assertion
+	assert.Nil(t, err)
+	assert.Nil(t, mock.ExpectationsWereMet())
+}
