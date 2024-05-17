@@ -6,8 +6,10 @@ import (
 
 // Mock for Client Firebase Auth Service
 // Matches abstract interface delcared by user.service
-type MockAuthClient struct{}
+type MockAuthClient struct {
+	DeleteUserError error
+}
 
 func (c *MockAuthClient) DeleteUser(ctx context.Context, uid string) error {
-	return nil
+	return c.DeleteUserError
 }

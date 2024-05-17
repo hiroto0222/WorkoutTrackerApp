@@ -82,7 +82,10 @@ func (s *UserServiceImpl) UpdateUser(userID, name string, weight, height float64
 	user.Name = name
 	user.Weight = weight
 	user.Height = height
-	s.db.Save(&user)
+	res = s.db.Save(&user)
+	if res.Error != nil {
+		return res.Error
+	}
 
 	return nil
 }

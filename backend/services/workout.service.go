@@ -50,6 +50,13 @@ func (s *WorkoutServiceImpl) CreateWorkout(createWorkoutParams *CreateWorkoutPar
 	// start database transaction
 	tx := s.db.Begin()
 
+	// ensure transaction rollback on any failure
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
 	// workout log data
 	logsRes := []logResponse{}
 
@@ -60,9 +67,10 @@ func (s *WorkoutServiceImpl) CreateWorkout(createWorkoutParams *CreateWorkoutPar
 		EndedAt:   createWorkoutParams.EndedAt,
 		UpdatedAt: createWorkoutParams.StartedAt,
 	}
-	res := s.db.Create(&workout)
+	res := tx.Create(&workout)
 	if res.Error != nil {
 		log.Printf("failed to create workout: %v", res.Error)
+		tx.Rollback()
 		return nil, res.Error
 	}
 
@@ -72,9 +80,10 @@ func (s *WorkoutServiceImpl) CreateWorkout(createWorkoutParams *CreateWorkoutPar
 			WorkoutID:  workout.ID,
 			ExerciseID: exerciseId,
 		}
-		res := s.db.Create(&workoutExercise)
+		res := tx.Create(&workoutExercise)
 		if res.Error != nil {
 			log.Printf("failed to create workout_exercise: %v", res.Error)
+			tx.Rollback()
 			return nil, res.Error
 		}
 
@@ -88,7 +97,7 @@ func (s *WorkoutServiceImpl) CreateWorkout(createWorkoutParams *CreateWorkoutPar
 					Reps:              logReq.Reps,
 					Time:              logReq.Time,
 				}
-				res := s.db.Create(&newLog)
+				res := tx.Create(&newLog)
 				logsRes = append(logsRes, logResponse{
 					ExerciseId: exerciseId,
 					Weight:     logReq.Weight,
@@ -97,6 +106,7 @@ func (s *WorkoutServiceImpl) CreateWorkout(createWorkoutParams *CreateWorkoutPar
 				})
 				if res.Error != nil {
 					log.Printf("failed to create exercise log: %v", res.Error)
+					tx.Rollback()
 					return nil, res.Error
 				}
 			}
@@ -104,12 +114,11 @@ func (s *WorkoutServiceImpl) CreateWorkout(createWorkoutParams *CreateWorkoutPar
 	}
 
 	// Commit the transaction if all operations succeed
-	// TODO: test for transaction commit
 	if err := tx.Commit().Error; err != nil {
 		// Handle transaction commit error
 		tx.Rollback() // Rollback changes to ensure data integrity
 		log.Println("failed to commit transaction")
-		return nil, res.Error
+		return nil, err
 	}
 
 	data := CreateWorkoutResponse{
@@ -155,7 +164,7 @@ func (s *WorkoutServiceImpl) GetWorkouts(userID string) (*GetWorkoutsResponse, e
 	`, userID).Rows()
 
 	if err != nil {
-		log.Panic("Failed to run sql query")
+		log.Println("Failed to run sql query")
 		return nil, err
 	}
 
@@ -176,7 +185,7 @@ func (s *WorkoutServiceImpl) GetWorkouts(userID string) (*GetWorkoutsResponse, e
 		// scan sql row
 		err := rows.Scan(&workoutId, &startedAt, &EndedAt, &exerciseId, &logWeight, &logReps, &logTime)
 		if err != nil {
-			log.Panic("Failed to scan sql row")
+			log.Println("Failed to scan sql row")
 			return nil, err
 		}
 

@@ -1,209 +1,355 @@
 package service_tests
 
 import (
+	"errors"
 	"testing"
-	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/hiroto0222/workout-tracker-app/mock"
 	"github.com/hiroto0222/workout-tracker-app/services"
 	"github.com/hiroto0222/workout-tracker-app/testutils"
 	"github.com/stretchr/testify/assert"
+	"gorm.io/gorm"
 )
 
 func TestCreateWorkout(t *testing.T) {
-	// Initialize mock db
-	sqlDB, db, mock := mock.NewMockDB(t)
-	svc := services.NewWorkoutService(db)
+	// create test workout
+	userID := "123"
+	workout, workoutExercises, logs, createWorkoutParams := testutils.CreateTestWorkout(userID)
 
-	defer sqlDB.Close()
-
-	// Define test data
-	now := time.Now()
-	createWorkoutParams := &services.CreateWorkoutParams{
-		UserID:      "123",
-		StartedAt:   now,
-		EndedAt:     now.Add(time.Hour), // Assuming workout duration is one hour
-		ExerciseIds: []int{1, 2},        // Assuming two exercises
-		Logs: map[int][]services.Log{
-			1: {
-				{Weight: 50.5, Reps: 10, Time: 30}, // Sample log for exercise ID 1
-				{Weight: 60, Reps: 12, Time: 35},   // Another sample log for exercise ID 1
+	testCases := []struct {
+		name            string
+		setupMocks      func(sqlMock sqlmock.Sqlmock)
+		checkAssertions func(t *testing.T, sqlMock sqlmock.Sqlmock, err error, resp *services.CreateWorkoutResponse)
+	}{
+		{
+			name: "Success",
+			setupMocks: func(sqlMock sqlmock.Sqlmock) {
+				// create mock sql rows
+				workoutRows, workoutExerciseRows, logRows := testutils.CreateTestWorkoutSQLRows(sqlMock, workout, workoutExercises, logs)
+				// start transaction
+				sqlMock.ExpectBegin()
+				// expect insert into workouts
+				sqlMock.ExpectQuery("INSERT INTO \"workouts\" (.+) VALUES (.+)").WillReturnRows(workoutRows)
+				// expect insert into workout_exercises
+				sqlMock.ExpectQuery("INSERT INTO \"workout_exercises\" (.+) VALUES (.+)").WillReturnRows(workoutExerciseRows)
+				// expect insert into logs
+				sqlMock.ExpectQuery("INSERT INTO \"logs\" (.+) VALUES (.+)").WillReturnRows(logRows)
+				sqlMock.ExpectQuery("INSERT INTO \"logs\" (.+) VALUES (.+)").WillReturnRows(logRows)
+				// expect transaction commit
+				sqlMock.ExpectCommit()
 			},
-			2: {
-				{Weight: 40.5, Reps: 8, Time: 25}, // Sample log for exercise ID 2
-				{Weight: 45, Reps: 10, Time: 30},  // Another sample log for exercise ID 2
+			checkAssertions: func(t *testing.T, sqlMock sqlmock.Sqlmock, err error, resp *services.CreateWorkoutResponse) {
+				assert.Nil(t, err)
+				assert.NotNil(t, resp)
+				assert.Equal(t, createWorkoutParams.UserID, resp.Workout.UserID)
+				assert.Equal(t, createWorkoutParams.StartedAt, resp.Workout.StartedAt)
+				assert.Equal(t, createWorkoutParams.EndedAt, resp.Workout.EndedAt)
+				assert.Len(t, resp.Logs, 2)
+				assert.Nil(t, sqlMock.ExpectationsWereMet())
+			},
+		},
+		{
+			name: "FailureToCreateWorkout",
+			setupMocks: func(sqlMock sqlmock.Sqlmock) {
+				// start transaction
+				sqlMock.ExpectBegin()
+				// expected error
+				sqlMock.ExpectQuery("INSERT INTO \"workouts\" (.+) VALUES (.+)").WillReturnError(errors.New("failed to create workout"))
+				// expect transaction rollback
+				sqlMock.ExpectRollback()
+			},
+			checkAssertions: func(t *testing.T, sqlMock sqlmock.Sqlmock, err error, resp *services.CreateWorkoutResponse) {
+				assert.NotNil(t, err)
+				assert.Nil(t, sqlMock.ExpectationsWereMet())
+			},
+		},
+		{
+			name: "FailureToCreateWorkoutExercise",
+			setupMocks: func(sqlMock sqlmock.Sqlmock) {
+				// create mock sql rows
+				workoutRows, _, _ := testutils.CreateTestWorkoutSQLRows(sqlMock, workout, workoutExercises, logs)
+				// start transaction
+				sqlMock.ExpectBegin()
+				// expect insert into workouts
+				sqlMock.ExpectQuery("INSERT INTO \"workouts\" (.+) VALUES (.+)").WillReturnRows(workoutRows)
+				// expected error
+				sqlMock.ExpectQuery("INSERT INTO \"workout_exercises\" (.+) VALUES (.+)").WillReturnError(errors.New("failed to create workout_exercise"))
+				// expect transaction rollback
+				sqlMock.ExpectRollback()
+			},
+			checkAssertions: func(t *testing.T, sqlMock sqlmock.Sqlmock, err error, resp *services.CreateWorkoutResponse) {
+				assert.NotNil(t, err)
+				assert.Nil(t, sqlMock.ExpectationsWereMet())
+			},
+		},
+		{
+			name: "FailureToCreateLog",
+			setupMocks: func(sqlMock sqlmock.Sqlmock) {
+				// create mock sql rows
+				workoutRows, workoutExerciseRows, _ := testutils.CreateTestWorkoutSQLRows(sqlMock, workout, workoutExercises, logs)
+				// start transaction
+				sqlMock.ExpectBegin()
+				// expect insert into workouts
+				sqlMock.ExpectQuery("INSERT INTO \"workouts\" (.+) VALUES (.+)").WillReturnRows(workoutRows)
+				// expect insert into workout_exercises
+				sqlMock.ExpectQuery("INSERT INTO \"workout_exercises\" (.+) VALUES (.+)").WillReturnRows(workoutExerciseRows)
+				// expect error
+				sqlMock.ExpectQuery("INSERT INTO \"logs\" (.+) VALUES (.+)").WillReturnError(errors.New("failed to create log"))
+				// expect transaction rollback
+				sqlMock.ExpectRollback()
+			},
+			checkAssertions: func(t *testing.T, sqlMock sqlmock.Sqlmock, err error, resp *services.CreateWorkoutResponse) {
+				assert.NotNil(t, err)
+				assert.Nil(t, sqlMock.ExpectationsWereMet())
+			},
+		},
+		{
+			name: "FailureToCommitTransaction",
+			setupMocks: func(sqlMock sqlmock.Sqlmock) {
+				// create mock sql rows
+				workoutRows, workoutExerciseRows, logRows := testutils.CreateTestWorkoutSQLRows(sqlMock, workout, workoutExercises, logs)
+				// start transaction
+				sqlMock.ExpectBegin()
+				// expect insert into workouts
+				sqlMock.ExpectQuery("INSERT INTO \"workouts\" (.+) VALUES (.+)").WillReturnRows(workoutRows)
+				// expect insert into workout_exercises
+				sqlMock.ExpectQuery("INSERT INTO \"workout_exercises\" (.+) VALUES (.+)").WillReturnRows(workoutExerciseRows)
+				// expect insert into logs
+				sqlMock.ExpectQuery("INSERT INTO \"logs\" (.+) VALUES (.+)").WillReturnRows(logRows)
+				sqlMock.ExpectQuery("INSERT INTO \"logs\" (.+) VALUES (.+)").WillReturnRows(logRows)
+				// exepect transaction commit error
+				sqlMock.ExpectCommit().WillReturnError(errors.New("failed to commit transaction"))
+			},
+			checkAssertions: func(t *testing.T, sqlMock sqlmock.Sqlmock, err error, resp *services.CreateWorkoutResponse) {
+				assert.NotNil(t, err)
+				assert.Nil(t, sqlMock.ExpectationsWereMet())
 			},
 		},
 	}
 
-	// create test workout
-	workout, workoutExercises, logs := testutils.CreateTestWorkout(createWorkoutParams)
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			// Initialize mock db
+			sqlDB, db, sqlMock := mock.NewMockDB(t)
+			svc := services.NewWorkoutService(db)
 
-	// define rows
-	workoutRows := mock.NewRows([]string{"id", "user_id", "started_at", "ended_at", "updated_at"})
-	workoutExerciseRows := mock.NewRows([]string{"id", "workout_id", "exercise_id"})
-	logRows := mock.NewRows([]string{"id", "workout_exercise_id", "set_number", "weight", "reps", "time"})
+			defer sqlDB.Close()
 
-	// add rows
-	workoutRows.AddRow(workout.ID, workout.UserID, workout.StartedAt, workout.EndedAt, workout.StartedAt)
-	for _, workoutExercise := range workoutExercises {
-		workoutExerciseRows.AddRow(workoutExercise.ID, workoutExercise.WorkoutID, workoutExercise.ExerciseID)
+			// setup mocks
+			tc.setupMocks(sqlMock)
+
+			// execute CreateWorkout
+			resp, err := svc.CreateWorkout(createWorkoutParams)
+
+			// check assertions
+			tc.checkAssertions(t, sqlMock, err, resp)
+		})
 	}
-	for _, log := range logs {
-		logRows.AddRow(log.ID, log.WorkoutExerciseID, log.SetNumber, log.Weight, log.Reps, log.Time)
-	}
-
-	// start expectations
-	mock.ExpectBegin()
-
-	// expect insert into workouts
-	mock.ExpectBegin()
-	mock.ExpectQuery("INSERT INTO \"workouts\" (.+) VALUES (.+)").WillReturnRows(workoutRows)
-	mock.ExpectCommit()
-
-	// expect insert into workout_exercises
-	for i := 1; i <= 2; i++ {
-		mock.ExpectBegin()
-		mock.ExpectQuery("INSERT INTO \"workout_exercises\" (.+) VALUES (.+)").WillReturnRows(workoutExerciseRows)
-		mock.ExpectCommit()
-		for j := 1; j <= 2; j++ {
-			mock.ExpectBegin()
-			mock.ExpectQuery("INSERT INTO \"logs\" (.+) VALUES (.+)").WillReturnRows(logRows)
-			mock.ExpectCommit()
-		}
-	}
-	mock.ExpectCommit()
-
-	// Execute the method
-	resp, err := svc.CreateWorkout(createWorkoutParams)
-
-	// Assertions
-	assert.Nil(t, err)
-	assert.NotNil(t, resp)
-	assert.Equal(t, createWorkoutParams.UserID, resp.Workout.UserID)
-	assert.Equal(t, createWorkoutParams.StartedAt, resp.Workout.StartedAt)
-	assert.Equal(t, createWorkoutParams.EndedAt, resp.Workout.EndedAt)
-	assert.Len(t, resp.Logs, 4) // Expecting 2 logs for each of the 2 exercises
-
-	// Check if all expectations were met
-	assert.Nil(t, mock.ExpectationsWereMet())
 }
 
 func TestGetWorkouts(t *testing.T) {
-	// Initialize mock db
-	sqlDB, db, mock := mock.NewMockDB(t)
-	svc := services.NewWorkoutService(db)
+	// create test workout
+	userID := "123"
+	workout, workoutExercises, logs, _ := testutils.CreateTestWorkout(userID)
+	exerciseID := workoutExercises[0].ExerciseID
 
-	defer sqlDB.Close()
+	testCases := []struct {
+		name            string
+		setupMocks      func(sqlMock sqlmock.Sqlmock)
+		checkAssertions func(t *testing.T, sqlMock sqlmock.Sqlmock, err error, resp *services.GetWorkoutsResponse)
+	}{
+		{
+			name: "Success",
+			setupMocks: func(sqlMock sqlmock.Sqlmock) {
+				// create mock sql rows
+				rows := sqlmock.NewRows([]string{"id", "started_at", "ended_at", "exercise_id", "weight", "reps", "time"})
+				for _, log := range logs {
+					rows.AddRow(workout.ID, workout.StartedAt, workout.EndedAt, workoutExercises[0].ExerciseID, log.Weight, log.Reps, log.Time)
+				}
 
-	// Define test data
-	now := time.Now()
-	createWorkoutParams := &services.CreateWorkoutParams{
-		UserID:      "123",
-		StartedAt:   now,
-		EndedAt:     now.Add(time.Hour), // Assuming workout duration is one hour
-		ExerciseIds: []int{1, 2},        // Assuming two exercises
-		Logs: map[int][]services.Log{
-			1: {
-				{Weight: 50.5, Reps: 10, Time: 30}, // Sample log for exercise ID 1
-				{Weight: 60, Reps: 12, Time: 35},   // Another sample log for exercise ID 1
+				sqlMock.ExpectQuery(`
+					SELECT w.id, w.started_at, w.ended_at, we.exercise_id AS "exercise_id", l.weight, l.reps, l.time
+					FROM workouts w
+						INNER JOIN workout_exercises we
+							ON we.workout_id = w.id AND w.user_id = \$1
+						INNER JOIN logs l
+							ON we.id = l.workout_exercise_id
+					ORDER BY w.started_at DESC, we.id, l.set_number;
+				`).WithArgs(userID).WillReturnRows(rows)
 			},
-			2: {
-				{Weight: 40.5, Reps: 8, Time: 25}, // Sample log for exercise ID 2
-				{Weight: 45, Reps: 10, Time: 30},  // Another sample log for exercise ID 2
+			checkAssertions: func(t *testing.T, sqlMock sqlmock.Sqlmock, err error, resp *services.GetWorkoutsResponse) {
+				assert.Nil(t, err)
+				assert.NotNil(t, resp)
+				assert.Nil(t, sqlMock.ExpectationsWereMet())
+
+				// check correct workout response
+				assert.Len(t, resp.Workouts, 1)
+				assert.Equal(t, workout.ID, resp.Workouts[0].ID)
+				assert.Equal(t, workout.StartedAt, resp.Workouts[0].StartedAt)
+				assert.Equal(t, workout.EndedAt, resp.Workouts[0].EndedAt)
+
+				// check correct logs
+				respWorkoutLogs := resp.WorkoutLogs[workout.ID]
+				assert.Len(t, logs, 2)
+				assert.Equal(t, exerciseID, respWorkoutLogs[0].ExerciseId)
+				assert.Equal(t, logs[0].Weight, respWorkoutLogs[0].Weight)
+				assert.Equal(t, logs[0].Reps, respWorkoutLogs[0].Reps)
+				assert.Equal(t, logs[0].Time, respWorkoutLogs[0].Time)
+				assert.Equal(t, exerciseID, respWorkoutLogs[1].ExerciseId)
+				assert.Equal(t, logs[1].Weight, respWorkoutLogs[1].Weight)
+				assert.Equal(t, logs[1].Reps, respWorkoutLogs[1].Reps)
+				assert.Equal(t, logs[1].Time, respWorkoutLogs[1].Time)
+			},
+		},
+		{
+			name: "FailureToQuery",
+			setupMocks: func(sqlMock sqlmock.Sqlmock) {
+				sqlMock.ExpectQuery(`
+					SELECT w.id, w.started_at, w.ended_at, we.exercise_id AS "exercise_id", l.weight, l.reps, l.time
+					FROM workouts w
+						INNER JOIN workout_exercises we
+							ON we.workout_id = w.id AND w.user_id = \$1
+						INNER JOIN logs l
+							ON we.id = l.workout_exercise_id
+					ORDER BY w.started_at DESC, we.id, l.set_number;
+				`).WithArgs(userID).WillReturnError(errors.New("query error"))
+			},
+			checkAssertions: func(t *testing.T, sqlMock sqlmock.Sqlmock, err error, resp *services.GetWorkoutsResponse) {
+				assert.NotNil(t, err)
+				assert.Equal(t, err, errors.New("query error"))
+				assert.Nil(t, resp)
+				assert.Nil(t, sqlMock.ExpectationsWereMet())
+			},
+		},
+		{
+			name: "FailureToScanRow",
+			setupMocks: func(sqlMock sqlmock.Sqlmock) {
+				// create mock sql rows with invalid fields
+				rows := sqlmock.NewRows([]string{"id", "started_at", "ended_at", "exercise_id", "weight", "reps", "time"})
+				for _, log := range logs {
+					rows.AddRow(workout.ID, workout.StartedAt, workout.EndedAt, workoutExercises[0].ExerciseID, "invalid weight", log.Reps, log.Time)
+				}
+
+				sqlMock.ExpectQuery(`
+					SELECT w.id, w.started_at, w.ended_at, we.exercise_id AS "exercise_id", l.weight, l.reps, l.time
+					FROM workouts w
+						INNER JOIN workout_exercises we
+							ON we.workout_id = w.id AND w.user_id = \$1
+						INNER JOIN logs l
+							ON we.id = l.workout_exercise_id
+					ORDER BY w.started_at DESC, we.id, l.set_number;
+				`).WithArgs(userID).WillReturnRows(rows)
+			},
+			checkAssertions: func(t *testing.T, sqlMock sqlmock.Sqlmock, err error, resp *services.GetWorkoutsResponse) {
+				assert.NotNil(t, err)
+				assert.Equal(t, err.Error(), "sql: Scan error on column index 4, name \"weight\": converting driver.Value type string (\"invalid weight\") to a float64: invalid syntax")
+				assert.Nil(t, resp)
+				assert.Nil(t, sqlMock.ExpectationsWereMet())
 			},
 		},
 	}
 
-	// create test workout
-	workout, workoutExercises, logs := testutils.CreateTestWorkout(createWorkoutParams)
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			// Initialize mock db
+			sqlDB, db, sqlMock := mock.NewMockDB(t)
+			svc := services.NewWorkoutService(db)
 
-	// define rows
-	workoutRows := mock.NewRows([]string{"id", "user_id", "started_at", "ended_at", "updated_at"})
-	workoutExerciseRows := mock.NewRows([]string{"id", "workout_id", "exercise_id"})
-	logRows := mock.NewRows([]string{"id", "workout_exercise_id", "set_number", "weight", "reps", "time"})
+			defer sqlDB.Close()
 
-	// add rows
-	workoutRows.AddRow(workout.ID, workout.UserID, workout.StartedAt, workout.EndedAt, workout.StartedAt)
-	for _, workoutExercise := range workoutExercises {
-		workoutExerciseRows.AddRow(workoutExercise.ID, workoutExercise.WorkoutID, workoutExercise.ExerciseID)
+			// setup mocks
+			tc.setupMocks(sqlMock)
+
+			// execute GetWorkouts
+			resp, err := svc.GetWorkouts(userID)
+
+			// check assertions
+			tc.checkAssertions(t, sqlMock, err, resp)
+		})
 	}
-	for _, log := range logs {
-		logRows.AddRow(log.ID, log.WorkoutExerciseID, log.SetNumber, log.Weight, log.Reps, log.Time)
-	}
-
-	// start expectations TODO: lacking test for inner join
-	mock.ExpectQuery("^SELECT (.+) FROM workouts*").
-		WillReturnRows(sqlmock.NewRows([]string{"id", "started_at", "ended_at", "exercise_id", "weight", "reps", "time"}).
-			AddRow(workout.ID, workout.StartedAt, workout.EndedAt, workoutExercises[0].ExerciseID, logs[0].Weight, logs[0].Reps, logs[0].Time))
-
-	// Execute the method
-	resp, err := svc.GetWorkouts(createWorkoutParams.UserID)
-
-	assert.Nil(t, err)
-	assert.NotNil(t, resp)
-
-	assert.NotEmpty(t, resp.Workouts)
-	assert.NotEmpty(t, resp.WorkoutLogs)
 }
 
 func TestDeleteWorkout(t *testing.T) {
-	// Initialize mock db
-	sqlDB, db, mock := mock.NewMockDB(t)
-	svc := services.NewWorkoutService(db)
+	// create test workout
+	userID := "123"
+	workout, workoutExercises, logs, _ := testutils.CreateTestWorkout(userID)
 
-	defer sqlDB.Close()
-
-	// Define test data
-	now := time.Now()
-	createWorkoutParams := &services.CreateWorkoutParams{
-		UserID:      "123",
-		StartedAt:   now,
-		EndedAt:     now.Add(time.Hour), // Assuming workout duration is one hour
-		ExerciseIds: []int{1, 2},        // Assuming two exercises
-		Logs: map[int][]services.Log{
-			1: {
-				{Weight: 50.5, Reps: 10, Time: 30}, // Sample log for exercise ID 1
-				{Weight: 60, Reps: 12, Time: 35},   // Another sample log for exercise ID 1
+	testCases := []struct {
+		name            string
+		setupMocks      func(sqlMock sqlmock.Sqlmock)
+		checkAssertions func(t *testing.T, sqlMock sqlmock.Sqlmock, err error)
+	}{
+		{
+			name: "Success",
+			setupMocks: func(sqlMock sqlmock.Sqlmock) {
+				// create mock sql rows
+				workoutRows, _, _ := testutils.CreateTestWorkoutSQLRows(sqlMock, workout, workoutExercises, logs)
+				// expect select query
+				selectSQL := "SELECT (.+) FROM \"workouts\" WHERE id = (.+)"
+				sqlMock.ExpectQuery(selectSQL).WillReturnRows(workoutRows)
+				// expect delete query
+				deleteSQL := "DELETE FROM \"workouts\" WHERE \"workouts\".\"id\" = (.+)"
+				sqlMock.ExpectBegin()
+				sqlMock.ExpectExec(deleteSQL).WillReturnResult(sqlmock.NewResult(1, 1))
+				sqlMock.ExpectCommit()
 			},
-			2: {
-				{Weight: 40.5, Reps: 8, Time: 25}, // Sample log for exercise ID 2
-				{Weight: 45, Reps: 10, Time: 30},  // Another sample log for exercise ID 2
+			checkAssertions: func(t *testing.T, sqlMock sqlmock.Sqlmock, err error) {
+				assert.Nil(t, err)
+				assert.Nil(t, sqlMock.ExpectationsWereMet())
+			},
+		},
+		{
+			name: "FailureWorkoutNotFound",
+			setupMocks: func(sqlMock sqlmock.Sqlmock) {
+				// expect select query
+				selectSQL := "SELECT (.+) FROM \"workouts\" WHERE id = (.+)"
+				sqlMock.ExpectQuery(selectSQL).WithArgs(workout.ID.String()).WillReturnError(gorm.ErrRecordNotFound)
+			},
+			checkAssertions: func(t *testing.T, sqlMock sqlmock.Sqlmock, err error) {
+				assert.NotNil(t, err)
+				assert.Equal(t, err, gorm.ErrRecordNotFound)
+				assert.Nil(t, sqlMock.ExpectationsWereMet())
+			},
+		},
+		{
+			name: "FailureToDelete",
+			setupMocks: func(sqlMock sqlmock.Sqlmock) {
+				// create mock sql rows
+				workoutRows, _, _ := testutils.CreateTestWorkoutSQLRows(sqlMock, workout, workoutExercises, logs)
+				// expect select query
+				selectSQL := "SELECT (.+) FROM \"workouts\" WHERE id = (.+)"
+				sqlMock.ExpectQuery(selectSQL).WillReturnRows(workoutRows)
+				// expect delete query
+				deleteSQL := "DELETE FROM \"workouts\" WHERE \"workouts\".\"id\" = (.+)"
+				sqlMock.ExpectBegin()
+				sqlMock.ExpectExec(deleteSQL).WillReturnError(errors.New("delete error"))
+				sqlMock.ExpectRollback()
+			},
+			checkAssertions: func(t *testing.T, sqlMock sqlmock.Sqlmock, err error) {
+				assert.NotNil(t, err)
+				assert.Equal(t, err, errors.New("delete error"))
+				assert.Nil(t, sqlMock.ExpectationsWereMet())
 			},
 		},
 	}
 
-	// create test workout
-	workout, workoutExercises, logs := testutils.CreateTestWorkout(createWorkoutParams)
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			// Initialize mock db
+			sqlDB, db, sqlMock := mock.NewMockDB(t)
+			svc := services.NewWorkoutService(db)
 
-	// define rows
-	workoutRows := mock.NewRows([]string{"id", "user_id", "started_at", "ended_at", "updated_at"})
-	workoutExerciseRows := mock.NewRows([]string{"id", "workout_id", "exercise_id"})
-	logRows := mock.NewRows([]string{"id", "workout_exercise_id", "set_number", "weight", "reps", "time"})
+			defer sqlDB.Close()
 
-	// add rows
-	workoutRows.AddRow(workout.ID, workout.UserID, workout.StartedAt, workout.EndedAt, workout.StartedAt)
-	for _, workoutExercise := range workoutExercises {
-		workoutExerciseRows.AddRow(workoutExercise.ID, workoutExercise.WorkoutID, workoutExercise.ExerciseID)
+			// setup mocks
+			tc.setupMocks(sqlMock)
+
+			// execute DeleteWorkout
+			err := svc.DeleteWorkout(workout.ID.String(), workout.UserID)
+
+			// check assertions
+			tc.checkAssertions(t, sqlMock, err)
+		})
 	}
-	for _, log := range logs {
-		logRows.AddRow(log.ID, log.WorkoutExerciseID, log.SetNumber, log.Weight, log.Reps, log.Time)
-	}
-
-	// expectations
-	selectSQL := "SELECT (.+) FROM \"workouts\" WHERE id = (.+)"
-	mock.ExpectQuery(selectSQL).WillReturnRows(workoutRows)
-
-	deleteSQL := "DELETE FROM \"workouts\" WHERE \"workouts\".\"id\" = (.+)"
-	mock.ExpectBegin()
-	mock.ExpectExec(deleteSQL).WillReturnResult(sqlmock.NewResult(1, 1)) // Simulate one row affected by delete
-	mock.ExpectCommit()
-
-	// execute DeleteWorkout
-	err := svc.DeleteWorkout(workout.ID.String(), workout.UserID)
-
-	// assertion
-	assert.Nil(t, err)
-	assert.Nil(t, mock.ExpectationsWereMet())
 }
