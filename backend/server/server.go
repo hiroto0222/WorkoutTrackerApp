@@ -2,11 +2,9 @@ package server
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
-	"firebase.google.com/go/auth"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/hiroto0222/workout-tracker-app/config"
@@ -29,20 +27,16 @@ type Server struct {
 	Config   config.Config
 	DB       *gorm.DB
 	Router   *gin.Engine
-	FireAuth *auth.Client
+	FireAuth config.AuthClient
 }
 
-func NewServer(conf config.Config, db *gorm.DB) *Server {
+func NewServer(conf config.Config, db *gorm.DB, authClient config.AuthClient) *Server {
 	server := &Server{
 		Config: conf,
 		DB:     db,
 	}
 
-	// init Firebase auth client
-	authClient, err := config.InitAuth(conf)
-	if err != nil {
-		log.Fatal("failed to create firebase auth instance")
-	}
+	// init authClient
 	server.FireAuth = authClient
 
 	// init services

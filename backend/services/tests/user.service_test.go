@@ -327,15 +327,16 @@ func TestDeleteUser(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			// initialize mock db
-			mockAuthClient := &mock.MockAuthClient{
-				DeleteUserError: tc.authClientDeleteUserError,
-			}
-			sqlDB, db, sqlMock := mock.NewMockDB(t)
-			svc := services.NewUserService(db, mockAuthClient)
-
 			// create mock context
 			mockCtx, _ := gin.CreateTestContext(httptest.NewRecorder())
+
+			// initialize mock auth client
+			mockAuthClient := &mock.MockAuthClient{}
+			mockAuthClient.On("DeleteUser", mockCtx, user.ID).Return(tc.authClientDeleteUserError)
+
+			// initialize mock db
+			sqlDB, db, sqlMock := mock.NewMockDB(t)
+			svc := services.NewUserService(db, mockAuthClient)
 
 			defer sqlDB.Close()
 
