@@ -57,12 +57,12 @@ func TestAuthMiddleware(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			// create test http server and recorder
-			server := testutils.NewTestServer(t, nil)
-			recorder := httptest.NewRecorder()
-
 			// initialize mock auth client
 			mockAuthClient := &my_mocks.MockAuthClient{}
+
+			// create test http server and recorder
+			server := testutils.NewTestServer(t, nil, mockAuthClient)
+			recorder := httptest.NewRecorder()
 
 			// create test auth required path
 			authRequiredPath := "/api/authrequired"

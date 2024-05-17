@@ -61,11 +61,14 @@ func TestGetExercises(t *testing.T) {
 			sqlDB, db, sqlMock := my_mocks.NewMockDB(t)
 			defer sqlDB.Close()
 
+			// initialize mock auth client
+			mockAuthClient := &my_mocks.MockAuthClient{}
+
 			// setup sql mocks
 			tc.setupMocks(sqlMock)
 
 			// create test http server and recorder
-			server := testutils.NewTestServer(t, db)
+			server := testutils.NewTestServer(t, db, mockAuthClient)
 			recorder := httptest.NewRecorder()
 
 			// create test url

@@ -9,12 +9,10 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewTestServer(t *testing.T, db *gorm.DB) *server.Server {
+func NewTestServer(t *testing.T, db *gorm.DB, mockAuthClient *my_mocks.MockAuthClient) *server.Server {
 	conf := config.Config{
 		Origin: "*", // テスト時は CORS を無効にする
 	}
-
-	mockAuthClient := &my_mocks.MockAuthClient{}
 
 	server := server.NewServer(conf, db, mockAuthClient)
 
