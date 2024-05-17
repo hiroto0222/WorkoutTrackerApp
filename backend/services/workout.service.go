@@ -164,7 +164,7 @@ func (s *WorkoutServiceImpl) GetWorkouts(userID string) (*GetWorkoutsResponse, e
 	`, userID).Rows()
 
 	if err != nil {
-		log.Panic("Failed to run sql query")
+		log.Println("Failed to run sql query")
 		return nil, err
 	}
 
@@ -185,7 +185,7 @@ func (s *WorkoutServiceImpl) GetWorkouts(userID string) (*GetWorkoutsResponse, e
 		// scan sql row
 		err := rows.Scan(&workoutId, &startedAt, &EndedAt, &exerciseId, &logWeight, &logReps, &logTime)
 		if err != nil {
-			log.Panic("Failed to scan sql row")
+			log.Println("Failed to scan sql row")
 			return nil, err
 		}
 

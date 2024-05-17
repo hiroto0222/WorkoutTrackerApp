@@ -15,15 +15,11 @@ func CreateTestWorkout(userID string) (models.Workout, []models.WorkoutExercise,
 		UserID:      userID,
 		StartedAt:   now,
 		EndedAt:     now.Add(time.Hour), // Assuming workout duration is one hour
-		ExerciseIds: []int{1, 2},        // Assuming two exercises
+		ExerciseIds: []int{1},           // Assuming 1 exercise
 		Logs: map[int][]services.Log{
 			1: {
 				{Weight: 50.5, Reps: 10, Time: 30}, // Sample log for exercise ID 1
 				{Weight: 60, Reps: 12, Time: 35},   // Another sample log for exercise ID 1
-			},
-			2: {
-				{Weight: 40.5, Reps: 8, Time: 25}, // Sample log for exercise ID 2
-				{Weight: 45, Reps: 10, Time: 30},  // Another sample log for exercise ID 2
 			},
 		},
 	}
