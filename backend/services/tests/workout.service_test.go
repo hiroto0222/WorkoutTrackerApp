@@ -9,6 +9,7 @@ import (
 	"github.com/hiroto0222/workout-tracker-app/services"
 	"github.com/hiroto0222/workout-tracker-app/testutils"
 	"github.com/stretchr/testify/assert"
+	"gorm.io/gorm"
 )
 
 func TestCreateWorkout(t *testing.T) {
@@ -270,43 +271,85 @@ func TestGetWorkouts(t *testing.T) {
 }
 
 func TestDeleteWorkout(t *testing.T) {
-	// Initialize mock db
-	sqlDB, db, mock := mock.NewMockDB(t)
-	svc := services.NewWorkoutService(db)
-
-	defer sqlDB.Close()
-
 	// create test workout
 	userID := "123"
 	workout, workoutExercises, logs, _ := testutils.CreateTestWorkout(userID)
 
-	// define rows
-	workoutRows := mock.NewRows([]string{"id", "user_id", "started_at", "ended_at", "updated_at"})
-	workoutExerciseRows := mock.NewRows([]string{"id", "workout_id", "exercise_id"})
-	logRows := mock.NewRows([]string{"id", "workout_exercise_id", "set_number", "weight", "reps", "time"})
-
-	// add rows
-	workoutRows.AddRow(workout.ID, workout.UserID, workout.StartedAt, workout.EndedAt, workout.StartedAt)
-	for _, workoutExercise := range workoutExercises {
-		workoutExerciseRows.AddRow(workoutExercise.ID, workoutExercise.WorkoutID, workoutExercise.ExerciseID)
+	testCases := []struct {
+		name            string
+		setupMocks      func(sqlMock sqlmock.Sqlmock)
+		checkAssertions func(t *testing.T, sqlMock sqlmock.Sqlmock, err error)
+	}{
+		{
+			name: "Success",
+			setupMocks: func(sqlMock sqlmock.Sqlmock) {
+				// create mock sql rows
+				workoutRows, _, _ := testutils.CreateTestWorkoutSQLRows(sqlMock, workout, workoutExercises, logs)
+				// expect select query
+				selectSQL := "SELECT (.+) FROM \"workouts\" WHERE id = (.+)"
+				sqlMock.ExpectQuery(selectSQL).WillReturnRows(workoutRows)
+				// expect delete query
+				deleteSQL := "DELETE FROM \"workouts\" WHERE \"workouts\".\"id\" = (.+)"
+				sqlMock.ExpectBegin()
+				sqlMock.ExpectExec(deleteSQL).WillReturnResult(sqlmock.NewResult(1, 1))
+				sqlMock.ExpectCommit()
+			},
+			checkAssertions: func(t *testing.T, sqlMock sqlmock.Sqlmock, err error) {
+				assert.Nil(t, err)
+				assert.Nil(t, sqlMock.ExpectationsWereMet())
+			},
+		},
+		{
+			name: "FailureWorkoutNotFound",
+			setupMocks: func(sqlMock sqlmock.Sqlmock) {
+				// expect select query
+				selectSQL := "SELECT (.+) FROM \"workouts\" WHERE id = (.+)"
+				sqlMock.ExpectQuery(selectSQL).WithArgs(workout.ID.String()).WillReturnError(gorm.ErrRecordNotFound)
+			},
+			checkAssertions: func(t *testing.T, sqlMock sqlmock.Sqlmock, err error) {
+				assert.NotNil(t, err)
+				assert.Equal(t, err, gorm.ErrRecordNotFound)
+				assert.Nil(t, sqlMock.ExpectationsWereMet())
+			},
+		},
+		{
+			name: "FailureToDelete",
+			setupMocks: func(sqlMock sqlmock.Sqlmock) {
+				// create mock sql rows
+				workoutRows, _, _ := testutils.CreateTestWorkoutSQLRows(sqlMock, workout, workoutExercises, logs)
+				// expect select query
+				selectSQL := "SELECT (.+) FROM \"workouts\" WHERE id = (.+)"
+				sqlMock.ExpectQuery(selectSQL).WillReturnRows(workoutRows)
+				// expect delete query
+				deleteSQL := "DELETE FROM \"workouts\" WHERE \"workouts\".\"id\" = (.+)"
+				sqlMock.ExpectBegin()
+				sqlMock.ExpectExec(deleteSQL).WillReturnError(errors.New("delete error"))
+				sqlMock.ExpectRollback()
+			},
+			checkAssertions: func(t *testing.T, sqlMock sqlmock.Sqlmock, err error) {
+				assert.NotNil(t, err)
+				assert.Equal(t, err, errors.New("delete error"))
+				assert.Nil(t, sqlMock.ExpectationsWereMet())
+			},
+		},
 	}
-	for _, log := range logs {
-		logRows.AddRow(log.ID, log.WorkoutExerciseID, log.SetNumber, log.Weight, log.Reps, log.Time)
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			// Initialize mock db
+			sqlDB, db, sqlMock := mock.NewMockDB(t)
+			svc := services.NewWorkoutService(db)
+
+			defer sqlDB.Close()
+
+			// setup mocks
+			tc.setupMocks(sqlMock)
+
+			// execute DeleteWorkout
+			err := svc.DeleteWorkout(workout.ID.String(), workout.UserID)
+
+			// check assertions
+			tc.checkAssertions(t, sqlMock, err)
+		})
 	}
-
-	// expectations
-	selectSQL := "SELECT (.+) FROM \"workouts\" WHERE id = (.+)"
-	mock.ExpectQuery(selectSQL).WillReturnRows(workoutRows)
-
-	deleteSQL := "DELETE FROM \"workouts\" WHERE \"workouts\".\"id\" = (.+)"
-	mock.ExpectBegin()
-	mock.ExpectExec(deleteSQL).WillReturnResult(sqlmock.NewResult(1, 1)) // Simulate one row affected by delete
-	mock.ExpectCommit()
-
-	// execute DeleteWorkout
-	err := svc.DeleteWorkout(workout.ID.String(), workout.UserID)
-
-	// assertion
-	assert.Nil(t, err)
-	assert.Nil(t, mock.ExpectationsWereMet())
 }
