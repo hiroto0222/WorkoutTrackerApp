@@ -8,7 +8,7 @@ import (
 )
 
 // CreateTestUser returns a User and the associated CreateUserParams
-func CreateTestUser() (*models.User, *services.CreateUserParams) {
+func CreateTestUser() (models.User, *services.CreateUserParams) {
 	now := time.Now()
 	createUserParams := &services.CreateUserParams{
 		ID:       "123",
@@ -36,5 +36,5 @@ func CreateTestUser() (*models.User, *services.CreateUserParams) {
 		UpdatedAt: now,
 	}
 
-	return &user, createUserParams
+	return user, createUserParams
 }
