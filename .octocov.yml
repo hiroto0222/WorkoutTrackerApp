@@ -25,4 +25,8 @@ report:
   if: is_default_branch
   datastores:
     - artifact://${GITHUB_REPOSITORY}
+badges:
+  datastores:
+    - local://badges
 push:
+  enable: true
