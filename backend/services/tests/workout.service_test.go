@@ -27,12 +27,12 @@ func TestCreateWorkout(t *testing.T) {
 		ExerciseIds: []int{1, 2},        // Assuming two exercises
 		Logs: map[int][]services.Log{
 			1: {
-				{Weight: 50, Reps: 10, Time: 30}, // Sample log for exercise ID 1
-				{Weight: 60, Reps: 12, Time: 35}, // Another sample log for exercise ID 1
+				{Weight: 50.5, Reps: 10, Time: 30}, // Sample log for exercise ID 1
+				{Weight: 60, Reps: 12, Time: 35},   // Another sample log for exercise ID 1
 			},
 			2: {
-				{Weight: 40, Reps: 8, Time: 25},  // Sample log for exercise ID 2
-				{Weight: 45, Reps: 10, Time: 30}, // Another sample log for exercise ID 2
+				{Weight: 40.5, Reps: 8, Time: 25}, // Sample log for exercise ID 2
+				{Weight: 45, Reps: 10, Time: 30},  // Another sample log for exercise ID 2
 			},
 		},
 	}
@@ -106,12 +106,12 @@ func TestGetWorkouts(t *testing.T) {
 		ExerciseIds: []int{1, 2},        // Assuming two exercises
 		Logs: map[int][]services.Log{
 			1: {
-				{Weight: 50, Reps: 10, Time: 30}, // Sample log for exercise ID 1
-				{Weight: 60, Reps: 12, Time: 35}, // Another sample log for exercise ID 1
+				{Weight: 50.5, Reps: 10, Time: 30}, // Sample log for exercise ID 1
+				{Weight: 60, Reps: 12, Time: 35},   // Another sample log for exercise ID 1
 			},
 			2: {
-				{Weight: 40, Reps: 8, Time: 25},  // Sample log for exercise ID 2
-				{Weight: 45, Reps: 10, Time: 30}, // Another sample log for exercise ID 2
+				{Weight: 40.5, Reps: 8, Time: 25}, // Sample log for exercise ID 2
+				{Weight: 45, Reps: 10, Time: 30},  // Another sample log for exercise ID 2
 			},
 		},
 	}
@@ -164,12 +164,12 @@ func TestDeleteWorkout(t *testing.T) {
 		ExerciseIds: []int{1, 2},        // Assuming two exercises
 		Logs: map[int][]services.Log{
 			1: {
-				{Weight: 50, Reps: 10, Time: 30}, // Sample log for exercise ID 1
-				{Weight: 60, Reps: 12, Time: 35}, // Another sample log for exercise ID 1
+				{Weight: 50.5, Reps: 10, Time: 30}, // Sample log for exercise ID 1
+				{Weight: 60, Reps: 12, Time: 35},   // Another sample log for exercise ID 1
 			},
 			2: {
-				{Weight: 40, Reps: 8, Time: 25},  // Sample log for exercise ID 2
-				{Weight: 45, Reps: 10, Time: 30}, // Another sample log for exercise ID 2
+				{Weight: 40.5, Reps: 8, Time: 25}, // Sample log for exercise ID 2
+				{Weight: 45, Reps: 10, Time: 30},  // Another sample log for exercise ID 2
 			},
 		},
 	}

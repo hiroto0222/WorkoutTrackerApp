@@ -35,9 +35,9 @@ type CreateWorkoutParams struct {
 }
 
 type Log struct {
-	Weight int
+	Weight float64
 	Reps   int
-	Time   int
+	Time   float64
 }
 
 type CreateWorkoutResponse struct {
@@ -127,10 +127,10 @@ type workoutResponse struct {
 }
 
 type logResponse struct {
-	ExerciseId int `json:"exercise_id"`
-	Weight     int `json:"weight"`
-	Reps       int `json:"reps"`
-	Time       int `json:"time"`
+	ExerciseId int     `json:"exercise_id"`
+	Weight     float64 `json:"weight"`
+	Reps       int     `json:"reps"`
+	Time       float64 `json:"time"`
 }
 
 // WorkoutLogsResponse is a map of workout_id -> []LogResponse
@@ -166,9 +166,9 @@ func (s *WorkoutServiceImpl) GetWorkouts(userID string) (*GetWorkoutsResponse, e
 		startedAt  time.Time
 		EndedAt    time.Time
 		exerciseId int
-		logWeight  int
+		logWeight  float64
 		logReps    int
-		logTime    int
+		logTime    float64
 	)
 
 	defer rows.Close()
