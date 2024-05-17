@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/hiroto0222/workout-tracker-app/mock"
+	my_mocks "github.com/hiroto0222/workout-tracker-app/mock"
 	"github.com/hiroto0222/workout-tracker-app/models"
 	"github.com/hiroto0222/workout-tracker-app/services"
 	"github.com/stretchr/testify/assert"
@@ -20,7 +20,7 @@ type exerciseData struct {
 // TestGetExerices tests for successful query of getting all exerices
 func TestGetExercises(t *testing.T) {
 	// initialize mock db
-	sqlDB, db, mock := mock.NewMockDB(t)
+	sqlDB, db, mock := my_mocks.NewMockDB(t)
 	svc := services.NewExerciseService(db)
 
 	defer sqlDB.Close()

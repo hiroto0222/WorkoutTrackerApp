@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/hiroto0222/workout-tracker-app/mock"
+	my_mocks "github.com/hiroto0222/workout-tracker-app/mock"
 	"github.com/hiroto0222/workout-tracker-app/services"
 	"github.com/hiroto0222/workout-tracker-app/testutils"
 	"github.com/stretchr/testify/assert"
@@ -131,7 +131,7 @@ func TestCreateWorkout(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// Initialize mock db
-			sqlDB, db, sqlMock := mock.NewMockDB(t)
+			sqlDB, db, sqlMock := my_mocks.NewMockDB(t)
 			svc := services.NewWorkoutService(db)
 
 			defer sqlDB.Close()
@@ -253,7 +253,7 @@ func TestGetWorkouts(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// Initialize mock db
-			sqlDB, db, sqlMock := mock.NewMockDB(t)
+			sqlDB, db, sqlMock := my_mocks.NewMockDB(t)
 			svc := services.NewWorkoutService(db)
 
 			defer sqlDB.Close()
@@ -337,7 +337,7 @@ func TestDeleteWorkout(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// Initialize mock db
-			sqlDB, db, sqlMock := mock.NewMockDB(t)
+			sqlDB, db, sqlMock := my_mocks.NewMockDB(t)
 			svc := services.NewWorkoutService(db)
 
 			defer sqlDB.Close()
