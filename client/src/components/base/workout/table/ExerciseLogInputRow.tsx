@@ -66,7 +66,7 @@ const ExerciseLogInputRow = ({
 
   const handleOnCompleted = () => {
     const newLog: Log = {
-      weight: parseInt(weight) || undefined,
+      weight: parseFloat(weight) || undefined,
       reps: parseInt(reps) || undefined,
       time: parseInt(time) || undefined,
       isCompleted: true,

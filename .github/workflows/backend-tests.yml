@@ -3,7 +3,7 @@ name: Run backend tests
 on:
   pull_request:
     branches: [main, develop]
-    paths: ["backend/**"]
+    paths: ["backend/**", ".github/workflows/backend-tests.yml"]
 
 jobs:
   test_go:
@@ -27,6 +27,6 @@ jobs:
       - name: Run Test
         run: go test -v -coverpkg ./... ./... -coverprofile=cover.out
 
-      # 実行結果を出力
+      # run octocov and generate coverage reports
       - name: Run Octocov
         uses: k1LoW/octocov-action@v0
