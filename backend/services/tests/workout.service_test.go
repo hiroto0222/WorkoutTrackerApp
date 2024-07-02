@@ -42,10 +42,22 @@ func TestCreateWorkout(t *testing.T) {
 			checkAssertions: func(t *testing.T, sqlMock sqlmock.Sqlmock, err error, resp *services.CreateWorkoutResponse) {
 				assert.Nil(t, err)
 				assert.NotNil(t, resp)
+
+				// assert workout
 				assert.Equal(t, createWorkoutParams.UserID, resp.Workout.UserID)
 				assert.Equal(t, createWorkoutParams.StartedAt, resp.Workout.StartedAt)
 				assert.Equal(t, createWorkoutParams.EndedAt, resp.Workout.EndedAt)
+
+				// assert logs
 				assert.Len(t, resp.Logs, 2)
+				assert.Equal(t, workoutExercises[0].ExerciseID, resp.Logs[0].ExerciseId)
+				assert.Equal(t, logs[0].Reps, resp.Logs[0].Reps)
+				assert.Equal(t, logs[0].Time, resp.Logs[0].Time)
+				assert.Equal(t, logs[0].Weight, resp.Logs[0].Weight)
+				assert.Equal(t, logs[1].Reps, resp.Logs[1].Reps)
+				assert.Equal(t, logs[1].Time, resp.Logs[1].Time)
+				assert.Equal(t, logs[1].Weight, resp.Logs[1].Weight)
+
 				assert.Nil(t, sqlMock.ExpectationsWereMet())
 			},
 		},
